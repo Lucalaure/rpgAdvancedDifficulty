@@ -8,6 +8,3 @@ bin/
 .vscode/
 .DS_Store
 
-# Original mods kept locally for reference only
-Champions-master/
-RpgDifficulty-1.21/

@@ -37,7 +37,46 @@ A mob is processed only once. A flag saved on the mob (`RpgDifficultyApplied`) s
 
 With Mod Menu installed, the config button opens a hub that links to both config screens.
 
-Per-dimension datapacks (`data/<ns>/difficulty/*.json`) and the `/rpgdifficulty zone …` commands work as they did in RpgDifficulty. See `RpgDifficulty-1.21/README.md`.
+### Per-dimension difficulty (datapacks)
+
+To give a dimension its own scaling settings, add a JSON file at `data/<namespace>/difficulty/<name>.json` in a datapack. Any of these settings can be overridden: `distanceCoordinatesX`, `distanceCoordinatesZ`, `increasingDistance`, `distanceFactor`, `increasingTime`, `timeFactor`, `heightDistance`, `heightFactor`, `maxFactorHealth`, `maxFactorDamage`, `maxFactorProtection`, `maxFactorSpeed`, `startingFactor`, `startingDistance`, `startingTime`, `startingHeight`, `positiveHeightIncreasion`, `negativeHeightIncreasion`.
+
+```json
+{
+    "dimension": "minecraft:the_nether",
+    "increasingDistance": 300,
+    "distanceFactor": 0.1,
+    "increasingTime": 60,
+    "timeFactor": 0.05,
+    "heightDistance": 30,
+    "heightFactor": 0.1,
+    "maxFactorHealth": 3.0,
+    "maxFactorDamage": 3.0,
+    "maxFactorProtection": 1.5,
+    "maxFactorSpeed": 2.0,
+    "startingFactor": 1.0,
+    "startingDistance": 0,
+    "startingTime": 0,
+    "startingHeight": 62,
+    "positiveHeightIncreasion": true,
+    "negativeHeightIncreasion": true
+}
+```
+
+Mobs in the `c:bosses` entity tag use the boss settings from `rpgdifficulty.json`. On multiplayer servers, setting `timeFactor` to 0 is recommended.
+
+### Difficulty zones (commands)
+
+A zone gives every mob inside it a fixed difficulty factor, replacing distance, time and height scaling:
+
+```
+/rpgdifficulty zone create box ~ ~ ~ ~10 ~10 ~10 2.5
+/rpgdifficulty zone create box ~ ~ ~ ~10 ~10 ~10 2.5 ZoneName
+/rpgdifficulty zone create sphere 100 64 200 30 1.8
+/rpgdifficulty zone remove <uuid>
+/rpgdifficulty zone remove here
+/rpgdifficulty zone list
+```
 
 ## Building
 
