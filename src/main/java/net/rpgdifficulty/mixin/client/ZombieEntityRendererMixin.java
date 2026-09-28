@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.client.renderer.entity.state.ZombieRenderState;
 import net.minecraft.world.entity.monster.zombie.Zombie;
-import net.rpgdifficulty.RpgDifficultyMain;
+import crystal.champions.config.ChampionsConfigServer;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 
 @Environment(EnvType.CLIENT)
@@ -40,7 +40,7 @@ public abstract class ZombieEntityRendererMixin extends AbstractZombieRenderer<Z
     @Override
     protected void scale(ZombieRenderState state, PoseStack matrices) {
         if (Boolean.TRUE.equals(state.getData(RPGDIFFICULTY_BIG)))
-            matrices.scale(RpgDifficultyMain.CONFIG.bigZombieSize, RpgDifficultyMain.CONFIG.bigZombieSize, RpgDifficultyMain.CONFIG.bigZombieSize);
+            matrices.scale(ChampionsConfigServer.get().bigZombieSize, ChampionsConfigServer.get().bigZombieSize, ChampionsConfigServer.get().bigZombieSize);
         super.scale(state, matrices);
     }
 

@@ -57,17 +57,6 @@ public class DifficultyLoader implements ResourceManagerReloadListener {
                 } else {
                     map.put("timeFactor", RpgDifficultyMain.CONFIG.timeFactor);
                 }
-                // height
-                if (data.has("heightDistance")) {
-                    map.put("heightDistance", data.get("heightDistance").getAsInt());
-                } else {
-                    map.put("heightDistance", RpgDifficultyMain.CONFIG.heightDistance);
-                }
-                if (data.has("heightFactor")) {
-                    map.put("heightFactor", data.get("heightFactor").getAsDouble());
-                } else {
-                    map.put("heightFactor", RpgDifficultyMain.CONFIG.heightFactor);
-                }
                 // max
                 if (data.has("maxFactorHealth")) {
                     map.put("maxFactorHealth", data.get("maxFactorHealth").getAsDouble());
@@ -84,11 +73,6 @@ public class DifficultyLoader implements ResourceManagerReloadListener {
                 } else {
                     map.put("maxFactorProtection", RpgDifficultyMain.CONFIG.maxFactorProtection);
                 }
-                if (data.has("maxFactorSpeed")) {
-                    map.put("maxFactorSpeed", data.get("maxFactorSpeed").getAsDouble());
-                } else {
-                    map.put("maxFactorSpeed", RpgDifficultyMain.CONFIG.maxFactorSpeed);
-                }
                 // starting
                 if (data.has("startingFactor")) {
                     map.put("startingFactor", data.get("startingFactor").getAsDouble());
@@ -104,22 +88,6 @@ public class DifficultyLoader implements ResourceManagerReloadListener {
                     map.put("startingTime", data.get("startingTime").getAsInt());
                 } else {
                     map.put("startingTime", RpgDifficultyMain.CONFIG.startingTime);
-                }
-                if (data.has("startingHeight")) {
-                    map.put("startingHeight", data.get("startingHeight").getAsInt());
-                } else {
-                    map.put("startingHeight", RpgDifficultyMain.CONFIG.startingHeight);
-                }
-                // height check
-                if (data.has("positiveHeightIncreasion")) {
-                    map.put("positiveHeightIncreasion", data.get("positiveHeightIncreasion").getAsBoolean());
-                } else {
-                    map.put("positiveHeightIncreasion", RpgDifficultyMain.CONFIG.positiveHeightIncreasion);
-                }
-                if (data.has("negativeHeightIncreasion")) {
-                    map.put("negativeHeightIncreasion", data.get("negativeHeightIncreasion").getAsBoolean());
-                } else {
-                    map.put("negativeHeightIncreasion", RpgDifficultyMain.CONFIG.negativeHeightIncreasion);
                 }
 
                 dimensionDifficulty.put(data.get("dimension").getAsString(), map);

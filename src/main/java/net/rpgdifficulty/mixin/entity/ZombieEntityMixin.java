@@ -19,7 +19,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.Level;
-import net.rpgdifficulty.RpgDifficultyMain;
+import crystal.champions.config.ChampionsConfigServer;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 
 @Mixin(Zombie.class)
@@ -58,7 +58,7 @@ public abstract class ZombieEntityMixin extends Monster implements ZombieEntityA
     @Inject(method = "getDefaultDimensions", at = @At("RETURN"), cancellable = true)
     private void getDefaultDimensionsMixin(Pose pose, CallbackInfoReturnable<EntityDimensions> info) {
         if (this.entityData.get(BIG_ZOMBIE)) {
-            info.setReturnValue(info.getReturnValue().scale(RpgDifficultyMain.CONFIG.bigZombieSize));
+            info.setReturnValue(info.getReturnValue().scale(ChampionsConfigServer.get().bigZombieSize));
         }
     }
 

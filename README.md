@@ -2,20 +2,21 @@
 
 A Fabric mod for Minecraft 26.3 that combines two mods. (The 1.21.1 version is available as release v1.0.0.)
 
-- **RpgDifficulty** (Globox_Z, MIT): mobs get stronger with distance from spawn, world time and height.
+- **RpgDifficulty** (Globox_Z, MIT): mobs get stronger as the world ages, and optionally with distance from spawn.
 - **Champions** (Crystal, GPLv3): any hostile mob can spawn as a *champion*, an elite with a tier (1–5), boosted stats, random affixes (Molten, Shielding, Magnetic, …), a boss bar and extra loot.
 
 ## How they work together
 
 Every mob spawn goes through a single pipeline:
 
-1. **Difficulty scaling.** RpgDifficulty computes a factor from distance, time and height, or from a difficulty zone or dimension datapack. It uses that factor to scale health, damage and armor, then applies the random-value and big/speed zombie variants.
-2. **Champion roll.** The mob then rolls for a champion tier. With `championsScaleWithDifficulty` on, the difficulty factor also raises champion odds, and higher tiers gain the most:
+1. **Difficulty scaling.** A difficulty factor is computed from world time (by default +10% for every hour the world has been running, up to 3×), plus distance from spawn if `enableDistanceScaling` is on. A difficulty zone or dimension datapack can override it. The factor scales health, damage and armor.
+2. **Zombie variant roll.** Zombies may become a *big zombie* (bigger, +10 HP, +2 damage, 30% slower) or a *speed zombie* (30% faster, −10 HP). Both start at 10% and grow with the difficulty factor, like champions.
+3. **Champion roll.** The mob then rolls for a champion tier. With `championsScaleWithDifficulty` on, the difficulty factor also raises champion odds, and higher tiers gain the most:
 
    `tier weight × min(maxChampionChanceMultiplier, 1 + (factor − 1) × championChanceScaling × tier)`
 
-   With the defaults, about 6% of eligible spawns are champions near spawn. Where the factor reaches 3.0, about 19% are, and tier 4–5 champions are up to 8× as common.
-3. **Champion stats.** The tier's health and strength multipliers apply on top of the already-scaled stats. Arrows and other projectiles from champions also deal the champion strength bonus.
+   With the defaults, about 6% of eligible spawns are champions near spawn. Once the factor reaches 3.0 (about 20 hours of world time by default), about 19% are, and tier 4–5 champions are up to 8× as common.
+4. **Champion stats.** The tier's health and strength multipliers apply on top of the already-scaled stats. Arrows and other projectiles from champions also deal the champion strength bonus.
 
 A mob is processed only once. A flag saved on the mob (`RpgDifficultyApplied`) stops scaling from being applied twice.
 
@@ -30,8 +31,8 @@ A mob is processed only once. A flag saved on the mob (`RpgDifficultyApplied`) s
 
 | File | What it controls |
 | --- | --- |
-| `config/rpgdifficulty.json` | Distance/time/height scaling, zombie variants, bosses, and the champion scaling options (*Champions* category) |
-| `config/Champions/champions_common.properties` | Tier weights, affix counts, per-tier health/strength growth, `max_boss_tier` |
+| `config/rpgdifficulty.json` | Time and (optional) distance scaling, bosses, and the champion/variant scaling options (*Champions* category) |
+| `config/Champions/champions_common.properties` | Tier weights, affix counts, per-tier health/strength growth, `max_boss_tier`, zombie variants |
 | `config/Champions/champions_affixes.properties` | Enable or disable individual affixes |
 | `config/Champions/champions_client.properties` | HUD colors and offsets |
 
@@ -39,7 +40,7 @@ With Mod Menu installed, the config button opens a hub that links to both config
 
 ### Per-dimension difficulty (datapacks)
 
-To give a dimension its own scaling settings, add a JSON file at `data/<namespace>/difficulty/<name>.json` in a datapack. Any of these settings can be overridden: `distanceCoordinatesX`, `distanceCoordinatesZ`, `increasingDistance`, `distanceFactor`, `increasingTime`, `timeFactor`, `heightDistance`, `heightFactor`, `maxFactorHealth`, `maxFactorDamage`, `maxFactorProtection`, `maxFactorSpeed`, `startingFactor`, `startingDistance`, `startingTime`, `startingHeight`, `positiveHeightIncreasion`, `negativeHeightIncreasion`.
+To give a dimension its own scaling settings, add a JSON file at `data/<namespace>/difficulty/<name>.json` in a datapack. Any of these settings can be overridden: `distanceCoordinatesX`, `distanceCoordinatesZ`, `increasingDistance`, `distanceFactor`, `increasingTime`, `timeFactor`, `maxFactorHealth`, `maxFactorDamage`, `maxFactorProtection`, `startingFactor`, `startingDistance`, `startingTime`. Distance settings only apply when `enableDistanceScaling` is on.
 
 ```json
 {
@@ -48,26 +49,20 @@ To give a dimension its own scaling settings, add a JSON file at `data/<namespac
     "distanceFactor": 0.1,
     "increasingTime": 60,
     "timeFactor": 0.05,
-    "heightDistance": 30,
-    "heightFactor": 0.1,
     "maxFactorHealth": 3.0,
     "maxFactorDamage": 3.0,
     "maxFactorProtection": 1.5,
-    "maxFactorSpeed": 2.0,
     "startingFactor": 1.0,
     "startingDistance": 0,
-    "startingTime": 0,
-    "startingHeight": 62,
-    "positiveHeightIncreasion": true,
-    "negativeHeightIncreasion": true
+    "startingTime": 0
 }
 ```
 
-Mobs in the `c:bosses` entity tag use the boss settings from `rpgdifficulty.json`. On multiplayer servers, setting `timeFactor` to 0 is recommended.
+Mobs in the `c:bosses` entity tag use the boss settings from `rpgdifficulty.json`. World time keeps counting while the server runs with nobody online, so on multiplayer servers consider a lower `timeFactor`, or enable distance scaling instead.
 
 ### Difficulty zones (commands)
 
-A zone gives every mob inside it a fixed difficulty factor, replacing distance, time and height scaling:
+A zone gives every mob inside it a fixed difficulty factor, replacing time and distance scaling:
 
 ```
 /rpgdifficulty zone create box ~ ~ ~ ~10 ~10 ~10 2.5

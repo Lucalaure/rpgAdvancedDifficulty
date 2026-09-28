@@ -361,6 +361,49 @@ public class ChampionsModMenu implements ModMenuApi {
 
         server.addEntry(tiersA.build());
 
+        var variants = entryBuilder.startSubCategory(Component.translatable("champions.hud.zombie_variants"))
+                .setExpanded(true);
+
+        variants.add(entryBuilder.startBooleanToggle(Component.translatable("champions.zombie_variants"), configS.zombieVariants)
+                .setDefaultValue(true)
+                .setSaveConsumer(val -> changesServer.put("zombie_variants", val))
+                .setTooltip(Component.translatable("champions.tooltip.zombie_variants"))
+                .build());
+        variants.add(entryBuilder.startIntField(Component.translatable("champions.big_zombie_chance"), configS.bigZombieChance)
+                .setDefaultValue(10).setMin(0).setMax(100)
+                .setSaveConsumer(val -> changesServer.put("big_zombie_chance", val))
+                .build());
+        variants.add(entryBuilder.startIntField(Component.translatable("champions.big_zombie_bonus_health"), configS.bigZombieBonusHealth)
+                .setDefaultValue(10).setMin(0).setMax(1000)
+                .setSaveConsumer(val -> changesServer.put("big_zombie_bonus_health", val))
+                .build());
+        variants.add(entryBuilder.startIntField(Component.translatable("champions.big_zombie_bonus_damage"), configS.bigZombieBonusDamage)
+                .setDefaultValue(2).setMin(0).setMax(100)
+                .setSaveConsumer(val -> changesServer.put("big_zombie_bonus_damage", val))
+                .build());
+        variants.add(entryBuilder.startFloatField(Component.translatable("champions.big_zombie_slowness"), configS.bigZombieSlowness)
+                .setDefaultValue(0.7f).setMin(0.1f).setMax(2.0f)
+                .setSaveConsumer(val -> changesServer.put("big_zombie_slowness", val))
+                .build());
+        variants.add(entryBuilder.startFloatField(Component.translatable("champions.big_zombie_size"), configS.bigZombieSize)
+                .setDefaultValue(1.3f).setMin(0.5f).setMax(3.0f)
+                .setSaveConsumer(val -> changesServer.put("big_zombie_size", val))
+                .build());
+        variants.add(entryBuilder.startIntField(Component.translatable("champions.speed_zombie_chance"), configS.speedZombieChance)
+                .setDefaultValue(10).setMin(0).setMax(100)
+                .setSaveConsumer(val -> changesServer.put("speed_zombie_chance", val))
+                .build());
+        variants.add(entryBuilder.startFloatField(Component.translatable("champions.speed_zombie_speed"), configS.speedZombieSpeed)
+                .setDefaultValue(1.3f).setMin(0.1f).setMax(3.0f)
+                .setSaveConsumer(val -> changesServer.put("speed_zombie_speed", val))
+                .build());
+        variants.add(entryBuilder.startIntField(Component.translatable("champions.speed_zombie_health_malus"), configS.speedZombieHealthMalus)
+                .setDefaultValue(10).setMin(0).setMax(1000)
+                .setSaveConsumer(val -> changesServer.put("speed_zombie_health_malus", val))
+                .build());
+
+        server.addEntry(variants.build());
+
 
         ConfigCategory affixes = builder.getOrCreateCategory(Component.translatable("champions.category.affixes"));
 

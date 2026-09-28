@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class ChampionsConfigServer {
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
     private static ChampionsConfigServer instance;
 
     public final int a1;
@@ -35,6 +35,16 @@ public class ChampionsConfigServer {
     public final float gs5;
 
     public final int maxBossTier;
+
+    public final boolean zombieVariants;
+    public final int bigZombieChance;
+    public final float bigZombieSlowness;
+    public final int bigZombieBonusHealth;
+    public final int bigZombieBonusDamage;
+    public final float bigZombieSize;
+    public final int speedZombieChance;
+    public final float speedZombieSpeed;
+    public final int speedZombieHealthMalus;
 
     private ChampionsConfigServer() {
         SimpleConfig config = SimpleConfig.of("Champions", "champions_common")
@@ -68,6 +78,16 @@ public class ChampionsConfigServer {
         this.gs5 = ((float) config.getOrDefault("tier5_growth_strength", 5.0));
 
         this.maxBossTier = config.getOrDefault("max_boss_tier", 0);
+
+        this.zombieVariants = config.getOrDefault("zombie_variants", true);
+        this.bigZombieChance = config.getOrDefault("big_zombie_chance", 10);
+        this.bigZombieSlowness = ((float) config.getOrDefault("big_zombie_slowness", 0.7));
+        this.bigZombieBonusHealth = config.getOrDefault("big_zombie_bonus_health", 10);
+        this.bigZombieBonusDamage = config.getOrDefault("big_zombie_bonus_damage", 2);
+        this.bigZombieSize = ((float) config.getOrDefault("big_zombie_size", 1.3));
+        this.speedZombieChance = config.getOrDefault("speed_zombie_chance", 10);
+        this.speedZombieSpeed = ((float) config.getOrDefault("speed_zombie_speed", 1.3));
+        this.speedZombieHealthMalus = config.getOrDefault("speed_zombie_health_malus", 10);
     }
 
     private String defaultConfig(String filename) {
@@ -109,6 +129,17 @@ public class ChampionsConfigServer {
                 
                 # Maximum tier for bosses (Wither, Ender Dragon)
                 max_boss_tier = 0
+
+                # Zombie variants (rolled together with champions, chance in %)
+                zombie_variants = true
+                big_zombie_chance = 10
+                big_zombie_slowness = 0.7
+                big_zombie_bonus_health = 10
+                big_zombie_bonus_damage = 2
+                big_zombie_size = 1.3
+                speed_zombie_chance = 10
+                speed_zombie_speed = 1.3
+                speed_zombie_health_malus = 10
                 """;
     }
 

@@ -14,113 +14,90 @@
   "affix.lively": "Lively",
   "affix.blinded": "Blinded",
   "affix.paralyzing": "Paralyzing",
-
   "champions.title": "Champions",
-
   "champions.category.client": "Client",
   "champions.category.server": "Server",
   "champions.category.affixes": "Affixes",
-
   "champions.hud.colors": "Colors",
   "champions.hud.y_offset": "Y Offsets",
   "champions.hud.x_offset": "X Offsets",
   "champions.hud.bar_render": "Bar render",
-
   "champions.hud.tiers": "Tiers",
   "champions.hud.tiers_w": "Weight",
   "champions.hud.tiers_gh": "Health multiplier",
   "champions.hud.tiers_gs": "Strength multiplier",
   "champions.hud.tiers_a": "Affixes count",
-
   "champions.hud.registry": "Registry",
-
-
   "champions.hex_tier_1": "Tier 1",
   "champions.hex_tier_2": "Tier 2",
   "champions.hex_tier_3": "Tier 3",
   "champions.hex_tier_4": "Tier 4",
   "champions.hex_tier_5": "Tier 5",
-
   "champions.y_offset_stars": "Stars",
   "champions.y_offset_text": "Text",
   "champions.y_offset_bar": "Bar",
   "champions.y_offset_affixes": "Affixes",
-
   "champions.x_offset_stars": "Stars",
   "champions.x_offset_text": "Text",
   "champions.x_offset_bar": "Bar",
   "champions.x_offset_affixes": "Affixes",
-
   "champions.always_render": "Always render bar",
   "champions.cache_client": "Client cache",
   "champions.cache_server": "Server cache",
-
   "champions.tooltip.color_hex": "Color in hex",
-
   "champions.tooltip.y_offset_stars": "Height of stars",
   "champions.tooltip.y_offset_text": "Height of text",
   "champions.tooltip.y_offset_bar": "Height of bar",
   "champions.tooltip.y_offset_affixes": "Height of affixes",
-
   "champions.tooltip.x_offset_stars": "Horizontal position of stars",
   "champions.tooltip.x_offset_text": "Horizontal position of text",
   "champions.tooltip.x_offset_bar": "Horizontal position of bar",
   "champions.tooltip.x_offset_affixes": "Horizontal position of affixes",
-
   "champions.tooltip.always_render": "Will bar render through walls?",
   "champions.tooltip.cache_client": "Time in milliseconds when you are looking at mob",
   "champions.tooltip.cache_server": "Time in milliseconds",
-
   "champions.tier0_weight": "Tier 0",
   "champions.tier1_weight": "Tier 1",
   "champions.tier2_weight": "Tier 2",
   "champions.tier3_weight": "Tier 3",
   "champions.tier4_weight": "Tier 4",
   "champions.tier5_weight": "Tier 5",
-
   "tier1_growth_health": "Tier 1",
   "tier2_growth_health": "Tier 2",
   "tier3_growth_health": "Tier 3",
   "tier4_growth_health": "Tier 4",
   "tier5_growth_health": "Tier 5",
-
   "tier1_growth_strength": "Tier 1",
   "tier2_growth_strength": "Tier 2",
   "tier3_growth_strength": "Tier 3",
   "tier4_growth_strength": "Tier 4",
   "tier5_growth_strength": "Tier 5",
-
   "champions.tier1_affixes_count": "Tier 1",
   "champions.tier2_affixes_count": "Tier 2",
   "champions.tier3_affixes_count": "Tier 3",
   "champions.tier4_affixes_count": "Tier 4",
   "champions.tier5_affixes_count": "Tier 5",
-
   "champions.tooltip.tier0_weight": "Weight for tier 0 (not champion)",
   "champions.tooltip.tier1_weight": "Weight for tier 1",
   "champions.tooltip.tier2_weight": "Weight for tier 2",
   "champions.tooltip.tier3_weight": "Weight for tier 3",
   "champions.tooltip.tier4_weight": "Weight for tier 4",
   "champions.tooltip.tier5_weight": "Weight for tier 5",
-
   "champions.tooltip.tier1_growth_health": "Health for tier 1",
   "champions.tooltip.tier2_growth_health": "Health for tier 2",
   "champions.tooltip.tier3_growth_health": "Health for tier 3",
   "champions.tooltip.tier4_growth_health": "Health for tier 4",
   "champions.tooltip.tier5_growth_health": "Health for tier 5",
-
   "champions.tooltip.tier1_growth_strength": "Strength for tier 1",
   "champions.tooltip.tier2_growth_strength": "Strength for tier 2",
   "champions.tooltip.tier3_growth_strength": "Strength for tier 3",
   "champions.tooltip.tier4_growth_strength": "Strength for tier 4",
   "champions.tooltip.tier5_growth_strength": "Strength for tier 5",
-
   "champions.tooltip.tier1_affixes_count": "Affixes count for tier 1",
   "champions.tooltip.tier2_affixes_count": "Affixes count for tier 2",
   "champions.tooltip.tier3_affixes_count": "Affixes count for tier 3",
   "champions.tooltip.tier4_affixes_count": "Affixes count for tier 4",
   "champions.tooltip.tier5_affixes_count": "Affixes count for tier 5",
-
   "champions.tooltip.hasty_affix": "Hasty affix",
   "champions.tooltip.arctic_affix": "Arctic affix",
   "champions.tooltip.affix.molten": "Molten affix",
@@ -135,5 +112,16 @@
   "champions.tooltip.affix.dampening": "Dampening affix",
   "champions.tooltip.affix.lively": "Lively affix",
   "champions.tooltip.affix.blinded": "Blinded affix",
-  "champions.tooltip.affix.paralyzing": "Paralyzing affix"
+  "champions.tooltip.affix.paralyzing": "Paralyzing affix",
+  "champions.hud.zombie_variants": "Zombie variants",
+  "champions.zombie_variants": "Enable zombie variants",
+  "champions.tooltip.zombie_variants": "Zombies can spawn as big (tanky, slow) or speed (fast, fragile) variants. Chances rise with difficulty like champions.",
+  "champions.big_zombie_chance": "Big zombie chance (%)",
+  "champions.big_zombie_bonus_health": "Big zombie bonus health",
+  "champions.big_zombie_bonus_damage": "Big zombie bonus damage",
+  "champions.big_zombie_slowness": "Big zombie speed multiplier",
+  "champions.big_zombie_size": "Big zombie size",
+  "champions.speed_zombie_chance": "Speed zombie chance (%)",
+  "champions.speed_zombie_speed": "Speed zombie speed multiplier",
+  "champions.speed_zombie_health_malus": "Speed zombie health penalty"
 }

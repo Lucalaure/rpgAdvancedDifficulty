@@ -12,27 +12,22 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 @Config.Gui.Background("minecraft:textures/block/stone.png")
 public class RpgDifficultyConfig implements ConfigData {
 
+    @Comment("Minutes of world time (ticks the world has been running) per increase")
+    public int increasingTime = 60;
+    @Comment("0.1 = 10% stronger per increasingTime")
+    public double timeFactor = 0.1D;
+
+    @Comment("Also make mobs stronger the further they spawn from world spawn")
+    public boolean enableDistanceScaling = false;
     @Comment("in Blocks")
     public int increasingDistance = 300;
     @Comment("0.1 = 10%")
     public double distanceFactor = 0.1D;
 
-    @Comment("in minutes")
-    public int increasingTime = 0;
-    @Comment("0.05 = 5%")
-    public double timeFactor = 0.05D;
-
-    @Comment("in Blocks")
-    public int heightDistance = 30;
-    @Comment("0.1 = 10%")
-    public double heightFactor = 0.1D;
-
     @Comment("2.0 = double")
     public double maxFactorHealth = 3.0D;
     public double maxFactorDamage = 3.0D;
     public double maxFactorProtection = 1.5D;
-    @Comment("Applies only to special zombie")
-    public double maxFactorSpeed = 2.0D;
 
     public boolean allowRandomValues = false;
     @Comment("in %")
@@ -51,19 +46,12 @@ public class RpgDifficultyConfig implements ConfigData {
     public int startingDistance = 0;
     @Comment("in minutes")
     public int startingTime = 0;
-    @Comment("in blocks, sea level is 62")
-    public int startingHeight = 62;
-
-    public boolean positiveHeightIncreasion = true;
-    public boolean negativeHeightIncreasion = true;
 
     public boolean affectBosses = true;
     @Comment("Applies only for dimensions other than Overworld")
     public boolean excludeDistanceInOtherDimension = true;
     @Comment("Applies only for dimensions other than Overworld")
-    public boolean excludeTimeInOtherDimension = true;
-    @Comment("Applies only for dimensions other than Overworld")
-    public boolean excludeHeightInOtherDimension = true;
+    public boolean excludeTimeInOtherDimension = false;
     @Comment("Based on health multiplier")
     public boolean dropMoreLoot = false;
     @Comment("0.02 = +2% chance per lvl")
@@ -78,28 +66,6 @@ public class RpgDifficultyConfig implements ConfigData {
     @Comment("Excluded Entity List Bsp: minecraft:villager")
     public ArrayList<String> excludedEntity = new ArrayList<String>(List.of("the_bumblezone:cosmic_crystal_entity"));
 
-    @ConfigEntry.Category("monster_setting")
-    public boolean allowSpecialZombie = true;
-    @ConfigEntry.Category("monster_setting")
-    @Comment("in %")
-    @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
-    public int bigZombieChance = 10;
-    @ConfigEntry.Category("monster_setting")
-    public float bigZombieSlownessFactor = 0.7F;
-    @ConfigEntry.Category("monster_setting")
-    public int bigZombieBonusLifePoints = 10;
-    @ConfigEntry.Category("monster_setting")
-    public int bigZombieBonusDamage = 2;
-    @ConfigEntry.Category("monster_setting")
-    public float bigZombieSize = 1.3F;
-    @ConfigEntry.Category("monster_setting")
-    @Comment("in %")
-    @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
-    public int speedZombieChance = 10;
-    @ConfigEntry.Category("monster_setting")
-    public double speedZombieSpeedFactor = 1.3D;
-    @ConfigEntry.Category("monster_setting")
-    public int speedZombieMalusLifePoints = 10;
     @ConfigEntry.Category("monster_setting")
     @Comment("Each player increases boss attributes")
     public boolean dynamicBossModification = true;
@@ -128,7 +94,7 @@ public class RpgDifficultyConfig implements ConfigData {
     @Comment("Allow mobs to spawn as Champions (tiers, affixes and loot are set in config/Champions)")
     public boolean enableChampions = true;
     @ConfigEntry.Category("champions")
-    @Comment("Champion spawn chance grows with the distance/time/height difficulty factor")
+    @Comment("Champion and zombie variant chances grow with the difficulty factor")
     public boolean championsScaleWithDifficulty = true;
     @ConfigEntry.Category("champions")
     @Comment("Tier weight multiplier = 1 + (difficultyFactor - 1) * this * tier")
