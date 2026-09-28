@@ -1,5 +1,6 @@
 package crystal.champions;
 
+import crystal.champions.bestiary.Bestiary;
 import crystal.champions.config.ChampionsConfigAffixes;
 import crystal.champions.config.ChampionsConfigServer;
 import crystal.champions.effects.CustomStatusEffects;
@@ -29,6 +30,7 @@ public class Champions implements ModInitializer {
         ChampionRank.get();
 
         Payload.register();
+        Bestiary.register();
         affixesRegister();
         CustomStatusEffects.registerEffects();
 

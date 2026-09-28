@@ -18,6 +18,15 @@ repositories {
 fabricApi {
 	// Regenerates the champion loot tables into src/main/generated (./gradlew runDatagen)
 	configureDataGeneration()
+
+	// Client tests in src/gametest (./gradlew runClientGameTest), screenshots end up in build/run/clientGameTest
+	configureTests {
+		createSourceSet = true
+		modId = "rpgadvanceddifficulty-gametest"
+		enableGameTests = false
+		enableClientGameTests = true
+		eula = false
+	}
 }
 
 dependencies {

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "rpgadvanceddifficulty-gametest",
+  "version": "1.0.0",
+  "name": "RPG Advanced Difficulty client tests",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-client-gametest": [
+      "net.rpgadvanceddifficulty.gametest.BestiaryClientGameTest"
+    ]
+  },
+  "depends": {
+    "rpgadvanceddifficulty": "*"
+  }
+}

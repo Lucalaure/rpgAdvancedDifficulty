@@ -23,6 +23,11 @@ public abstract class ZombieVariantAffix extends Affix {
     }
 
     @Override
+    public String getMobsKey() {
+        return "champions.bestiary.mobs.zombies";
+    }
+
+    @Override
     public @Nullable String getExclusiveGroup() {
         return "zombie_build";
     }

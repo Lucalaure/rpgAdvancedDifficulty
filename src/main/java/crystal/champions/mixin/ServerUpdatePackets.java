@@ -2,6 +2,7 @@ package crystal.champions.mixin;
 
 import crystal.champions.Champions;
 import crystal.champions.IChampions;
+import crystal.champions.bestiary.Bestiary;
 import crystal.champions.util.net.ChampionsNetworking;
 import crystal.champions.util.net.Payload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -60,6 +61,7 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
                 if (distance <= 1600) {
                     if (distance <= 225.0) {
                         ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
+                        Bestiary.discover(player, champions$getAffixesString());
                         trackedPlayerIds.add(uuid);
                         currentIds.add(uuid);
                     }
@@ -67,6 +69,7 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
                 }
             } else {
                 ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
+                Bestiary.discover(player, champions$getAffixesString());
                 ChampionsNetworking.sendUpdateC(player, mob, champions$getChampionTier(), champions$getAffixesString());
                 trackedPlayerIds.add(uuid);
                 currentIds.add(uuid);

@@ -13,6 +13,9 @@ public class Affix {
     /** Which mobs can roll this affix. Override to make a mob-specific variant (e.g. zombies only). */
     public boolean canApplyTo(Mob mob) { return true; }
 
+    /** Translation key describing which mobs can have this affix (shown in the bestiary). */
+    public String getMobsKey() { return "champions.bestiary.mobs.any"; }
+
     /** Affixes sharing a group can't roll together on one champion (e.g. big vs speedy). */
     public @Nullable String getExclusiveGroup() { return null; }
 

@@ -68,6 +68,16 @@ These only roll on the listed mobs. Affixes in the same *group* can't roll toget
 
 Their stats are set in `champions_affixes.properties`, and both can be switched off there or in the Champions config screen.
 
+## Bestiary
+
+Players learn what each affix does through the **bestiary**, a book opened from the button to the right of the recipe book in the survival inventory.
+
+- **Discovery:** when a player gets within 15 blocks of a champion (the range where its health bar and affixes appear), each of its affixes is added to that player's bestiary, with a "Bestiary updated" message above the hotbar.
+- **Saved per player:** discoveries are stored on the player (per world), kept on death, and synced to their client.
+- **Pages:** an intro with discovery progress, the champion tiers (read from the current config), then one page per affix with its name, which mobs can have it, and what it does. Undiscovered affixes show as "???".
+
+Affix descriptions are the `affix.<name>.desc` keys in `assets/champions/lang/en_us.json`.
+
 ### Adding a mob-specific affix
 
 1. Create a class in `src/main/java/crystal/champions/affix/` that extends `Affix` (or `ZombieVariantAffix` for zombies).
@@ -75,7 +85,7 @@ Their stats are set in `champions_affixes.properties`, and both can be switched 
 3. Put permanent stat changes in `onApply(Mob mob)`, which runs once when the champion is created. Put ongoing behavior in `onTick`, `onAttack` or `onHurt`.
 4. Optionally return a name from `getExclusiveGroup()` so opposing variants can't roll together.
 5. Add it to `FACTORY_LIST` in `AffixRegistry`, add a matching `rN` toggle (the next number) and default to `ChampionsConfigAffixes`, and bump that config's `VERSION`.
-6. Add `"affix.<name>"` to `assets/champions/lang/en_us.json`. That is the name shown above the champion's health bar.
+6. Add `"affix.<name>"` (the name shown above the champion's health bar) and `"affix.<name>.desc"` (its bestiary description) to `assets/champions/lang/en_us.json`. Override `getMobsKey()` to show which mobs can have it in the bestiary.
 
 ## Changes from the original mods
 
@@ -138,7 +148,9 @@ Requires JDK 25 or newer.
 ./gradlew build
 ```
 
-The jar is written to `build/libs/`. At runtime it needs Fabric API and Cloth Config; Mod Menu is optional. The mod declares `provides: ["rpgdifficulty", "champions"]`, so Fabric refuses to load it alongside the original mods.
+The jar is written to `build/libs/`.
+
+`./gradlew runClientGameTest` runs the automated client test in `src/gametest`. It creates a test world, spawns a champion, and saves screenshots of the champion HUD, the inventory bestiary button and the bestiary pages to `build/run/clientGameTest/screenshots/`. At runtime it needs Fabric API and Cloth Config; Mod Menu is optional. The mod declares `provides: ["rpgdifficulty", "champions"]`, so Fabric refuses to load it alongside the original mods.
 
 ## License
 
