@@ -1,0 +1,45 @@
+package net.rpgdifficulty.mixin;
+
+import net.minecraft.server.MinecraftServer;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.rpgdifficulty.RpgDifficultyMain;
+import net.rpgdifficulty.api.MobStrengthener;
+
+@Mixin(ServerWorld.class)
+public abstract class ServerWorldMixin {
+
+    @Shadow
+    @Mutable
+    @Final
+    private MinecraftServer server;
+
+    @Inject(method = "spawnEntity", at = @At("HEAD"))
+    private void spawnEntityMixin(Entity entity, CallbackInfoReturnable<Boolean> info) {
+        if (entity instanceof MobEntity mobEntity) {
+            if (server.isOnThread()) {
+                MobStrengthener.changeAttributes(mobEntity, (ServerWorld) (Object) this, null, entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES));
+            } else {
+                server.execute(() -> MobStrengthener.changeAttributes(mobEntity, (ServerWorld) (Object) this, null, entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES)));
+            }
+        } else if (entity instanceof PersistentProjectileEntity persistentProjectileEntity) {
+            if (persistentProjectileEntity.getOwner() instanceof MobEntity mobEntity) {
+                if (server.isOnThread()) {
+                    MobStrengthener.changeAttributes(mobEntity, (ServerWorld) (Object) this, persistentProjectileEntity, false);
+                } else {
+                    server.execute(() -> MobStrengthener.changeAttributes(mobEntity, (ServerWorld) (Object) this, persistentProjectileEntity, false));
+                }
+            }
+        }
+    }
+}

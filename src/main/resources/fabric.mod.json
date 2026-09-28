@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "rpgadvanceddifficulty",
+  "version": "${version}",
+  "name": "RPG Advanced Difficulty",
+  "description": "Mobs grow stronger with time, distance and height - and the further you go, the more likely they are to spawn as Champions: elite mobs with tiers, boosted stats and deadly affixes.\nCombines RpgDifficulty (Globox_Z) and Champions (Crystal).",
+  "authors": [
+    "Globox_Z (RpgDifficulty)",
+    "Crystal (Champions)"
+  ],
+  "license": "GPL-3.0-only",
+  "contact": {
+    "sources": "https://github.com/Lucalaure/rpgAdvancedDifficulty",
+    "issues": "https://github.com/Lucalaure/rpgAdvancedDifficulty/issues"
+  },
+  "icon": "assets/champions/icon.png",
+  "environment": "*",
+  "provides": [
+    "rpgdifficulty",
+    "champions"
+  ],
+  "entrypoints": {
+    "main": [
+      "net.rpgdifficulty.RpgDifficultyMain",
+      "crystal.champions.Champions",
+      "crystal.champions.data.ChampionsLootTableRegister"
+    ],
+    "client": [
+      "net.rpgdifficulty.RpgDifficultyClient",
+      "crystal.champions.client.ChampionsClient"
+    ],
+    "modmenu": [
+      "net.rpgadvanceddifficulty.client.CombinedModMenu"
+    ],
+    "fabric-datagen": [
+      "crystal.champions.data.DataGenerator"
+    ]
+  },
+  "mixins": [
+    "rpgdifficulty.mixins.json",
+    "champions.mixins.json",
+    "champions.mixins.affixes.json",
+    {
+      "config": "champions.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=21",
+    "fabric-api": "*",
+    "cloth-config2": ">=${cloth_config_version}"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}

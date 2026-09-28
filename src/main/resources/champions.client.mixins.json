@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "crystal.champions.client.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "BossBarClientMixin",
+    "ClientWorldAccessor",
+    "ShulkerBulletRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "ParticlesMixin"
+  ]
+}

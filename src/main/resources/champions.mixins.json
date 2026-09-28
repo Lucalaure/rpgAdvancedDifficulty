@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "crystal.champions.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "CreeperEntityMixin",
+    "EntityDataMixin",
+    "ServerUpdatePackets",
+    "ShulkerBulletMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}
