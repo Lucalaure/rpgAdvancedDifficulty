@@ -3,8 +3,6 @@ package net.rpgadvanceddifficulty;
 import crystal.champions.IChampions;
 import crystal.champions.config.ChampionsConfigServer;
 import crystal.champions.util.ChampionRank;
-import net.minecraft.core.Holder;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.animal.golem.IronGolem;
@@ -18,13 +16,8 @@ import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.entity.monster.cubemob.Slime;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.spider.CaveSpider;
-import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.rpgdifficulty.RpgDifficultyMain;
-import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.config.RpgDifficultyConfig;
 
 import static crystal.champions.util.PrepareChampions.prepareAffixes;
@@ -32,8 +25,8 @@ import static crystal.champions.util.PrepareChampions.prepareAttributes;
 
 /**
  * Bridges the two systems: once RpgDifficulty has scaled a freshly spawned mob,
- * this rolls its zombie variant and whether it becomes a Champion. Both rolls use
- * the same difficulty factor, so they get more common the harder the world gets.
+ * this rolls whether it becomes a Champion. The roll uses the same difficulty
+ * factor, so champions get more common (and higher tier) the harder the world gets.
  */
 public final class ChampionSpawner {
     private ChampionSpawner() {
@@ -56,51 +49,10 @@ public final class ChampionSpawner {
         if (rank.tier() > 0) {
             champion.champions$setChampionTier(rank.tier());
             prepareAttributes(mob, rank);
-            champion.champions$setAffixesString(prepareAffixes(rank));
-        }
-    }
-
-    /**
-     * Big / speed zombie variants. Applied on top of the difficulty-scaled stats and
-     * before the champion roll, so a variant can still become a champion.
-     */
-    public static void tryApplyVariant(Mob mob, double difficultyFactor) {
-        ChampionsConfigServer config = ChampionsConfigServer.get();
-        if (!config.zombieVariants || mob.isBaby() || !(mob instanceof Zombie)) return;
-
-        ZombieEntityAccess zombie = (ZombieEntityAccess) mob;
-        if (zombie.rpgdifficulty$isBig()) return;
-
-        double chanceMultiplier = RpgDifficultyMain.CONFIG.championsScaleWithDifficulty
-                ? Math.min(RpgDifficultyMain.CONFIG.maxChampionChanceMultiplier, 1.0 + Math.max(0.0, difficultyFactor - 1.0) * RpgDifficultyMain.CONFIG.championChanceScaling)
-                : 1.0;
-        RandomSource random = mob.getRandom();
-
-        if (random.nextFloat() < config.speedZombieChance / 100.0 * chanceMultiplier) {
-            addBase(mob, Attributes.MAX_HEALTH, -config.speedZombieHealthMalus);
-            multiplyBase(mob, Attributes.MOVEMENT_SPEED, config.speedZombieSpeed);
-        } else if (random.nextFloat() < config.bigZombieChance / 100.0 * chanceMultiplier) {
-            addBase(mob, Attributes.MAX_HEALTH, config.bigZombieBonusHealth);
-            addBase(mob, Attributes.ATTACK_DAMAGE, config.bigZombieBonusDamage);
-            multiplyBase(mob, Attributes.MOVEMENT_SPEED, config.bigZombieSlowness);
-            zombie.setBig();
-        } else {
-            return;
-        }
-        mob.setHealth(mob.getMaxHealth());
-    }
-
-    private static void addBase(Mob mob, Holder<Attribute> attribute, double amount) {
-        AttributeInstance instance = mob.getAttribute(attribute);
-        if (instance != null) {
-            instance.setBaseValue(Math.max(1.0, instance.getBaseValue() + amount));
-        }
-    }
-
-    private static void multiplyBase(Mob mob, Holder<Attribute> attribute, double factor) {
-        AttributeInstance instance = mob.getAttribute(attribute);
-        if (instance != null) {
-            instance.setBaseValue(instance.getBaseValue() * factor);
+            champion.champions$setAffixesString(prepareAffixes(rank, mob));
+            // One-time affix effects, e.g. the zombie Big/Speedy builds
+            champion.champions$getActiveAffixes().forEach(affix -> affix.onApply(mob));
+            mob.setHealth(mob.getMaxHealth());
         }
     }
 

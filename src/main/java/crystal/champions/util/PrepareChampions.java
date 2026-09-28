@@ -1,5 +1,6 @@
 package crystal.champions.util;
 
+import crystal.champions.affix.Affix;
 import crystal.champions.affix.AffixRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Mob;
@@ -8,7 +9,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PrepareChampions {
     private PrepareChampions() {
@@ -26,12 +29,19 @@ public class PrepareChampions {
         }
     }
 
-    public static String prepareAffixes(ChampionRank rank) {
-        List<String> pool = new ArrayList<>(AffixRegistry.ALL_AFFIXES.keySet());
+    public static String prepareAffixes(ChampionRank rank, Mob mob) {
+        // Only affixes this mob can have (mob-specific variants are filtered out for other mobs)
+        List<Affix> pool = new ArrayList<>(AffixRegistry.ALL_AFFIXES.values().stream().filter(affix -> affix.canApplyTo(mob)).toList());
         Collections.shuffle(pool);
 
-        int count = Math.min(rank.affixes(), pool.size());
-        List<String> selected = pool.subList(0, count);
+        List<String> selected = new ArrayList<>();
+        Set<String> usedGroups = new HashSet<>();
+        for (Affix affix : pool) {
+            if (selected.size() >= rank.affixes()) break;
+            String group = affix.getExclusiveGroup();
+            if (group != null && !usedGroups.add(group)) continue;
+            selected.add(affix.getName());
+        }
 
         return String.join(",", selected);
     }

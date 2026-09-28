@@ -33,7 +33,10 @@ public class AffixRegistry {
             DampingAffix::new,
             LivelyAffix::new,
             BlindedAffix::new,
-            ParalyzingAffix::new
+            ParalyzingAffix::new,
+            // Mob-specific variants
+            BigAffix::new,
+            SpeedyAffix::new
             );
 
     public static void affixesRegister() {

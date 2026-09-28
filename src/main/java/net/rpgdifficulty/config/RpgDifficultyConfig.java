@@ -94,7 +94,7 @@ public class RpgDifficultyConfig implements ConfigData {
     @Comment("Allow mobs to spawn as Champions (tiers, affixes and loot are set in config/Champions)")
     public boolean enableChampions = true;
     @ConfigEntry.Category("champions")
-    @Comment("Champion and zombie variant chances grow with the difficulty factor")
+    @Comment("Champion spawn chance grows with the difficulty factor")
     public boolean championsScaleWithDifficulty = true;
     @ConfigEntry.Category("champions")
     @Comment("Tier weight multiplier = 1 + (difficultyFactor - 1) * this * tier")

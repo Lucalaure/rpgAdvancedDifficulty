@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class ChampionsConfigAffixes {
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
     private static ChampionsConfigAffixes instance;
 
     public final int cooldownBeforeBulletArtic;
@@ -38,6 +38,12 @@ public class ChampionsConfigAffixes {
     public final int paralyzeDuration;
     public final int magneticCooldown;
     public final int magneticPullTime;
+    public final int bigZombieBonusHealth;
+    public final int bigZombieBonusDamage;
+    public final float bigZombieSlowness;
+    public final float bigZombieSize;
+    public final float speedyZombieSpeed;
+    public final int speedyZombieHealthMalus;
 
     public final boolean r1;
     public final boolean r2;
@@ -54,6 +60,8 @@ public class ChampionsConfigAffixes {
     public final boolean r13;
     public final boolean r14;
     public final boolean r15;
+    public final boolean r16;
+    public final boolean r17;
 
     // Использую SimpleConfig
     // https://github.com/magistermaks/fabric-simplelibs/blob/master/simple-config/SimpleConfig.java
@@ -118,6 +126,15 @@ public class ChampionsConfigAffixes {
         r13 = config.getOrDefault("lively_affix", true);
         r14 = config.getOrDefault("blinded_affix", true);
         r15 = config.getOrDefault("paralyzing_affix", true);
+        r16 = config.getOrDefault("big_affix", true);
+        r17 = config.getOrDefault("speedy_affix", true);
+
+        bigZombieBonusHealth = config.getOrDefault("big_zombie_bonus_health", 10);
+        bigZombieBonusDamage = config.getOrDefault("big_zombie_bonus_damage", 2);
+        bigZombieSlowness = (float) config.getOrDefault("big_zombie_slowness", 0.7);
+        bigZombieSize = (float) config.getOrDefault("big_zombie_size", 1.3);
+        speedyZombieSpeed = (float) config.getOrDefault("speedy_zombie_speed", 1.3);
+        speedyZombieHealthMalus = config.getOrDefault("speedy_zombie_health_malus", 10);
     }
 
     private String defaultConfig(String filename) {
@@ -141,6 +158,9 @@ public class ChampionsConfigAffixes {
                 lively_affix = true
                 blinded_affix = true
                 paralyzing_affix = true
+                # Zombie-only affixes
+                big_affix = true
+                speedy_affix = true
                 
                 # Arctic
                 # Cooldown between arctic bullets (ticks)
@@ -218,6 +238,19 @@ public class ChampionsConfigAffixes {
                 paralyzing_chance = 0.1
                 # Paralyze effect duration (ticks)
                 paralyzing_duration = 60
+
+                # Big (zombies only)
+                big_zombie_bonus_health = 10
+                big_zombie_bonus_damage = 2
+                # Movement speed multiplier
+                big_zombie_slowness = 0.7
+                # Model and hitbox scale
+                big_zombie_size = 1.3
+
+                # Speedy (zombies only)
+                # Movement speed multiplier
+                speedy_zombie_speed = 1.3
+                speedy_zombie_health_malus = 10
                 """;
     }
 

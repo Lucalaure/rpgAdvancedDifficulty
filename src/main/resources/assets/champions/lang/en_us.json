@@ -113,15 +113,15 @@
   "champions.tooltip.affix.lively": "Lively affix",
   "champions.tooltip.affix.blinded": "Blinded affix",
   "champions.tooltip.affix.paralyzing": "Paralyzing affix",
-  "champions.hud.zombie_variants": "Zombie variants",
-  "champions.zombie_variants": "Enable zombie variants",
-  "champions.tooltip.zombie_variants": "Zombies can spawn as big (tanky, slow) or speed (fast, fragile) variants. Chances rise with difficulty like champions.",
-  "champions.big_zombie_chance": "Big zombie chance (%)",
+  "champions.hud.zombie_variants": "Zombie variant affixes",
   "champions.big_zombie_bonus_health": "Big zombie bonus health",
   "champions.big_zombie_bonus_damage": "Big zombie bonus damage",
   "champions.big_zombie_slowness": "Big zombie speed multiplier",
   "champions.big_zombie_size": "Big zombie size",
-  "champions.speed_zombie_chance": "Speed zombie chance (%)",
-  "champions.speed_zombie_speed": "Speed zombie speed multiplier",
-  "champions.speed_zombie_health_malus": "Speed zombie health penalty"
+  "affix.big": "Big",
+  "affix.speedy": "Speedy",
+  "champions.tooltip.affix.big": "Big affix (zombies only): bigger, more health and damage, slower",
+  "champions.tooltip.affix.speedy": "Speedy affix (zombies only): much faster, less health",
+  "champions.speedy_zombie_speed": "Speedy zombie speed multiplier",
+  "champions.speedy_zombie_health_malus": "Speedy zombie health penalty"
 }

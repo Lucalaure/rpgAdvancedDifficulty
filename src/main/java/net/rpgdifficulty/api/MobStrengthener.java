@@ -230,8 +230,7 @@ public class MobStrengthener {
                     setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
                     setStrengthened(mobEntity);
 
-                    // Variant and champion rolls on top of the scaled stats, more likely the harder it gets
-                    ChampionSpawner.tryApplyVariant(mobEntity, mobHealthFactor);
+                    // Champion roll on top of the scaled stats, more likely the harder it gets
                     ChampionSpawner.tryMakeChampion(mobEntity, mobHealthFactor);
                 }
         }
