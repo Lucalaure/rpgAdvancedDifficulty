@@ -1,9 +1,9 @@
 package crystal.champions.affix;
 
 import crystal.champions.config.ChampionsConfigAffixes;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Random;
 
@@ -19,7 +19,7 @@ public class BlindedAffix extends Affix {
     @Override
     public void onHurt(LivingEntity champion, LivingEntity target) {
         if (rnd.nextFloat() < config.blindChance) {
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, config.blindDuration, 0, false, true, true));
+            target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, config.blindDuration, 0, false, true, true));
         }
     }
 }

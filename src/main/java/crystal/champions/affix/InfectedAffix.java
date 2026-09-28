@@ -1,12 +1,12 @@
 package crystal.champions.affix;
 
 import crystal.champions.config.ChampionsConfigAffixes;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.mob.SilverfishEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Silverfish;
 
 import java.util.List;
 
@@ -25,25 +25,25 @@ public class InfectedAffix extends Affix {
 
     @Override
     public void onTick(LivingEntity entity) {
-        if (entity.age % config.timeBeforeInfected != 0) return;
+        if (entity.tickCount % config.timeBeforeInfected != 0) return;
         
-        ServerWorld world = (ServerWorld) entity.getWorld();
+        ServerLevel world = (ServerLevel) entity.level();
 
-        List<SilverfishEntity> nearby = world.getEntitiesByClass(SilverfishEntity.class, entity.getBoundingBox().expand(40.0), e -> true);
+        List<Silverfish> nearby = world.getEntitiesOfClass(Silverfish.class, entity.getBoundingBox().inflate(40.0), e -> true);
         if (nearby.size() > config.maxSilverFishCount) return;
 
         final int count = (int) (entity.getHealth() * config.infectedFactorHealth + config.infectedSilverfish);
         final int maxCount = Math.min(count, config.maxSilverFishCount);
 
         for (int i = 0; i < maxCount; i++) {
-            SilverfishEntity silverfish = EntityType.SILVERFISH.create(world);
+            Silverfish silverfish = EntityTypes.SILVERFISH.create(world, EntitySpawnReason.EVENT);
             if (silverfish != null) {
-                BlockPos pos = entity.getBlockPos();
+                BlockPos pos = entity.blockPosition();
 
-                silverfish.refreshPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), entity.getRandom().nextFloat() * 360.0F, 0.0F);
-                silverfish.initialize(world, world.getLocalDifficulty(pos), SpawnReason.EVENT, null);
+                silverfish.snapTo(entity.getX(), entity.getY(), entity.getZ(), entity.getRandom().nextFloat() * 360.0F, 0.0F);
+                silverfish.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), EntitySpawnReason.EVENT, null);
 
-                world.spawnEntity(silverfish);
+                world.addFreshEntity(silverfish);
             }
         }
     }

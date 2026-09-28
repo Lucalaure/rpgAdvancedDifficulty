@@ -1,7 +1,6 @@
 package crystal.champions.client.render;
 
 import crystal.champions.config.ChampionsConfigClient;
-import net.minecraft.client.gui.DrawContext;
 
 public class ChampionsColor {
 
@@ -12,15 +11,13 @@ public class ChampionsColor {
      * Это использую для того, чтобы потом через кфг с hex цвета менять в числовое
      * Чуть вайб кодинга было тут
      */
-    public static void applyColor(DrawContext context, int hex) {
-        final float r = (hex >> 16 & 255) / 255.0F;
-        final float g = (hex >> 8 & 255) / 255.0F;
-        final float b = (hex & 255) / 255.0F;
-        context.setShaderColor(r, g, b, 1.0F);
+    public static int applyColor(int hex) {
+        // 26.x: no more setShaderColor, the tint is passed as ARGB into blit()/text()
+        return 0xFF000000 | (hex & 0xFFFFFF);
     }
 
-    public static void resetColor(DrawContext context) {
-        context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    public static int resetColor() {
+        return 0xFFFFFFFF;
     }
 
     public static int parseHex(String hex) {

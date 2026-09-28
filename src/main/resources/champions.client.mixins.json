@@ -5,12 +5,10 @@
   "client": [
     "BossBarClientMixin",
     "ClientWorldAccessor",
+    "ParticlesMixin",
     "ShulkerBulletRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "ParticlesMixin"
-  ]
+  }
 }

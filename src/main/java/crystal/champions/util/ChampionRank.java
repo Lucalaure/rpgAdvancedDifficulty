@@ -1,7 +1,7 @@
 package crystal.champions.util;
 
 import crystal.champions.config.ChampionsConfigServer;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public record ChampionRank(int tier, int affixes, int weight, float growth_h, fl
         }
     }
 
-    public static ChampionRank getRandomRank(Random random) {
+    public static ChampionRank getRandomRank(RandomSource random) {
         if (TOTAL_WEIGHT <= 0) return RANKS.getFirst();
 
         int roll = random.nextInt(TOTAL_WEIGHT);
@@ -44,7 +44,7 @@ public record ChampionRank(int tier, int affixes, int weight, float growth_h, fl
      * Each tier's weight is multiplied by min(maxMultiplier, 1 + progress * scaling * tier),
      * so higher tiers gain the most. Tiers above maxTier are never rolled.
      */
-    public static ChampionRank getRandomRank(Random random, double progress, double scaling, double maxMultiplier, int maxTier) {
+    public static ChampionRank getRandomRank(RandomSource random, double progress, double scaling, double maxMultiplier, int maxTier) {
         double[] weights = new double[RANKS.size()];
         double total = 0;
         for (int i = 0; i < RANKS.size(); i++) {

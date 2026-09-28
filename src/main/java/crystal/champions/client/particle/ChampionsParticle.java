@@ -1,46 +1,45 @@
 package crystal.champions.client.particle;
 
-import net.minecraft.client.particle.ParticleTextureSheet;
-import net.minecraft.client.particle.SpriteBillboardParticle;
-import net.minecraft.client.particle.SpriteProvider;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.particle.SpriteSet;
 
 /**
  * Custom particles for champions
  */
-public class ChampionsParticle extends SpriteBillboardParticle {
-    private final SpriteProvider spriteProvider;
+public class ChampionsParticle extends SingleQuadParticle {
+    private final SpriteSet spriteProvider;
 
-    public ChampionsParticle(ClientWorld world, double x, double y, double z,
+    public ChampionsParticle(ClientLevel world, double x, double y, double z,
                              double velocityX, double velocityY, double velocityZ,
-                             SpriteProvider spriteProvider, int hexColor) {
-        super(world, x, y, z, velocityX, velocityY, velocityZ);
+                             SpriteSet spriteProvider, int hexColor) {
+        super(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider.first());
 
         this.spriteProvider = spriteProvider;
-        this.maxAge = 40 + this.random.nextInt(10);
+        this.lifetime = 40 + this.random.nextInt(10);
 
-        this.velocityY = velocityY * 1.1D;
+        this.yd = velocityY * 1.1D;
 
-        this.red = (hexColor >> 16 & 255) / 255.0F;
-        this.green = (hexColor >> 8 & 255) / 255.0F;
-        this.blue = (hexColor & 255) / 255.0F;
+        this.rCol = (hexColor >> 16 & 255) / 255.0F;
+        this.gCol = (hexColor >> 8 & 255) / 255.0F;
+        this.bCol = (hexColor & 255) / 255.0F;
 
         try {
-            this.setSpriteForAge(spriteProvider);
+            this.setSpriteFromAge(spriteProvider);
         } catch (Exception e) {
-            this.markDead();
+            this.remove();
         }
     }
 
     @Override
     public void tick() {
         super.tick();
-        this.setSpriteForAge(this.spriteProvider);
-        this.alpha = 1.0f - ((float) this.age / (float) this.maxAge);
+        this.setSpriteFromAge(this.spriteProvider);
+        this.alpha = 1.0f - ((float) this.age / (float) this.lifetime);
     }
 
     @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.TRANSLUCENT;
     }
 }

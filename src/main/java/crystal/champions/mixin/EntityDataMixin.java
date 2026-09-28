@@ -3,14 +3,15 @@ package crystal.champions.mixin;
 import crystal.champions.IChampions;
 import crystal.champions.affix.Affix;
 import crystal.champions.affix.AffixRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.World;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,7 +29,7 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
      * Записываем сюда все данные для их использования в чемпионах
      * По названию и так понятно я думаю
      */
-    protected EntityDataMixin(EntityType<?> type, World world) {
+    protected EntityDataMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
@@ -89,13 +90,13 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
     @Inject(method = "tick", at = @At("TAIL"))
     private void onChampionTick(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        if (!entity.getWorld().isClient) {
+        if (!entity.level().isClientSide()) {
             this.champions$getActiveAffixes().forEach(affix -> {
                 affix.onTick(entity);
-                if (entity instanceof MobEntity mob) affix.onAttack(entity, mob);
-                if (entity.age % 40 == 0) {
-                    entity.addStatusEffect(new StatusEffectInstance(
-                            StatusEffects.SPEED, 40, tier / 3, false, false, false));
+                if (entity instanceof Mob mob) affix.onAttack(entity, mob);
+                if (entity.tickCount % 40 == 0) {
+                    entity.addEffect(new MobEffectInstance(
+                            MobEffects.SPEED, 40, tier / 3, false, false, false));
                 }
             });
         }
@@ -118,8 +119,8 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
     @Unique private static final String KEY_ADAPTATION_COUNT = "adaptationCount";
 
 
-    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void writeChampionData(NbtCompound nbt, CallbackInfo ci) {
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void writeChampionData(ValueOutput nbt, CallbackInfo ci) {
         nbt.putInt(KEY_TIER, this.champions$getChampionTier());
         nbt.putString(KEY_AFFIXES, this.champions$getAffixesString());
 
@@ -127,19 +128,11 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
         nbt.putInt(KEY_ADAPTATION_COUNT, this.champions$getAdaptation());
     }
 
-    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readChampionData(NbtCompound nbt, CallbackInfo ci) {
-        if (nbt.contains(KEY_TIER)) {
-            this.champions$setChampionTier(nbt.getInt(KEY_TIER));
-        }
-        if (nbt.contains(KEY_AFFIXES)) {
-            this.champions$setAffixesString(nbt.getString(KEY_AFFIXES));
-        }
-        if (nbt.contains(KEY_ADAPTATION_TYPE)) {
-            this.champions$setAdaptationType(nbt.getString(KEY_ADAPTATION_TYPE));
-        }
-        if (nbt.contains(KEY_ADAPTATION_COUNT)) {
-            this.champions$setAdaptation(nbt.getInt(KEY_ADAPTATION_COUNT));
-        }
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void readChampionData(ValueInput nbt, CallbackInfo ci) {
+        nbt.getInt(KEY_TIER).ifPresent(this::champions$setChampionTier);
+        nbt.getString(KEY_AFFIXES).ifPresent(this::champions$setAffixesString);
+        nbt.getString(KEY_ADAPTATION_TYPE).ifPresent(this::champions$setAdaptationType);
+        nbt.getInt(KEY_ADAPTATION_COUNT).ifPresent(this::champions$setAdaptation);
     }
 }

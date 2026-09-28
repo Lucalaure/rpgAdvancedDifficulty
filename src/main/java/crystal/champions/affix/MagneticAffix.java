@@ -1,13 +1,13 @@
 package crystal.champions.affix;
 
 import crystal.champions.config.ChampionsConfigAffixes;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * MagneticAffix
- * Из интересно здесь именно через set надо target.setVelocity(pX, pY, pZ);
+ * Из интересно здесь именно через set надо target.setDeltaMovement(pX, pY, pZ);
  * Без него не будет как в оригинальном моде
  */
 public class MagneticAffix extends Affix {
@@ -18,18 +18,18 @@ public class MagneticAffix extends Affix {
     ChampionsConfigAffixes config = ChampionsConfigAffixes.get();
 
     @Override
-    public void onAttack(LivingEntity entity, MobEntity mob) {
-        if (entity.age % config.magneticCooldown <= config.magneticPullTime) return;
+    public void onAttack(LivingEntity entity, Mob mob) {
+        if (entity.tickCount % config.magneticCooldown <= config.magneticPullTime) return;
         LivingEntity target = mob.getTarget();
         if (target != null) {
-            Vec3d pullDir = entity.getPos().subtract(target.getPos()).normalize();
+            Vec3 pullDir = entity.position().subtract(target.position()).normalize();
             final double i = 0.01 * config.strength;
-            final float pX = (float) (pullDir.x * i + target.getVelocity().x * 0.5);
-            final float pY = (float) (pullDir.y * i + target.getVelocity().y * 0.6);
-            final float pZ = (float) (pullDir.z * i + target.getVelocity().z * 0.5);
-            target.setVelocity(pX, pY, pZ);
+            final float pX = (float) (pullDir.x * i + target.getDeltaMovement().x * 0.5);
+            final float pY = (float) (pullDir.y * i + target.getDeltaMovement().y * 0.6);
+            final float pZ = (float) (pullDir.z * i + target.getDeltaMovement().z * 0.5);
+            target.setDeltaMovement(pX, pY, pZ);
 
-            target.velocityModified = true;
+            target.syncVelocity = true;
         }
     }
 }

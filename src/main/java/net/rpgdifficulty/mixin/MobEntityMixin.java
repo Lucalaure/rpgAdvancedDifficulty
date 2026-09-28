@@ -1,6 +1,6 @@
 package net.rpgdifficulty.mixin;
 
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -9,15 +9,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.rpgdifficulty.access.EntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
 
-@Mixin(MobEntity.class)
+@Mixin(Mob.class)
 public abstract class MobEntityMixin extends LivingEntity implements EntityAccess {
 
     @Unique
@@ -25,25 +26,25 @@ public abstract class MobEntityMixin extends LivingEntity implements EntityAcces
     @Unique
     private boolean strengthened = false;
 
-    public MobEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+    public MobEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    @ModifyVariable(method = "getXpToDrop", at = @At(value = "RETURN", ordinal = 0))
+    @ModifyVariable(method = "getBaseExperienceReward", at = @At(value = "RETURN", ordinal = 0))
     private int getXpToDropMixin(int original) {
-        return MobStrengthener.getXpToDropAddition((MobEntity) (Object) this, (ServerWorld) this.getWorld(), original);
+        return MobStrengthener.getXpToDropAddition((Mob) (Object) this, (ServerLevel) this.level(), original);
     }
 
-    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readCustomDataFromNbtMixin(NbtCompound nbt, CallbackInfo info) {
-        this.mobHealthMultiplier = nbt.getFloat("MobHealthMultiplier");
-        this.strengthened = nbt.getBoolean("RpgDifficultyApplied");
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void readCustomDataFromNbtMixin(ValueInput input, CallbackInfo info) {
+        this.mobHealthMultiplier = input.getFloatOr("MobHealthMultiplier", 0.0f);
+        this.strengthened = input.getBooleanOr("RpgDifficultyApplied", false);
     }
 
-    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void writeCustomDataToNbtMixin(NbtCompound nbt, CallbackInfo info) {
-        nbt.putFloat("MobHealthMultiplier", this.mobHealthMultiplier);
-        nbt.putBoolean("RpgDifficultyApplied", this.strengthened);
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void writeCustomDataToNbtMixin(ValueOutput output, CallbackInfo info) {
+        output.putFloat("MobHealthMultiplier", this.mobHealthMultiplier);
+        output.putBoolean("RpgDifficultyApplied", this.strengthened);
     }
 
     @Override

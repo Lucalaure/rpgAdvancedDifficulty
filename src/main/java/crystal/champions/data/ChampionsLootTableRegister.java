@@ -2,44 +2,45 @@ package crystal.champions.data;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.condition.EntityPropertiesLootCondition;
-import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.entry.LootTableEntry;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.predicate.NbtPredicate;
-import net.minecraft.predicate.entity.EntityPredicate;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
+import net.minecraft.advancements.predicates.NbtPredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 public class ChampionsLootTableRegister implements ModInitializer {
 
     @Override
     public void onInitialize() {
         LootTableEvents.MODIFY.register((key, tableBuilder, source, wrapperLookup) -> {
-            if (source.isBuiltin() && key.getValue().getPath().startsWith("entities/")) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1.0f));
+            if (source.isBuiltin() && key.identifier().getPath().startsWith("entities/")) {
+                LootPool.Builder poolBuilder = LootPool.lootPool()
+                        .setRolls(ContextIntProviders.exactly(1));
                 for (int tier = 1; tier < 6; tier++) {
-                    RegistryKey<LootTable> tierKey = RegistryKey.of(RegistryKeys.LOOT_TABLE,
-                            Identifier.of("champions", "champions/tier_" + tier));
-                    poolBuilder.with(LootTableEntry.builder(tierKey)
-                            .conditionally(EntityPropertiesLootCondition.builder(
+                    ResourceKey<LootTable> tierKey = ResourceKey.create(Registries.LOOT_TABLE,
+                            Identifier.fromNamespaceAndPath("champions", "champions/tier_" + tier));
+                    // 26.3: nested loot table entries take a Holder; Fabric's lookup here can resolve loot table references
+                    poolBuilder.add(NestedLootTable.lootTableReference(wrapperLookup.getOrThrow(tierKey))
+                            .when(LootItemEntityPropertyCondition.hasProperties(
                                     LootContext.EntityTarget.THIS,
-                                    EntityPredicate.Builder.create()
+                                    EntityPredicate.Builder.entity()
                                             .nbt(new NbtPredicate(createTierNbt(tier)))
                             ))
                     );
                 }
-                tableBuilder.pool(poolBuilder);
+                tableBuilder.withPool(poolBuilder);
             }
         });
     }
-    private static NbtCompound createTierNbt(int tier) {
-        NbtCompound nbt = new NbtCompound();
+    private static CompoundTag createTierNbt(int tier) {
+        CompoundTag nbt = new CompoundTag();
         nbt.putInt("tier", tier);
         return nbt;
     }

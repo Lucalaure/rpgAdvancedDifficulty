@@ -1,71 +1,76 @@
 package net.rpgdifficulty.mixin.entity;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.At;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.world.World;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.level.Level;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 
-@Mixin(ZombieEntity.class)
-public abstract class ZombieEntityMixin extends HostileEntity implements ZombieEntityAccess {
+@Mixin(Zombie.class)
+public abstract class ZombieEntityMixin extends Monster implements ZombieEntityAccess {
 
     @Unique
-    private static final TrackedData<Boolean> BIG_ZOMBIE = DataTracker.registerData(ZombieEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> BIG_ZOMBIE = SynchedEntityData.defineId(Zombie.class, EntityDataSerializers.BOOLEAN);
 
-    public ZombieEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {
+    public ZombieEntityMixin(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world);
     }
 
-    @Inject(method = "initDataTracker", at = @At("TAIL"))
-    protected void initDataTrackerMixin(DataTracker.Builder builder, CallbackInfo info) {
-        builder.add(BIG_ZOMBIE, false);
+    @Inject(method = "defineSynchedData", at = @At("TAIL"))
+    protected void initDataTrackerMixin(SynchedEntityData.Builder builder, CallbackInfo info) {
+        builder.define(BIG_ZOMBIE, false);
     }
 
-    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readCustomDataFromTagMixin(NbtCompound nbt, CallbackInfo info) {
-        this.dataTracker.set(BIG_ZOMBIE, nbt.getBoolean("Big"));
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void readCustomDataFromTagMixin(ValueInput input, CallbackInfo info) {
+        this.entityData.set(BIG_ZOMBIE, input.getBooleanOr("Big", false));
     }
 
-    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void writeCustomDataToTagMixin(NbtCompound nbt, CallbackInfo info) {
-        nbt.putBoolean("Big", this.dataTracker.get(BIG_ZOMBIE));
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void writeCustomDataToTagMixin(ValueOutput output, CallbackInfo info) {
+        output.putBoolean("Big", this.entityData.get(BIG_ZOMBIE));
     }
 
-    @Inject(method = "onTrackedDataSet", at = @At("HEAD"))
-    private void onTrackedDataSetMixin(TrackedData<?> data, CallbackInfo info) {
+    @Inject(method = "onSyncedDataUpdated", at = @At("HEAD"))
+    private void onTrackedDataSetMixin(EntityDataAccessor<?> data, CallbackInfo info) {
         if (BIG_ZOMBIE.equals(data)) {
-            this.calculateDimensions();
+            this.refreshDimensions();
+        }
+    }
+
+    // Zombie overrides getDefaultDimensions itself (baby size), so scale its result instead of overriding it
+    @Inject(method = "getDefaultDimensions", at = @At("RETURN"), cancellable = true)
+    private void getDefaultDimensionsMixin(Pose pose, CallbackInfoReturnable<EntityDimensions> info) {
+        if (this.entityData.get(BIG_ZOMBIE)) {
+            info.setReturnValue(info.getReturnValue().scale(RpgDifficultyMain.CONFIG.bigZombieSize));
         }
     }
 
     @Override
-    public EntityDimensions getBaseDimensions(EntityPose pose) {
-        return this.dataTracker.get(BIG_ZOMBIE) ? super.getBaseDimensions(pose).scaled(RpgDifficultyMain.CONFIG.bigZombieSize) : super.getBaseDimensions(pose);
-    }
-
-    @Override
     public void setBig() {
-        this.dataTracker.set(BIG_ZOMBIE, true);
-        this.refreshPosition();
-        this.calculateDimensions();
+        this.entityData.set(BIG_ZOMBIE, true);
+        this.reapplyPosition();
+        this.refreshDimensions();
     }
 
     @Override
-    public TrackedData<Boolean> getTrackedDataBoolean() {
-        return BIG_ZOMBIE;
+    public boolean rpgdifficulty$isBig() {
+        return this.entityData.get(BIG_ZOMBIE);
     }
 }

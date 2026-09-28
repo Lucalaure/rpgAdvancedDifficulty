@@ -8,36 +8,36 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.ChunkRegion;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.api.MobStrengthener;
 
-@Mixin(ChunkRegion.class)
+@Mixin(WorldGenRegion.class)
 public class ChunkRegionMixin {
 
     @Shadow
     @Final
     @Mutable
-    private ServerWorld world;
+    private ServerLevel level;
 
-    @Inject(method = "spawnEntity", at = @At("HEAD"))
+    @Inject(method = "addFreshEntity", at = @At("HEAD"))
     private void spawnEntityMixin(Entity entity, CallbackInfoReturnable<Boolean> info) {
-        if (entity instanceof MobEntity mobEntity) {
-            if (world.getServer().isOnThread()) {
-                MobStrengthener.changeAttributes(mobEntity, world, null, entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES));
+        if (entity instanceof Mob mobEntity) {
+            if (level.getServer().isSameThread()) {
+                MobStrengthener.changeAttributes(mobEntity, level, null, entity.is(RpgDifficultyMain.BOSS_ENTITY_TYPES));
             } else {
-                world.getServer().execute(() -> MobStrengthener.changeAttributes(mobEntity, world, null, entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES)));
+                level.getServer().execute(() -> MobStrengthener.changeAttributes(mobEntity, level, null, entity.is(RpgDifficultyMain.BOSS_ENTITY_TYPES)));
             }
-        } else if (entity instanceof PersistentProjectileEntity persistentProjectileEntity) {
-            if (persistentProjectileEntity.getOwner() instanceof MobEntity mobEntity) {
-                if (world.getServer().isOnThread()) {
-                    MobStrengthener.changeAttributes(mobEntity, world, persistentProjectileEntity, false);
+        } else if (entity instanceof AbstractArrow persistentProjectileEntity) {
+            if (persistentProjectileEntity.getOwner() instanceof Mob mobEntity) {
+                if (level.getServer().isSameThread()) {
+                    MobStrengthener.changeAttributes(mobEntity, level, persistentProjectileEntity, false);
                 } else {
-                    world.getServer().execute(() -> MobStrengthener.changeAttributes(mobEntity, world, persistentProjectileEntity, false));
+                    level.getServer().execute(() -> MobStrengthener.changeAttributes(mobEntity, level, persistentProjectileEntity, false));
                 }
             }
         }

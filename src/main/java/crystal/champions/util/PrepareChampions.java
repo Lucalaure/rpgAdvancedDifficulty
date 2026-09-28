@@ -1,10 +1,10 @@
 package crystal.champions.util;
 
 import crystal.champions.affix.AffixRegistry;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,14 +15,14 @@ public class PrepareChampions {
         /* This utility class should not be instantiated */
     }
 
-    public static void prepareAttributes(MobEntity mob, ChampionRank rank) {
+    public static void prepareAttributes(Mob mob, ChampionRank rank) {
         final float h = rank.growth_h();
         final float s = rank.growth_s();
-        modifyAttribute(mob, EntityAttributes.GENERIC_MAX_HEALTH, h);
+        modifyAttribute(mob, Attributes.MAX_HEALTH, h);
         mob.setHealth(mob.getMaxHealth());
 
-        if (mob.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE) != null) {
-            modifyAttribute(mob, EntityAttributes.GENERIC_ATTACK_DAMAGE, s);
+        if (mob.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+            modifyAttribute(mob, Attributes.ATTACK_DAMAGE, s);
         }
     }
 
@@ -36,8 +36,8 @@ public class PrepareChampions {
         return String.join(",", selected);
     }
 
-    private static void modifyAttribute(MobEntity entity, RegistryEntry<EntityAttribute> attribute, float m) {
-        var instance = entity.getAttributeInstance(attribute);
+    private static void modifyAttribute(Mob entity, Holder<Attribute> attribute, float m) {
+        var instance = entity.getAttribute(attribute);
         if (instance != null) {
             instance.setBaseValue(instance.getBaseValue() * m);
         }

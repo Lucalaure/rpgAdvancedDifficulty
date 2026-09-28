@@ -2,31 +2,29 @@ package net.rpgdifficulty.data;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.rpgdifficulty.RpgDifficultyMain;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-public class DifficultyLoader implements SimpleSynchronousResourceReloadListener {
+public class DifficultyLoader implements ResourceManagerReloadListener {
 
     public static HashMap<String, HashMap<String, Object>> dimensionDifficulty = new HashMap<>();
 
-    @Override
-    public Identifier getFabricId() {
-        return Identifier.of("rpgdifficulty", "difficulty_loader");
-    }
+    // Registered with Fabric's ResourceLoader under this id
+    public static final Identifier ID = Identifier.fromNamespaceAndPath("rpgdifficulty", "difficulty_loader");
 
     @Override
-    public void reload(ResourceManager manager) {
+    public void onResourceManagerReload(ResourceManager manager) {
 
         dimensionDifficulty.clear();
-        manager.findResources("difficulty", id -> id.getPath().endsWith(".json")).forEach((id, resourceRef) -> {
+        manager.listResources("difficulty", id -> id.getPath().endsWith(".json")).forEach((id, resourceRef) -> {
             try {
-                InputStream stream = resourceRef.getInputStream();
+                InputStream stream = resourceRef.open();
                 JsonObject data = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
 
                 HashMap<String, Object> map = new HashMap<String, Object>();

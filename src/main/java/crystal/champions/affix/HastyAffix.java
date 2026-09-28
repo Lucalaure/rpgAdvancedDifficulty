@@ -1,9 +1,9 @@
 package crystal.champions.affix;
 
 import crystal.champions.config.ChampionsConfigAffixes;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 
 /**
  * HastyAffix
@@ -19,9 +19,9 @@ public class HastyAffix extends Affix {
 
     @Override
     public void onTick(LivingEntity entity) {
-        if (entity.age % 20 == 0) {
-            entity.addStatusEffect(new StatusEffectInstance(
-                    StatusEffects.SPEED, 20, config.hastyAmplifier, true, false, false
+        if (entity.tickCount % 20 == 0) {
+            entity.addEffect(new MobEffectInstance(
+                    MobEffects.SPEED, 20, config.hastyAmplifier, true, false, false
             ));
         }
     }

@@ -3,7 +3,6 @@
   "minVersion": "0.8",
   "package": "net.rpgdifficulty.mixin",
   "compatibilityLevel": "JAVA_21",
-  "plugin": "net.rpgdifficulty.mixin.compat.RpgDifficultyMixinPlugin",
   "mixins": [
     "ChunkRegionMixin",
     "EntityAttributesMixin",
@@ -11,9 +10,7 @@
     "MobEntityMixin",
     "PassiveEntityMixin",
     "ServerWorldMixin",
-    "access.DefaultAttributeRegistryAccess",
-    "compat.LevelZCompatMixin",
-    "compat.PlayerExCompatMixin",
+    "access.AbstractArrowAccess",
     "entity.CreeperEntityMixin",
     "entity.EnderDragonEntityMixin",
     "entity.EvokerFangsEntityMixin",

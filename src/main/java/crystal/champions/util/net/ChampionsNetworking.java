@@ -1,8 +1,8 @@
 package crystal.champions.util.net;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Mob;
 
 /**
  * Даем Identifier пакетам и отправляем их
@@ -15,9 +15,9 @@ public class ChampionsNetworking {
         /* This utility class should not be instantiated */
     }
 
-    public static void sendUpdateS(ServerPlayerEntity player, MobEntity entity, int tier, String affixes) {
+    public static void sendUpdateS(ServerPlayer player, Mob entity, int tier, String affixes) {
         Payload.ChampionUpdate payload = new Payload.ChampionUpdate(
-                entity.getUuid(),
+                entity.getUUID(),
                 entity.getDisplayName(),
                 tier,
                 affixes,
@@ -27,9 +27,9 @@ public class ChampionsNetworking {
         ServerPlayNetworking.send(player, payload);
     }
 
-    public static void sendUpdateC(ServerPlayerEntity player, MobEntity entity, int tier, String affixes) {
+    public static void sendUpdateC(ServerPlayer player, Mob entity, int tier, String affixes) {
         Payload.ChampionUpdateCl payload = new Payload.ChampionUpdateCl(
-                entity.getUuid(),
+                entity.getUUID(),
                 entity.getDisplayName(),
                 tier,
                 affixes,
@@ -39,7 +39,7 @@ public class ChampionsNetworking {
         ServerPlayNetworking.send(player, payload);
     }
 
-    public static void sendRemove(ServerPlayerEntity player, MobEntity mob) {
-        ServerPlayNetworking.send(player, new Payload.ChampionRemove(mob.getUuid()));
+    public static void sendRemove(ServerPlayer player, Mob mob) {
+        ServerPlayNetworking.send(player, new Payload.ChampionRemove(mob.getUUID()));
     }
 }

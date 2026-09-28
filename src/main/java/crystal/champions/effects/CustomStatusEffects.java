@@ -1,20 +1,20 @@
 package crystal.champions.effects;
 
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.effect.MobEffect;
 
 public class CustomStatusEffects {
     private CustomStatusEffects() {
         /* This utility class should not be instantiated */
     }
 
-    public static final RegistryEntry<StatusEffect> STUN = reg(new StunStatusEffect());
+    public static final Holder<MobEffect> STUN = reg(new StunStatusEffect());
 
-    private static RegistryEntry<StatusEffect> reg(StatusEffect statusEffect) {
-        return Registry.registerReference(Registries.STATUS_EFFECT, Identifier.of("champions", "stun"), statusEffect);
+    private static Holder<MobEffect> reg(MobEffect statusEffect) {
+        return Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath("champions", "stun"), statusEffect);
     }
     public static void registerEffects() {
         // Register

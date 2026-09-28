@@ -1,31 +1,47 @@
 package net.rpgdifficulty.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.ZombieBaseEntityRenderer;
-import net.minecraft.client.render.entity.ZombieEntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory.Context;
-import net.minecraft.client.render.entity.model.ZombieEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.mob.ZombieEntity;
+import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
+import net.minecraft.client.model.monster.zombie.ZombieModel;
+import net.minecraft.client.renderer.entity.AbstractZombieRenderer;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
+import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
+import net.minecraft.client.renderer.entity.ZombieRenderer;
+import net.minecraft.client.renderer.entity.state.ZombieRenderState;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 
 @Environment(EnvType.CLIENT)
-@Mixin(ZombieEntityRenderer.class)
-public abstract class ZombieEntityRendererMixin extends ZombieBaseEntityRenderer<ZombieEntity, ZombieEntityModel<ZombieEntity>> {
+@Mixin(ZombieRenderer.class)
+public abstract class ZombieEntityRendererMixin extends AbstractZombieRenderer<Zombie, ZombieRenderState, ZombieModel<ZombieRenderState>> {
 
-    public ZombieEntityRendererMixin(Context ctx, ZombieEntityModel<ZombieEntity> bodyModel, ZombieEntityModel<ZombieEntity> legsArmorModel, ZombieEntityModel<ZombieEntity> bodyArmorModel) {
-        super(ctx, bodyModel, legsArmorModel, bodyArmorModel);
+    // Big zombie flag, copied from the entity into the render state during extraction
+    @Unique
+    private static final RenderStateDataKey<Boolean> RPGDIFFICULTY_BIG = RenderStateDataKey.create(() -> "rpgdifficulty:big_zombie");
+
+    public ZombieEntityRendererMixin(Context ctx, ZombieModel<ZombieRenderState> bodyModel, ZombieModel<ZombieRenderState> babyModel,
+            ArmorModelSet<ZombieModel<ZombieRenderState>> armorSet, ArmorModelSet<ZombieModel<ZombieRenderState>> babyArmorSet) {
+        super(ctx, bodyModel, babyModel, armorSet, babyArmorSet);
     }
 
     @Override
-    protected void scale(ZombieEntity entity, MatrixStack matrices, float amount) {
-        if (entity.getDataTracker().get(((ZombieEntityAccess) entity).getTrackedDataBoolean()))
+    public void extractRenderState(Zombie entity, ZombieRenderState state, float partialTicks) {
+        super.extractRenderState(entity, state, partialTicks);
+        state.setData(RPGDIFFICULTY_BIG, ((ZombieEntityAccess) entity).rpgdifficulty$isBig());
+    }
+
+    @Override
+    protected void scale(ZombieRenderState state, PoseStack matrices) {
+        if (Boolean.TRUE.equals(state.getData(RPGDIFFICULTY_BIG)))
             matrices.scale(RpgDifficultyMain.CONFIG.bigZombieSize, RpgDifficultyMain.CONFIG.bigZombieSize, RpgDifficultyMain.CONFIG.bigZombieSize);
-        super.scale(entity, matrices, amount);
+        super.scale(state, matrices);
     }
 
 }

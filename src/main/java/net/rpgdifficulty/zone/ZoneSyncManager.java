@@ -1,11 +1,11 @@
 package net.rpgdifficulty.zone;
 
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -14,12 +14,15 @@ import java.util.List;
 
 public class ZoneSyncManager {
 
-    public record ZoneSyncPayload(List<ZoneEntry> zones) implements CustomPayload {
+    public record ZoneSyncPayload(List<ZoneEntry> zones) implements CustomPacketPayload {
 
-        public static final CustomPayload.Id<ZoneSyncPayload> ID =
-                new CustomPayload.Id<>(Identifier.of("rpgdifficulty", "zone_sync"));
+        public static final CustomPacketPayload.Type<ZoneSyncPayload> TYPE =
+                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath("rpgdifficulty", "zone_sync"));
 
-        public static final PacketCodec<PacketByteBuf, ZoneSyncPayload> CODEC = PacketCodec.of(
+        // Alias of TYPE (1.21.1 name)
+        public static final CustomPacketPayload.Type<ZoneSyncPayload> ID = TYPE;
+
+        public static final StreamCodec<FriendlyByteBuf, ZoneSyncPayload> CODEC = CustomPacketPayload.codec(
                 (payload, buf) -> {
                     buf.writeVarInt(payload.zones.size());
                     for (ZoneEntry entry : payload.zones) {
@@ -37,8 +40,8 @@ public class ZoneSyncManager {
         );
 
         @Override
-        public Id<? extends CustomPayload> getId() {
-            return ID;
+        public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+            return TYPE;
         }
     }
 
@@ -58,12 +61,12 @@ public class ZoneSyncManager {
             }
         }
 
-        void write(PacketByteBuf buf) {
-            buf.writeString(dimension);
-            buf.writeEnumConstant(shape);
+        void write(FriendlyByteBuf buf) {
+            buf.writeUtf(dimension);
+            buf.writeEnum(shape);
             buf.writeDouble(factor);
             buf.writeBoolean(name != null);
-            if (name != null) buf.writeString(name);
+            if (name != null) buf.writeUtf(name);
             buf.writeInt(minX);
             buf.writeInt(minY);
             buf.writeInt(minZ);
@@ -73,11 +76,11 @@ public class ZoneSyncManager {
             buf.writeDouble(radius);
         }
 
-        static ZoneEntry read(PacketByteBuf buf) {
-            String dimension = buf.readString();
-            DifficultyZone.Shape shape = buf.readEnumConstant(DifficultyZone.Shape.class);
+        static ZoneEntry read(FriendlyByteBuf buf) {
+            String dimension = buf.readUtf();
+            DifficultyZone.Shape shape = buf.readEnum(DifficultyZone.Shape.class);
             double factor = buf.readDouble();
-            String name = buf.readBoolean() ? buf.readString() : null;
+            String name = buf.readBoolean() ? buf.readUtf() : null;
             int minX = buf.readInt();
             int minY = buf.readInt();
             int minZ = buf.readInt();
@@ -108,13 +111,13 @@ public class ZoneSyncManager {
     public static void syncToAll(MinecraftServer server) {
         List<DifficultyZone> zones = DifficultyZonePersistentState.get(server).getZones();
         ZoneSyncPayload payload = new ZoneSyncPayload(zones.stream().map(ZoneEntry::from).toList());
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) {
+        for (ServerPlayer player : PlayerLookup.all(server)) {
             ServerPlayNetworking.send(player, payload);
         }
     }
 
-    public static void syncToPlayer(ServerPlayerEntity player) {
-        List<DifficultyZone> zones = DifficultyZonePersistentState.get(player.getServer()).getZones();
+    public static void syncToPlayer(ServerPlayer player) {
+        List<DifficultyZone> zones = DifficultyZonePersistentState.get(player.level().getServer()).getZones();
         ZoneSyncPayload payload = new ZoneSyncPayload(zones.stream().map(ZoneEntry::from).toList());
         ServerPlayNetworking.send(player, payload);
     }

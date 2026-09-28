@@ -2,8 +2,8 @@ package net.rpgdifficulty.zone;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class ClientZoneTracker {
     private static ZoneSyncManager.ZoneEntry currentZone = null;
 
     public static void init() {
-        ClientPlayNetworking.registerGlobalReceiver(ZoneSyncManager.ZoneSyncPayload.ID, (payload, context) -> {
+        ClientPlayNetworking.registerGlobalReceiver(ZoneSyncManager.ZoneSyncPayload.TYPE, (payload, context) -> {
             zones = payload.zones();
             lastCheckedPos = null;
         });
@@ -24,19 +24,19 @@ public class ClientZoneTracker {
         ClientTickEvents.END_CLIENT_TICK.register(ClientZoneTracker::onClientTick);
     }
 
-    private static void onClientTick(MinecraftClient client) {
+    private static void onClientTick(Minecraft client) {
         if (client.player == null || zones.isEmpty()) {
             return;
         }
 
-        BlockPos pos = client.player.getBlockPos();
+        BlockPos pos = client.player.blockPosition();
 
         if (pos.equals(lastCheckedPos)) {
             return;
         }
         lastCheckedPos = pos;
 
-        String dimension = client.player.getWorld().getRegistryKey().getValue().toString();
+        String dimension = client.player.level().dimension().identifier().toString();
         double x = client.player.getX();
         double y = client.player.getY();
         double z = client.player.getZ();

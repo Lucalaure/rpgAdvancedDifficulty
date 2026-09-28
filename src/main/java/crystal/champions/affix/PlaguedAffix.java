@@ -1,11 +1,11 @@
 package crystal.champions.affix;
 
 import crystal.champions.config.ChampionsConfigAffixes;
-import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.world.World;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 /**
  * PlaguedAffix
  * Здесь мы на моба ставим туманное зелье на отравление и все
@@ -20,15 +20,15 @@ public class PlaguedAffix extends Affix {
 
     @Override
     public void onTick(LivingEntity entity) {
-        if (entity.age % 10 != 0) return;
-        World world = entity.getWorld();
-        AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(world, entity.getX(), entity.getY(), entity.getZ());
+        if (entity.tickCount % 10 != 0) return;
+        Level world = entity.level();
+        AreaEffectCloud cloud = new AreaEffectCloud(world, entity.getX(), entity.getY(), entity.getZ());
         cloud.setRadius(3.0f);
         cloud.setWaitTime(0);
         cloud.setDuration(10);
-        StatusEffectInstance plagued = new StatusEffectInstance(StatusEffects.POISON, config.poisonDuration, config.poisonAmplifier);
+        MobEffectInstance plagued = new MobEffectInstance(MobEffects.POISON, config.poisonDuration, config.poisonAmplifier);
         cloud.addEffect(plagued);
-        world.spawnEntity(cloud);
-        entity.removeStatusEffect(StatusEffects.POISON);
+        world.addFreshEntity(cloud);
+        entity.removeEffect(MobEffects.POISON);
     }
 }

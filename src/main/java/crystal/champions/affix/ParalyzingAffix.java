@@ -2,8 +2,8 @@ package crystal.champions.affix;
 
 import crystal.champions.config.ChampionsConfigAffixes;
 import crystal.champions.effects.CustomStatusEffects;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Random;
 
@@ -19,7 +19,7 @@ public class ParalyzingAffix extends Affix{
     @Override
     public void onHurt(LivingEntity champion, LivingEntity target) {
         if (rnd.nextFloat() < config.paralyzeChance) {
-            target.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.STUN, config.paralyzeDuration, 0));
+            target.addEffect(new MobEffectInstance(CustomStatusEffects.STUN, config.paralyzeDuration, 0));
         }
     }
 }

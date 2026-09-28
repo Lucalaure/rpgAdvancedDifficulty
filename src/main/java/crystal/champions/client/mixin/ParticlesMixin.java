@@ -3,7 +3,7 @@ package crystal.champions.client.mixin;
 import crystal.champions.Champions;
 import crystal.champions.client.net.ChampionDisplayInfo;
 import crystal.champions.client.net.ClientPacket;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,11 +19,11 @@ public class ParticlesMixin {
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        UUID uuid = entity.getUuid();
+        UUID uuid = entity.getUUID();
 
         ChampionDisplayInfo info = ClientPacket.activeChampionsCl.get(uuid);
 
-        if (info != null && entity.age % 4 == 0) {
+        if (info != null && entity.tickCount % 4 == 0) {
             spawnChampionParticles(entity, info.tier());
         }
     }
@@ -32,11 +32,11 @@ public class ParticlesMixin {
     private void spawnChampionParticles(LivingEntity entity, int tier) {
         int color = getColor(tier);
 
-        entity.getWorld().addParticle(
+        entity.level().addParticle(
                 Champions.CHAMPIONS_SPELL,
-                entity.getParticleX(0.5),
-                entity.getRandomBodyY(),
-                entity.getParticleZ(0.5),
+                entity.getRandomX(0.5),
+                entity.getRandomY(),
+                entity.getRandomZ(0.5),
                 color,
                 0.01,
                 0

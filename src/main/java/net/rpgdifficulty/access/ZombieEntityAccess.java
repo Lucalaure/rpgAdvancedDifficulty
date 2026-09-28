@@ -1,10 +1,9 @@
 package net.rpgdifficulty.access;
 
-import net.minecraft.entity.data.TrackedData;
-
 public interface ZombieEntityAccess {
 
     void setBig();
 
-    TrackedData<Boolean> getTrackedDataBoolean();
+    // Tracked "BIG_ZOMBIE" boolean, synced to the client for the renderer
+    boolean rpgdifficulty$isBig();
 }

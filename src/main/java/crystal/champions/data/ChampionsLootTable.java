@@ -1,85 +1,89 @@
 package crystal.champions.data;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.entry.LootPoolEntry;
-import net.minecraft.loot.function.EnchantRandomlyLootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvider;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.functions.EnchantRandomlyFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
-public class ChampionsLootTable extends SimpleFabricLootTableProvider {
-    private final RegistryWrapper.WrapperLookup registries;
+public class ChampionsLootTable extends SimpleFabricLootTableSubProvider {
+    private final HolderLookup.Provider registries;
 
-    public ChampionsLootTable(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
-        super(output, registryLookup, LootContextTypes.ENTITY);
+    public ChampionsLootTable(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
+        super(output, registryLookup, LootContextParamSets.ENTITY);
         this.registries = registryLookup.join();
     }
 
+    // Fabric's datagen calls generate(BiConsumer) directly; vanilla's no-arg entry point is unused
     @Override
-    public void accept(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> exporter) {
-        generateTier(exporter, 1, ItemEntry.builder(Items.BOOK)
-                .apply(EnchantRandomlyLootFunction.builder(this.registries)));
-        generateTier(exporter, 2, ItemEntry.builder(Items.BOOK)
-                .apply(EnchantRandomlyLootFunction.builder(this.registries)));
-        generateTier(exporter, 3, ItemEntry.builder(Items.BOOK)
-                .apply(EnchantRandomlyLootFunction.builder(this.registries)));
-        generateTier(exporter, 4, ItemEntry.builder(Items.BOOK)
-                .apply(EnchantRandomlyLootFunction.builder(this.registries)));
+    public void run() {
+    }
+
+    @Override
+    public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> exporter) {
+        generateTier(exporter, 1, LootItem.lootTableItem(Items.BOOK)
+                .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries.lookupOrThrow(Registries.ENCHANTMENT))));
+        generateTier(exporter, 2, LootItem.lootTableItem(Items.BOOK)
+                .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries.lookupOrThrow(Registries.ENCHANTMENT))));
+        generateTier(exporter, 3, LootItem.lootTableItem(Items.BOOK)
+                .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries.lookupOrThrow(Registries.ENCHANTMENT))));
+        generateTier(exporter, 4, LootItem.lootTableItem(Items.BOOK)
+                .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries.lookupOrThrow(Registries.ENCHANTMENT))));
 
         generateTier5(exporter);
     }
-    private void generateTier(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> exporter, int tier, LootPoolEntry.Builder<?> entry) {
+    private void generateTier(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> exporter, int tier, LootPoolEntryContainer.Builder<?> entry) {
         if (tier >= 5) return;
-        RegistryKey<LootTable> key = RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of("champions", "champions/tier_" + tier));
-        exporter.accept(key, LootTable.builder().pool(LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(tier))
-                        .with(entry)
+        ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("champions", "champions/tier_" + tier));
+        exporter.accept(key, LootTable.lootTable().withPool(LootPool.lootPool()
+                        .setRolls(ContextIntProviders.exactly(tier))
+                        .add(entry)
                 )
         );
     }
-    private void generateTier5(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> exporter) {
-        RegistryKey<LootTable> key = RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of("champions", "champions/tier_" + 5));
-        exporter.accept(key, LootTable.builder()
-                .pool(LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1))
-                        .with(ItemEntry.builder(Items.WITHER_SKELETON_SKULL))
-                        .with(ItemEntry.builder(Items.NETHER_STAR))
+    private void generateTier5(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> exporter) {
+        ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("champions", "champions/tier_" + 5));
+        exporter.accept(key, LootTable.lootTable()
+                .withPool(LootPool.lootPool()
+                        .setRolls(ContextIntProviders.exactly(1))
+                        .add(LootItem.lootTableItem(Items.WITHER_SKELETON_SKULL))
+                        .add(LootItem.lootTableItem(Items.NETHER_STAR))
                 )
-                .pool(LootPool.builder()
-                        .rolls(UniformLootNumberProvider.create(3, 5))
-                        .with(ItemEntry.builder(Items.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.WILD_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.VEX_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.RIB_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.SHAPER_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.HOST_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.WARD_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.TIDE_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.COAST_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.EYE_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.WAYFINDER_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.RAISER_ARMOR_TRIM_SMITHING_TEMPLATE))
-                        .with(ItemEntry.builder(Items.DUNE_ARMOR_TRIM_SMITHING_TEMPLATE))
+                .withPool(LootPool.lootPool()
+                        .setRolls(ContextIntProviders.between(3, 5))
+                        .add(LootItem.lootTableItem(Items.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.WILD_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.VEX_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.RIB_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.SHAPER_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.HOST_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.WARD_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.TIDE_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.COAST_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.EYE_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.WAYFINDER_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.RAISER_ARMOR_TRIM_SMITHING_TEMPLATE))
+                        .add(LootItem.lootTableItem(Items.DUNE_ARMOR_TRIM_SMITHING_TEMPLATE))
                 )
-                .pool(LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(4))
-                        .with(ItemEntry.builder(Items.BOOK)
-                                .apply(EnchantRandomlyLootFunction.builder((this.registries))))
+                .withPool(LootPool.lootPool()
+                        .setRolls(ContextIntProviders.exactly(4))
+                        .add(LootItem.lootTableItem(Items.BOOK)
+                                .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries.lookupOrThrow(Registries.ENCHANTMENT))))
                 )
         );
     }

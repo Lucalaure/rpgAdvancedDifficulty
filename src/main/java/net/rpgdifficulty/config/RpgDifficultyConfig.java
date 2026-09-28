@@ -64,17 +64,13 @@ public class RpgDifficultyConfig implements ConfigData {
     public boolean excludeTimeInOtherDimension = true;
     @Comment("Applies only for dimensions other than Overworld")
     public boolean excludeHeightInOtherDimension = true;
-    @Comment("Based on health multiplier, if Nameplate mod installed based on level")
+    @Comment("Based on health multiplier")
     public boolean dropMoreLoot = false;
     @Comment("0.02 = +2% chance per lvl")
     public float moreLootChance = 0.02F;
     public float maxLootChance = 0.7F;
     @Comment("Each loot table item has 0.5 = 50% chance to get dropped")
     public float chanceForEachItem = 0.5F;
-    @Comment("Only applies when LevelZ/PlayerEx is loaded. 0.0 = disabled")
-    public double levelFactor = 0.0D;
-    @Comment("Only applies when LevelZ/PlayerEx is loaded. Get players in radius")
-    public double playerRadius = 100.0D;
 
     @Comment("Hud for testing purpose only")
     public boolean hudTesting = false;

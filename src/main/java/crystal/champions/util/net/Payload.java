@@ -1,62 +1,62 @@
 package crystal.champions.util.net;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextCodecs;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Uuids;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 
 import java.util.UUID;
 
-public abstract class Payload implements CustomPayload {
+public abstract class Payload implements CustomPacketPayload {
     private static final String CHAMPIONS = "champions";
 
-    public record ChampionUpdate(UUID uuid, Text name, int tier, String affixes, float health, float maxHealth) implements CustomPayload {
-        public static final Id<ChampionUpdate> SERVER_UPDATE_ID = new Id<>(Identifier.of(CHAMPIONS, "update_hud"));
-        public static final PacketCodec<RegistryByteBuf, ChampionUpdate> CODEC = PacketCodec.tuple(
-                Uuids.PACKET_CODEC, ChampionUpdate::uuid,
-                TextCodecs.REGISTRY_PACKET_CODEC, ChampionUpdate::name,
-                PacketCodecs.VAR_INT, ChampionUpdate::tier,
-                PacketCodecs.STRING, ChampionUpdate::affixes,
-                PacketCodecs.FLOAT, ChampionUpdate::health,
-                PacketCodecs.FLOAT, ChampionUpdate::maxHealth,
+    public record ChampionUpdate(UUID uuid, Component name, int tier, String affixes, float health, float maxHealth) implements CustomPacketPayload {
+        public static final Type<ChampionUpdate> SERVER_UPDATE_ID = new Type<>(Identifier.fromNamespaceAndPath(CHAMPIONS, "update_hud"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, ChampionUpdate> CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC, ChampionUpdate::uuid,
+                ComponentSerialization.STREAM_CODEC, ChampionUpdate::name,
+                ByteBufCodecs.VAR_INT, ChampionUpdate::tier,
+                ByteBufCodecs.STRING_UTF8, ChampionUpdate::affixes,
+                ByteBufCodecs.FLOAT, ChampionUpdate::health,
+                ByteBufCodecs.FLOAT, ChampionUpdate::maxHealth,
                 ChampionUpdate::new
         );
-        @Override public Id<? extends CustomPayload> getId() { return SERVER_UPDATE_ID; }
+        @Override public Type<? extends CustomPacketPayload> type() { return SERVER_UPDATE_ID; }
     }
 
 
-    public record ChampionUpdateCl(UUID uuid, Text name, int tier, String affixes, float health, float maxHealth) implements CustomPayload {
-        public static final Id<ChampionUpdateCl> CLIENT_UPDATE_ID = new Id<>(Identifier.of(CHAMPIONS, "update_client_hud"));
-        public static final PacketCodec<RegistryByteBuf, ChampionUpdateCl> CODEC = PacketCodec.tuple(
-                Uuids.PACKET_CODEC, ChampionUpdateCl::uuid,
-                TextCodecs.REGISTRY_PACKET_CODEC, ChampionUpdateCl::name,
-                PacketCodecs.VAR_INT, ChampionUpdateCl::tier,
-                PacketCodecs.STRING, ChampionUpdateCl::affixes,
-                PacketCodecs.FLOAT, ChampionUpdateCl::health,
-                PacketCodecs.FLOAT, ChampionUpdateCl::maxHealth,
+    public record ChampionUpdateCl(UUID uuid, Component name, int tier, String affixes, float health, float maxHealth) implements CustomPacketPayload {
+        public static final Type<ChampionUpdateCl> CLIENT_UPDATE_ID = new Type<>(Identifier.fromNamespaceAndPath(CHAMPIONS, "update_client_hud"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, ChampionUpdateCl> CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC, ChampionUpdateCl::uuid,
+                ComponentSerialization.STREAM_CODEC, ChampionUpdateCl::name,
+                ByteBufCodecs.VAR_INT, ChampionUpdateCl::tier,
+                ByteBufCodecs.STRING_UTF8, ChampionUpdateCl::affixes,
+                ByteBufCodecs.FLOAT, ChampionUpdateCl::health,
+                ByteBufCodecs.FLOAT, ChampionUpdateCl::maxHealth,
                 ChampionUpdateCl::new
         );
-        @Override public Id<? extends CustomPayload> getId() { return CLIENT_UPDATE_ID; }
+        @Override public Type<? extends CustomPacketPayload> type() { return CLIENT_UPDATE_ID; }
     }
 
 
-    public record ChampionRemove(UUID uuid) implements CustomPayload {
-        public static final Id<ChampionRemove> REMOVE_ID = new Id<>(Identifier.of(CHAMPIONS, "remove_hud"));
-        public static final PacketCodec<RegistryByteBuf, ChampionRemove> CODEC = PacketCodec.tuple(
-                Uuids.PACKET_CODEC, ChampionRemove::uuid,
+    public record ChampionRemove(UUID uuid) implements CustomPacketPayload {
+        public static final Type<ChampionRemove> REMOVE_ID = new Type<>(Identifier.fromNamespaceAndPath(CHAMPIONS, "remove_hud"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, ChampionRemove> CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC, ChampionRemove::uuid,
                 ChampionRemove::new
         );
-        @Override public Id<? extends CustomPayload> getId() { return REMOVE_ID; }
+        @Override public Type<? extends CustomPacketPayload> type() { return REMOVE_ID; }
     }
 
     public static void register() {
-        PayloadTypeRegistry.playS2C().register(Payload.ChampionUpdate.SERVER_UPDATE_ID, Payload.ChampionUpdate.CODEC);
-        PayloadTypeRegistry.playS2C().register(Payload.ChampionUpdateCl.CLIENT_UPDATE_ID, Payload.ChampionUpdateCl.CODEC);
-        PayloadTypeRegistry.playS2C().register(Payload.ChampionRemove.REMOVE_ID, Payload.ChampionRemove.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payload.ChampionUpdate.SERVER_UPDATE_ID, Payload.ChampionUpdate.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payload.ChampionUpdateCl.CLIENT_UPDATE_ID, Payload.ChampionUpdateCl.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Payload.ChampionRemove.REMOVE_ID, Payload.ChampionRemove.CODEC);
     }
 }

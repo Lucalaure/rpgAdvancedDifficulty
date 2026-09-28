@@ -1,9 +1,9 @@
 package crystal.champions.client.net;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public record ChampionDisplayInfo(
-        Text name,
+        Component name,
         int tier,
         String affixes,
         float health,

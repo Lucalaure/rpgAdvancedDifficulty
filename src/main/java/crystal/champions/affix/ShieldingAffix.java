@@ -2,9 +2,10 @@ package crystal.champions.affix;
 
 import crystal.champions.IChampions;
 import crystal.champions.config.ChampionsConfigAffixes;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SpellParticleOption;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 
 /**
  * ShieldingAffix
@@ -20,9 +21,9 @@ public class ShieldingAffix extends Affix {
 
     @Override
     public void onTick(LivingEntity entity) {
-        if (entity.getWorld().isClient) return;
+        if (entity.level().isClientSide()) return;
 
-        final long time = entity.getWorld().getTime();
+        final long time = entity.level().getGameTime();
         final boolean shieldWork = (time % config.shieldAllTime) < config.shieldWork;
 
         IChampions champion = (IChampions) entity;
@@ -31,9 +32,9 @@ public class ShieldingAffix extends Affix {
             champion.champions$setShielding(shieldWork);
         }
         if (shieldWork) {
-            ((ServerWorld) entity.getWorld()).spawnParticles(
-                    ParticleTypes.EFFECT,
-                    entity.getX(), entity.getRandomBodyY(), entity.getZ(),
+            ((ServerLevel) entity.level()).sendParticles(
+                    SpellParticleOption.create(ParticleTypes.EFFECT, -1, 1.0F),
+                    entity.getX(), entity.getRandomY(), entity.getZ(),
                     0, 1.0, 1.0, 1.0, 0.8
             );
         }

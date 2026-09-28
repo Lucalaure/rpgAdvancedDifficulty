@@ -1,12 +1,12 @@
 package crystal.champions.affix;
 
 import crystal.champions.config.ChampionsConfigAffixes;
-import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
 
 /**
  * DesecratingAffix
@@ -21,18 +21,18 @@ public class DesecratingAffix extends Affix {
     ChampionsConfigAffixes config = ChampionsConfigAffixes.get();
 
     @Override
-    public void onAttack(LivingEntity entity, MobEntity mob) {
-        if (entity.age % config.timeBeforeDesecrating != 0) return;
+    public void onAttack(LivingEntity entity, Mob mob) {
+        if (entity.tickCount % config.timeBeforeDesecrating != 0) return;
         LivingEntity target = mob.getTarget();
         if (target == null) return;
-        World world = entity.getWorld();
-        AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(world, target.getX(), target.getY(), target.getZ());
+        Level world = entity.level();
+        AreaEffectCloud cloud = new AreaEffectCloud(world, target.getX(), target.getY(), target.getZ());
         cloud.setRadius(3.0f);
         cloud.setWaitTime(10);
         cloud.setDuration(config.cloudDuration);
-        StatusEffectInstance desecrating = new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 10, 1);
+        MobEffectInstance desecrating = new MobEffectInstance(MobEffects.INSTANT_DAMAGE, 10, 1);
         cloud.addEffect(desecrating);
 
-        world.spawnEntity(cloud);
+        world.addFreshEntity(cloud);
     }
 }

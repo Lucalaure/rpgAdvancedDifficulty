@@ -1,64 +1,85 @@
 package crystal.champions.client.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import crystal.champions.IBullet;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.entity.ShulkerBulletEntityRenderer;
-import net.minecraft.client.render.entity.model.ShulkerBulletEntityModel;
-import net.minecraft.entity.projectile.ShulkerBulletEntity;
-import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.ShulkerBulletRenderer;
+import net.minecraft.client.renderer.entity.state.ShulkerBulletRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.projectile.ShulkerBullet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ShulkerBulletEntityRenderer.class)
+@Mixin(ShulkerBulletRenderer.class)
 public class ShulkerBulletRendererMixin {
 
-    @Unique private static final Identifier ARCTIC_TEXTURE = Identifier.of("champions", "textures/entity/arctic.png");
-    @Unique private static final Identifier MOLTEN_TEXTURE = Identifier.of("champions", "textures/entity/molten.png");
+    @Unique private static final Identifier ARCTIC_TEXTURE = Identifier.fromNamespaceAndPath("champions", "textures/entity/arctic.png");
+    @Unique private static final Identifier MOLTEN_TEXTURE = Identifier.fromNamespaceAndPath("champions", "textures/entity/molten.png");
+    @Unique private static final Identifier DEFAULT_TEXTURE = Identifier.withDefaultNamespace("textures/entity/shulker/spark.png");
+
+    /**
+     * Texture override, extracted from IBullet into the render state (null = vanilla)
+     */
+    @Unique private static final RenderStateDataKey<Identifier> CHAMPIONS_TEXTURE = RenderStateDataKey.create(() -> "champions:bullet_texture");
+
+    @Unique private static final String SUBMIT =
+            "submit(Lnet/minecraft/client/renderer/entity/state/ShulkerBulletRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V";
+
+    /**
+     * Check IBullet while we still have the entity
+     */
+    @Inject(
+            method = "extractRenderState(Lnet/minecraft/world/entity/projectile/ShulkerBullet;Lnet/minecraft/client/renderer/entity/state/ShulkerBulletRenderState;F)V",
+            at = @At("TAIL")
+    )
+    private void champions$extractTexture(ShulkerBullet entity, ShulkerBulletRenderState state, float partialTicks, CallbackInfo ci) {
+        IBullet bullet = (IBullet) entity;
+
+        Identifier texture = null;
+        if (bullet.champions$isArctic()) {
+            texture = ARCTIC_TEXTURE;
+        } else if (bullet.champions$isMolten()) {
+            texture = MOLTEN_TEXTURE;
+        }
+        state.setData(CHAMPIONS_TEXTURE, texture);
+    }
 
     /**
      * Change bullet color
-     * @param model which model
-     * @param texture idk pray
-     * @param entity for check IBullet
+     * @param state render state with texture from IBullet
      * @return texture
      */
     @Redirect(
-            method = "render*",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/entity/model/ShulkerBulletEntityModel;getLayer(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/RenderLayer;"
-            )
-    )
-    private RenderLayer redirectGetLayer(ShulkerBulletEntityModel model, Identifier texture, ShulkerBulletEntity entity) {
-        IBullet bullet = (IBullet) entity;
-
-        if (bullet.champions$isArctic()) {
-            return model.getLayer(ARCTIC_TEXTURE);
-        } else if (bullet.champions$isMolten()) {
-            return model.getLayer(MOLTEN_TEXTURE);
-        }
-
-        return model.getLayer(texture);
-    }
-
-    @Redirect(
-            method = "render*",
+            method = SUBMIT,
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/render/entity/ShulkerBulletEntityRenderer;LAYER:Lnet/minecraft/client/render/RenderLayer;",
+                    target = "Lnet/minecraft/client/renderer/entity/ShulkerBulletRenderer;TEXTURE_LOCATION:Lnet/minecraft/resources/Identifier;",
                     opcode = org.objectweb.asm.Opcodes.GETSTATIC
             )
     )
-    private RenderLayer redirectLayerField(ShulkerBulletEntity entity) {
-        IBullet bullet = (IBullet) entity;
+    private Identifier redirectGetLayer(ShulkerBulletRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        Identifier texture = state.getData(CHAMPIONS_TEXTURE);
+        return texture != null ? texture : DEFAULT_TEXTURE;
+    }
 
-        if (bullet.champions$isArctic()) {
-            return RenderLayer.getEntityTranslucent(ARCTIC_TEXTURE);
-        } else if (bullet.champions$isMolten()) {
-            return RenderLayer.getEntityTranslucent(MOLTEN_TEXTURE);
-        }
-        return RenderLayer.getEntityTranslucent(Identifier.of("minecraft","textures/entity/shulker/spark.png"));
+    @Redirect(
+            method = SUBMIT,
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/client/renderer/entity/ShulkerBulletRenderer;RENDER_TYPE:Lnet/minecraft/client/renderer/rendertype/RenderType;",
+                    opcode = org.objectweb.asm.Opcodes.GETSTATIC
+            )
+    )
+    private RenderType redirectLayerField(ShulkerBulletRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        Identifier texture = state.getData(CHAMPIONS_TEXTURE);
+        return RenderTypes.entityTranslucent(texture != null ? texture : DEFAULT_TEXTURE);
     }
 }

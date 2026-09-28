@@ -5,13 +5,14 @@ import crystal.champions.IChampions;
 import crystal.champions.util.net.ChampionsNetworking;
 import crystal.champions.util.net.Payload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.boss.WitherEntity;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,14 +25,13 @@ import java.util.*;
  * Если сервер то рендерим тут
  * Если клиент отправляем пакеты с данными
  */
-@Mixin(MobEntity.class)
+@Mixin(Mob.class)
 public abstract class ServerUpdatePackets extends LivingEntity implements IChampions {
 
-    protected ServerUpdatePackets(net.minecraft.entity.EntityType<? extends LivingEntity> type, net.minecraft.world.World world) {
+    protected ServerUpdatePackets(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
     }
 
-    @Override @Shadow protected abstract void removeFromDimension();
     @Unique private final Set<UUID> trackedPlayerIds = new HashSet<>();
 
     /**
@@ -40,21 +40,21 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
      */
     @Inject(method = "tick", at = @At("TAIL"))
     private void manageChampionHud(CallbackInfo ci) {
-        if (this.getWorld().isClient || this.champions$getChampionTier() <= 0) return;
+        if (this.level().isClientSide() || this.champions$getChampionTier() <= 0) return;
 
         Set<UUID> currentIds = new HashSet<>();
-        MobEntity mob = (MobEntity) (Object) this;
-        final boolean BOSSES = mob instanceof EnderDragonEntity || mob instanceof WitherEntity;
+        Mob mob = (Mob) (Object) this;
+        final boolean BOSSES = mob instanceof EnderDragon || mob instanceof WitherBoss;
 
-        List<ServerPlayerEntity> nearby = this.getWorld().getEntitiesByClass(
-                ServerPlayerEntity.class, this.getBoundingBox().expand(80.0), p -> true
+        List<ServerPlayer> nearby = this.level().getEntitiesOfClass(
+                ServerPlayer.class, this.getBoundingBox().inflate(80.0), p -> true
         );
 
-        for (ServerPlayerEntity player : nearby) {
+        for (ServerPlayer player : nearby) {
             if (!ServerPlayNetworking.canSend(player, Payload.ChampionUpdate.SERVER_UPDATE_ID)) return;
 
-            final UUID uuid = player.getUuid();
-            final double distance = player.squaredDistanceTo(this);
+            final UUID uuid = player.getUUID();
+            final double distance = player.distanceToSqr(this);
 
             if (!BOSSES) {
                 if (distance <= 1600) {
@@ -76,13 +76,13 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
     }
 
     @Unique
-    private void removeIterator(Set<UUID> currentIds, MobEntity mob) {
+    private void removeIterator(Set<UUID> currentIds, Mob mob) {
         Iterator<UUID> it = trackedPlayerIds.iterator();
         while (it.hasNext()) {
             UUID id = it.next();
             if (!currentIds.contains(id)) {
                 try {
-                    ServerPlayerEntity player = Objects.requireNonNull(this.getWorld().getServer()).getPlayerManager().getPlayer(id);
+                    ServerPlayer player = Objects.requireNonNull(this.level().getServer()).getPlayerList().getPlayer(id);
                     if (player != null) {
                         ChampionsNetworking.sendRemove(player, mob);
                     }
@@ -100,13 +100,13 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
      */
     @Unique
     private void removeIt() {
-        if (this.getWorld().getServer() == null) return;
+        if (this.level().getServer() == null) return;
 
         Set<UUID> ids= new HashSet<>(trackedPlayerIds);
         for (UUID id : ids) {
-            ServerPlayerEntity player = this.getWorld().getServer().getPlayerManager().getPlayer(id);
-            MobEntity mob = (MobEntity) (Object) this;
-            if (player != null && mob.isDead()) {
+            ServerPlayer player = this.level().getServer().getPlayerList().getPlayer(id);
+            Mob mob = (Mob) (Object) this;
+            if (player != null && mob.isDeadOrDying()) {
                 ChampionsNetworking.sendRemove(player, mob);
             }
         }
