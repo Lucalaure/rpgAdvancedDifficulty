@@ -78,7 +78,7 @@ Players learn what each affix does through the **bestiary**, a book opened from 
 
 Affix descriptions are the `affix.<name>.desc` keys in `assets/champions/lang/en_us.json`.
 
-### Adding a mob-specific affix
+## Adding a mob-specific affix
 
 1. Create a class in `src/main/java/crystal/champions/affix/` that extends `Affix` (or `ZombieVariantAffix` for zombies).
 2. Override `canApplyTo(Mob mob)` to limit it to your mob, for example `return mob instanceof Skeleton;`.
