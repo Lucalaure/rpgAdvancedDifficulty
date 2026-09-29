@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChampionsConfigAffixes {
-    private static final int VERSION = 7;
+    private static final int VERSION = 8;
     private static ChampionsConfigAffixes instance;
 
     public final int cooldownBeforeBulletArtic;
@@ -97,7 +97,7 @@ public class ChampionsConfigAffixes {
             enabled.put(name, config.getOrDefault(toggleKey(name), true));
             affixSlots.put(name, Math.max(1, Math.min(8, config.getOrDefault(name + "_slots", AffixRegistry.defaultSlots(name)))));
         }
-        affixSlotWeightBonus = (float) config.getOrDefault("affix_slot_weight_bonus", 0.6);
+        affixSlotWeightBonus = (float) config.getOrDefault("affix_slot_weight_bonus", 0.25);
 
         bigBonusHealth = config.getOrDefault("big_bonus_health", 10);
         bigBonusDamage = config.getOrDefault("big_bonus_damage", 2);
@@ -115,7 +115,7 @@ public class ChampionsConfigAffixes {
             registry.append(name).append("_slots = ").append(AffixRegistry.defaultSlots(name)).append("\n");
         }
         registry.append("# Bigger affixes are picked more often when they fit: weight = 1 + bonus * (slots - 1)\n");
-        registry.append("affix_slot_weight_bonus = 0.6\n");
+        registry.append("affix_slot_weight_bonus = 0.25\n");
         return """
                 # Champions Affixes
                 

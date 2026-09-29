@@ -48,7 +48,7 @@ Champion creepers also explode bigger (radius × tier, capped by `maxCreeperExpl
 
 Each champion rolls its tier's number of affixes at random from the affixes it is allowed to have.
 
-**Affix slots:** each champion tier has a slot budget (tier 1: 1, tier 2: 2, tier 3: 3, tier 4: 4, tier 5: 8), and each affix takes up 1–4 slots (the *Slots* column). Affixes are picked until the slots are full, so a tier 2 champion gets either two 1-slot affixes or one 2-slot affix, and a 3-slot affix can only appear on tier 3 or higher. Bigger affixes are picked more often when they fit: each affix's weight is `1 + 0.6 × (slots − 1)`, so a 4-slot affix is 2.8× as likely as a 1-slot one. Slot costs (`<affix>_slots`) and the weight bonus (`affix_slot_weight_bonus`) are in `champions_affixes.properties`, and the tier budgets (`tierN_affix_slots`) in `champions_common.properties`; both are also in the Champions config screen.
+**Affix slots:** each champion tier has a slot budget (tier 1: 1, tier 2: 2, tier 3: 3, tier 4: 4, tier 5: 8), and each affix takes up 1–4 slots (the *Slots* column). Affixes are picked until the slots are full, so a tier 2 champion gets either two 1-slot affixes or one 2-slot affix, and a 3-slot affix can only appear on tier 3 or higher. Bigger affixes are picked more often when they fit: each affix's weight is `1 + 0.25 × (slots − 1)`, so 2-, 3- and 4-slot affixes are 1.25×, 1.5× and 1.75× as likely as a 1-slot one. Slot costs (`<affix>_slots`) and the weight bonus (`affix_slot_weight_bonus`) are in `champions_affixes.properties`, and the tier budgets (`tierN_affix_slots`) in `champions_common.properties`; both are also in the Champions config screen.
 
 ### General affixes (any champion)
 

@@ -383,7 +383,7 @@ public class ChampionsModMenu implements ModMenuApi {
         var affixTiers = entryBuilder.startSubCategory(Component.translatable("champions.hud.affix_slots"))
                 .setExpanded(false);
         affixTiers.add(entryBuilder.startFloatField(Component.translatable("champions.affix_slot_weight_bonus"), configA.affixSlotWeightBonus)
-                .setDefaultValue(0.6f).setMin(0.0f).setMax(10.0f)
+                .setDefaultValue(0.25f).setMin(0.0f).setMax(10.0f)
                 .setSaveConsumer(val -> changesAffix.put("affix_slot_weight_bonus", val))
                 .setTooltip(Component.translatable("champions.tooltip.affix_slot_weight_bonus"))
                 .build());
