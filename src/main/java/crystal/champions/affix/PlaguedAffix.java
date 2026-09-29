@@ -7,7 +7,7 @@ import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 /**
- * PlaguedAffix
+ * PlaguedAffix (the champion itself is immune to poison, see PlaguedMixin)
  * Здесь мы на моба ставим туманное зелье на отравление и все
  */
 public class PlaguedAffix extends Affix {
@@ -29,6 +29,5 @@ public class PlaguedAffix extends Affix {
         MobEffectInstance plagued = new MobEffectInstance(MobEffects.POISON, config.poisonDuration, config.poisonAmplifier);
         cloud.addEffect(plagued);
         world.addFreshEntity(cloud);
-        entity.removeEffect(MobEffects.POISON);
     }
 }

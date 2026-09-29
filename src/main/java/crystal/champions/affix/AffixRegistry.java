@@ -48,16 +48,16 @@ public class AffixRegistry {
             new Entry("webslinger", 2, WebslingerAffix::new),
             new Entry("brood_mother", 3, BroodMotherAffix::new),
             new Entry("pouncer", 1, PouncerAffix::new),
-            new Entry("blink", 3, BlinkAffix::new),
-            new Entry("thief", 1, ThiefAffix::new),
-            new Entry("alchemist", 3, AlchemistAffix::new),
+            new Entry("blink", 2, BlinkAffix::new),
+            new Entry("thief", 2, ThiefAffix::new),
+            new Entry("alchemist", 2, AlchemistAffix::new),
             new Entry("coven", 2, CovenAffix::new),
             new Entry("inferno", 3, InfernoAffix::new),
             new Entry("barrage", 4, BarrageAffix::new),
             new Entry("splitter", 3, SplitterAffix::new),
             new Entry("sticky", 1, StickyAffix::new),
             new Entry("warlord", 3, WarlordAffix::new),
-            new Entry("berserker", 4, BerserkerAffix::new)
+            new Entry("berserker", 2, BerserkerAffix::new)
             );
 
     /** Every affix name, enabled or not (config toggles, config screen, commands). */

@@ -9,6 +9,7 @@
     "CubeMobAttackHooksMixin",
     "DampeningMixin",
     "MobAttackHooksMixin",
+    "PlaguedMixin",
     "ProjectileHooksMixin",
     "ProjectileSpawnHooksMixin",
     "ReflectionMixin",

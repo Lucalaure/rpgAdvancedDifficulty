@@ -27,5 +27,9 @@ public interface IChampions {
     void champions$setAdaptation(int count);
 
     boolean champions$isShielding();
+
+    /** False for champions that must not drop champion loot (e.g. Splitter pieces). */
+    boolean champions$dropsChampionLoot();
+    void champions$setDropsChampionLoot(boolean drops);
     default void champions$setShielding(boolean value) {}
 }

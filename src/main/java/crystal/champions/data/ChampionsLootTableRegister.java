@@ -42,6 +42,8 @@ public class ChampionsLootTableRegister implements ModInitializer {
     private static CompoundTag createTierNbt(int tier) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("tier", tier);
+        // Champions that shouldn't drop loot (Splitter pieces) save championLoot = false
+        nbt.putBoolean("championLoot", true);
         return nbt;
     }
 }

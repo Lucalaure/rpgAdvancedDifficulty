@@ -38,6 +38,17 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
     @Unique private String type = "";
     @Unique private int adaptCount = 0;
     @Unique private boolean isShielding = false;
+    @Unique private boolean dropsChampionLoot = true;
+
+    @Override
+    public boolean champions$dropsChampionLoot() {
+        return dropsChampionLoot;
+    }
+
+    @Override
+    public void champions$setDropsChampionLoot(boolean drops) {
+        dropsChampionLoot = drops;
+    }
 
     /**
      * Устанавливаем сеттеры и геттеры
@@ -117,6 +128,7 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
     @Unique private static final String KEY_AFFIXES = "affixes";
     @Unique private static final String KEY_ADAPTATION_TYPE = "adaptationType";
     @Unique private static final String KEY_ADAPTATION_COUNT = "adaptationCount";
+    @Unique private static final String KEY_LOOT = "championLoot";
 
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
@@ -126,6 +138,8 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
 
         nbt.putString(KEY_ADAPTATION_TYPE, this.champions$getAdaptationType());
         nbt.putInt(KEY_ADAPTATION_COUNT, this.champions$getAdaptation());
+        // The champion loot tables match on this (see ChampionsLootTableRegister)
+        nbt.putBoolean(KEY_LOOT, this.dropsChampionLoot);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
@@ -134,5 +148,6 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
         nbt.getString(KEY_AFFIXES).ifPresent(this::champions$setAffixesString);
         nbt.getString(KEY_ADAPTATION_TYPE).ifPresent(this::champions$setAdaptationType);
         nbt.getInt(KEY_ADAPTATION_COUNT).ifPresent(this::champions$setAdaptation);
+        this.dropsChampionLoot = nbt.getBooleanOr(KEY_LOOT, true);
     }
 }

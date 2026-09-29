@@ -66,7 +66,7 @@ Each champion rolls its tier's number of affixes at random from the affixes it i
 | Lively | 1 | Regenerates 1 HP/sec, or 4 HP/sec when it has no target |
 | Molten | 3 | Fires homing projectiles that burn, and is fire-resistant |
 | Paralyzing | 3 | Small chance per hit to root the target in place |
-| Plagued | 2 | Poisons nearby creatures |
+| Plagued | 2 | Poisons nearby creatures, and is immune to poison itself |
 | Reflection | 3 | Hurts and pushes back anyone who damages it |
 | Shielding | 4 | Periodically becomes immune to all damage |
 
@@ -85,20 +85,20 @@ These only roll on the listed mobs.
 | Webslinger | 2 | Spiders‡ | Every 4 s throws a cobweb that traps the target where it lands; webs vanish after 5 s |
 | Brood Mother | 3 | Spiders (not cave spiders) | Spawns 2 cave spiders when hurt (max 6 nearby) |
 | Pouncer | 1 | Spiders‡ | Leaps at targets 4–12 blocks away |
-| Blink | 3 | Endermen | Teleports behind its attacker after being hit |
-| Thief | 1 | Endermen | 25% chance per hit to knock the item out of your hand |
-| Alchemist | 3 | Witches | Every 5 s also throws a potion of Weakness, Mining Fatigue or Levitation |
-| Coven | 2 | Witches | Every 2 s heals hostile mobs within 8 blocks |
+| Blink | 2 | Endermen | Teleports behind its attacker after being hit |
+| Thief | 2 | Endermen | 25% chance per hit to knock the item out of your hand |
+| Alchemist | 2 | Witches | Every 5 s also throws a potion of Weakness, Mining Fatigue or Levitation |
+| Coven | 2 | Witches | Arrives with 1–3 extra monsters (zombie/skeleton/spider), and every 2 s heals hostile mobs within 8 blocks |
 | Inferno | 3 | Blazes, ghasts | Fireballs leave a 3×3 patch of fire (needs the `mob_griefing` gamerule) |
 | Barrage | 4 | Blazes, ghasts | Every 4 s an extra burst: 5 small fireballs (blaze) or 2 large ones (ghast) |
-| Splitter | 3 | Slimes, magma cubes | Splits into 2 extra pieces; each piece is a champion with one of its affixes (at the lowest tier with enough slots for it) |
+| Splitter | 3 | Slimes, magma cubes | Splits into 2 extra pieces; each piece has a 50% chance to keep one of its other affixes (never Splitter). Pieces never drop champion loot |
 | Sticky | 1 | Slimes, magma cubes | Its hits give Slowness IV for 3 s |
-| Warlord | 3 | Illagers | Other illagers within 16 blocks get Strength |
-| Berserker | 4 | Vindicators | Attacks faster as its health drops (up to ~3× as often) |
+| Warlord | 3 | Illagers | Arrives with 2–3 extra pillagers/vindicators, and other illagers within 16 blocks get Strength |
+| Berserker | 2 | Vindicators | Attacks faster as its health drops (up to ~3× as often) |
 
 \* Zombie, husk, drowned, zombie villager and zombified piglin. † Skeleton, stray, bogged and wither skeleton (anything that uses the skeleton bow logic). ‡ Includes cave spiders.
 
-Minions summoned by affixes (Horde Caller zombies, Brood Mother cave spiders, Infested silverfish) never become champions themselves.
+Minions summoned by affixes (Horde Caller, Coven and Warlord followers, Brood Mother cave spiders, Infested silverfish) never become champions themselves.
 
 Every affix can be switched off in `champions_affixes.properties` or the Champions config screen. Big's stats are set there too.
 

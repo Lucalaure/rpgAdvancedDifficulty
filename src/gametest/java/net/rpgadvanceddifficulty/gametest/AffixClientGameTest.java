@@ -127,6 +127,7 @@ public class AffixClientGameTest implements FabricClientGameTest {
             run("inferno", this::testInferno);
             run("barrage", this::testBarrage);
             run("splitter", this::testSplitter);
+            run("champion loot", this::testChampionLoot);
             run("sticky", this::testSticky);
             run("warlord", this::testWarlord);
             run("berserker", this::testBerserker);
@@ -279,8 +280,14 @@ public class AffixClientGameTest implements FabricClientGameTest {
     }
 
     private void testPlagued() {
-        spawnChampion(EntityTypes.ZOMBIE, "plagued", 1.5);
+        // A spider, since zombies are undead and immune to poison anyway
+        UUID id = spawnChampion(EntityTypes.SPIDER, "plagued", 1.5);
         server.waitFor(s -> player(s).hasEffect(MobEffects.POISON), 5 * SECOND);
+        server.runOnServer(s -> {
+            Mob spider = champion(s, id);
+            check(!spider.hasEffect(MobEffects.POISON), "plagued: the champion poisoned itself");
+            check(!spider.addEffect(new net.minecraft.world.effect.MobEffectInstance(MobEffects.POISON, 100)), "plagued: the champion can be poisoned");
+        });
     }
 
     private void testInfected() {
@@ -483,6 +490,14 @@ public class AffixClientGameTest implements FabricClientGameTest {
             mob.tickCount = 40;
             affix("coven").onTick(mob);
             check(zombie.getHealth() > before, "coven: nearby hostile mob was not healed");
+            // 1-3 followers arrive with it (the plain zombie ally is the only other monster we spawned)
+            List<Mob> followers = nearby(s, Mob.class).stream()
+                    .filter(m -> m != mob && m != zombie && (m instanceof Zombie || m instanceof AbstractSkeleton || m instanceof net.minecraft.world.entity.monster.spider.Spider))
+                    .toList();
+            check(followers.size() >= 1 && followers.size() <= 3, "coven: expected 1-3 followers, found " + followers.size());
+            followers.forEach(f -> check(neverChampion(f), "coven: a follower can become a champion"));
+            affix("coven").onTick(mob);
+            check(nearby(s, Mob.class).size() == followers.size() + 2, "coven: summoned followers more than once");
         });
     }
 
@@ -525,12 +540,33 @@ public class AffixClientGameTest implements FabricClientGameTest {
             for (Slime piece : pieces) {
                 IChampions champion = (IChampions) piece;
                 String affixes = champion.champions$getAffixesString();
-                // The piece is the lowest tier with enough slots for its inherited affix (Splitter 3 slots, Sticky 1)
-                boolean oneAffix = affixes.equals("splitter") || affixes.equals("sticky");
-                int expectedTier = oneAffix ? PrepareChampions.lowestRankWithSlots(affix(affixes).getSlots()).tier() : -1;
-                check(oneAffix && champion.champions$getChampionTier() == expectedTier,
-                        "splitter: a piece did not inherit one affix (tier " + champion.champions$getChampionTier() + ", '" + affixes + "')");
+                if (affixes.isEmpty()) {
+                    check(neverChampion(piece), "splitter: a piece without an affix can still become a champion");
+                } else {
+                    check(affixes.equals("sticky"), "splitter: a piece inherited '" + affixes + "' (Splitter must not chain)");
+                    check(champion.champions$getChampionTier() == 1, "splitter: a sticky piece is tier " + champion.champions$getChampionTier());
+                    check(!champion.champions$dropsChampionLoot(), "splitter: a piece drops champion loot");
+                }
             }
+        });
+    }
+
+    private void testChampionLoot() {
+        UUID normal = spawnChampion(EntityTypes.ZOMBIE, "hasty", 3.0, 1);
+        UUID noLoot = spawnChampion(EntityTypes.ZOMBIE, "hasty", -3.0, 1);
+        server.runOnServer(s -> {
+            ((IChampions) champion(s, noLoot)).champions$setDropsChampionLoot(false);
+            for (UUID id : List.of(normal, noLoot)) {
+                Mob mob = champion(s, id);
+                mob.hurtServer(level(s), level(s).damageSources().playerAttack(player(s)), 10000.0f);
+            }
+        });
+        context.waitTicks(30);
+        server.runOnServer(s -> {
+            List<ItemEntity> books = nearby(s, ItemEntity.class).stream()
+                    .filter(item -> item.getItem().is(Items.ENCHANTED_BOOK) || item.getItem().is(Items.BOOK)).toList();
+            check(books.size() == 1, "champion loot: expected 1 book (from the normal champion only), found " + books.size());
+            check(books.getFirst().getX() > px, "champion loot: the book came from the champion that shouldn't drop loot");
         });
     }
 
@@ -558,6 +594,11 @@ public class AffixClientGameTest implements FabricClientGameTest {
             mob.tickCount = 20;
             affix("warlord").onTick(mob);
             check(champion(s, ally).hasEffect(MobEffects.STRENGTH), "warlord: nearby illager has no Strength");
+            List<net.minecraft.world.entity.monster.illager.AbstractIllager> illagers = nearby(s, net.minecraft.world.entity.monster.illager.AbstractIllager.class);
+            int followers = illagers.size() - 2;
+            check(followers >= 2 && followers <= 3, "warlord: expected 2-3 extra illagers, found " + followers);
+            illagers.stream().filter(i -> i != mob && i != champion(s, ally))
+                    .forEach(i -> check(neverChampion(i), "warlord: a follower can become a champion"));
         });
     }
 
