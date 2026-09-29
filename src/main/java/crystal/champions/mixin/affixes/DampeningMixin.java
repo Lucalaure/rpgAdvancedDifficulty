@@ -21,9 +21,10 @@ public class DampeningMixin {
      */
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true)
     private float applyDampening(float amount, ServerLevel level, DamageSource source) {
+        // Indirect damage: projectiles, explosions, and anything not dealt directly by its causer (e.g. potions)
+        final boolean indirect = source.is(DamageTypeTags.IS_PROJECTILE) || source.is(DamageTypeTags.IS_EXPLOSION) || !source.isDirect();
         if (this instanceof IChampions champion && champion.champions$getAffixesString().contains("dampening")
-                && (!source.is(DamageTypeTags.IS_PROJECTILE)
-                || !source.is(DamageTypeTags.IS_FIRE))) return amount * get().dampeningAmount;
+                && indirect) return amount * get().dampeningAmount;
 
         return amount;
     }

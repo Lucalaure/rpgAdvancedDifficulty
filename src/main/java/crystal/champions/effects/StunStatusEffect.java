@@ -9,13 +9,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class StunStatusEffect extends MobEffect {
-    private static final Map<UUID, Float> frozenYaw = new ConcurrentHashMap<>();
-    private static final Map<UUID, Float> frozenPitch = new ConcurrentHashMap<>();
 
     public StunStatusEffect() {
         super(MobEffectCategory.HARMFUL, 0x999999);
@@ -27,22 +22,11 @@ public class StunStatusEffect extends MobEffect {
 
     @Override
     public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity entity, int amplifier) {
+        // Movement and jumping are locked by the attribute modifiers above; this stops any leftover momentum
         entity.setDeltaMovement(0, 0, 0);
-
         if (entity instanceof Player player) {
-            UUID id = player.getUUID();
-
-            frozenYaw.putIfAbsent(id, player.getYRot());
-            frozenPitch.putIfAbsent(id, player.getXRot());
-            final float baseYaw = frozenYaw.get(id);
-            final float basePitch = frozenPitch.get(id);
-
-            player.setYRot(baseYaw + (float)((Math.random() - 0.5) * 0.1));
-            player.setXRot(basePitch + (float)((Math.random() - 0.5) * 0.1));
-
             player.setSprinting(false);
             player.setJumping(false);
-            player.needsSync = true;
         }
         return true;
     }

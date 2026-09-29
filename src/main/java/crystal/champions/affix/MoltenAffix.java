@@ -37,7 +37,8 @@ public class MoltenAffix extends Affix {
 
                 entity.level().addFreshEntity(bullet);
             }
-        } else if (entity.tickCount % 20 == 0) {
+        }
+        if (entity.tickCount % 20 == 0) {
             entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 40, 0, false, false, false));
         }
     }

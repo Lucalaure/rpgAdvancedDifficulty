@@ -37,7 +37,8 @@ public final class ChampionSpawner {
         if (!config.enableChampions) return;
 
         IChampions champion = (IChampions) mob;
-        if (champion.champions$getChampionTier() > 0) return;
+        // Already a champion, or marked as never-champion (NEVER_CHAMPION)
+        if (champion.champions$getChampionTier() != 0) return;
 
         // Champions' own notion of a boss (max_boss_tier in champions_common), not the c:bosses tag
         final boolean isBoss = mob instanceof WitherBoss || mob instanceof EnderDragon;

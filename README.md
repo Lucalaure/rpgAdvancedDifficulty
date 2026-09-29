@@ -3,7 +3,7 @@
 A Fabric mod for Minecraft 26.3 that combines two mods. (The 1.21.1 version is available as release v1.0.0.)
 
 - **RpgDifficulty** (Globox_Z, MIT): mobs get stronger as the world ages, and optionally with distance from spawn.
-- **Champions** (Crystal, GPLv3): any hostile mob can spawn as a *champion*, an elite with a tier (1–5), boosted stats, random affixes (Molten, Shielding, Magnetic, …), a boss bar and extra loot.
+- **Champions** (Crystal, GPLv3): any hostile mob can spawn as a *champion*, an elite with a tier (1–5), boosted stats, random affixes (Molten, Shielding, Sniper, …), a boss bar and extra loot.
 
 ## How they work together
 
@@ -15,7 +15,7 @@ Every mob spawn goes through a single pipeline:
    `tier weight × min(maxChampionChanceMultiplier, 1 + (factor − 1) × championChanceScaling × tier)`
 
    With the defaults, about 6% of eligible spawns are champions near spawn. Once the factor reaches 3.0 (about 20 hours of world time by default), about 19% are, and tier 4–5 champions are up to 8× as common.
-3. **Champion stats and affixes.** The tier's health and strength multipliers apply on top of the already-scaled stats. The champion then gets its random affixes (see below), which may include mob-specific ones such as the zombie-only *Big* and *Speedy*. Arrows and other projectiles from champions also deal the champion strength bonus.
+3. **Champion stats and affixes.** The tier's health and strength multipliers apply on top of the already-scaled stats. The champion then gets its random affixes (see below), which may include mob-specific ones such as Sniper for skeletons or Webslinger for spiders. Arrows and other projectiles from champions also deal the champion strength bonus.
 
 A mob is processed only once. A flag saved on the mob (`RpgDifficultyApplied`) stops scaling from being applied twice.
 
@@ -41,32 +41,63 @@ Each champion rolls its tier's number of affixes at random from the affixes it i
 | --- | --- |
 | Adaptive | Takes less and less damage from the same damage type in a row |
 | Arctic | Fires homing projectiles that slow its target |
+| Big | 1.3× size, +10 health, +2 damage, 30% slower |
 | Blinded | Its hits can blind the target for a few seconds |
-| Dampening | Takes less damage from indirect attacks |
+| Dampening | Takes half damage from indirect attacks (projectiles, explosions, potions) |
 | Desecrating | Periodically spawns a cloud of harming under its target |
 | Hasty | Much faster movement |
-| Infested | Spawns silverfish when it attacks or is hit |
+| Infested | Spawns silverfish every so often while fighting |
 | Knocking | Extra knockback, and slows the target briefly |
 | Lively | Regenerates 1 HP/sec, or 4 HP/sec when it has no target |
-| Magnetic | Periodically pulls its target toward itself |
 | Molten | Fires homing projectiles that burn, and is fire-resistant |
 | Paralyzing | Small chance per hit to root the target in place |
 | Plagued | Poisons nearby creatures |
-| Reflection | Reflects part of the damage it takes back at the attacker |
+| Reflection | Hurts and pushes back anyone who damages it |
 | Shielding | Periodically becomes immune to all damage |
 
 ### Mob-specific affixes
 
-These only roll on the listed mobs. Affixes in the same *group* can't roll together on one champion.
+These only roll on the listed mobs.
 
-| Affix | Mobs | Group | Effect |
-| --- | --- | --- | --- |
-| Big | Zombies* | `zombie_build` | 1.3× size, +10 health, +2 damage, 30% slower |
-| Speedy | Zombies* | `zombie_build` | 30% faster, −10 health |
+| Affix | Mobs | Effect |
+| --- | --- | --- |
+| Horde Caller | Zombies* | The first time it targets a player, 2–3 more zombies of its kind join the fight |
+| Sunproof | Zombies*, skeletons† | Doesn't burn in daylight |
+| Sniper | Skeletons† | Fires every 3 s instead of every 1–2 s, but arrows are 50% faster, perfectly aimed and deal +50% damage |
+| Volley | Skeletons† | Every 3 s fires a spread of 3 arrows |
+| Frost Archer | Strays | Its arrows freeze the target like powder snow |
+| Stalker | Creepers | Invisible (effect particles still show) until it starts to hiss |
+| Webslinger | Spiders‡ | Every 4 s throws a cobweb that traps the target where it lands; webs vanish after 5 s |
+| Brood Mother | Spiders (not cave spiders) | Spawns 2 cave spiders when hurt (max 6 nearby) |
+| Pouncer | Spiders‡ | Leaps at targets 4–12 blocks away |
+| Blink | Endermen | Teleports behind its attacker after being hit |
+| Thief | Endermen | 25% chance per hit to knock the item out of your hand |
+| Alchemist | Witches | Every 5 s also throws a potion of Weakness, Mining Fatigue or Levitation |
+| Coven | Witches | Every 2 s heals hostile mobs within 8 blocks |
+| Inferno | Blazes, ghasts | Fireballs leave a 3×3 patch of fire (needs the `mob_griefing` gamerule) |
+| Barrage | Blazes, ghasts | Every 4 s an extra burst: 5 small fireballs (blaze) or 2 large ones (ghast) |
+| Splitter | Slimes, magma cubes | Splits into 2 extra pieces; each piece is a tier 1 champion with one of its affixes |
+| Sticky | Slimes, magma cubes | Its hits give Slowness IV for 3 s |
+| Warlord | Illagers | Other illagers within 16 blocks get Strength |
+| Berserker | Vindicators | Attacks faster as its health drops (up to ~3× as often) |
 
-\* Zombie, husk, drowned, zombie villager and zombified piglin (adults only).
+\* Zombie, husk, drowned, zombie villager and zombified piglin. † Skeleton, stray, bogged and wither skeleton (anything that uses the skeleton bow logic). ‡ Includes cave spiders.
 
-Their stats are set in `champions_affixes.properties`, and both can be switched off there or in the Champions config screen.
+Minions summoned by affixes (Horde Caller zombies, Brood Mother cave spiders, Infested silverfish) never become champions themselves.
+
+Every affix can be switched off in `champions_affixes.properties` or the Champions config screen. Big's stats are set there too.
+
+## Testing commands
+
+Operators (permission level 2) can spawn champions to try affixes out:
+
+| Command | What it does |
+| --- | --- |
+| `/champion list` | Lists every enabled affix and which mobs can have it |
+| `/champion demo <affix>` | Spawns a fitting mob with only that affix, 3 blocks in front of you |
+| `/champion spawn <mob> <affix> [affix...]` | Spawns any mob with any combination of affixes (space or comma separated). The tier is the number of affixes, up to 5 |
+
+For example, `/champion demo webslinger` or `/champion spawn minecraft:skeleton sniper volley sunproof`. Affix names autocomplete, and the command refuses affixes the mob can't have.
 
 ## Bestiary
 
@@ -80,18 +111,26 @@ Affix descriptions are the `affix.<name>.desc` keys in `assets/champions/lang/en
 
 ## Adding a mob-specific affix
 
-1. Create a class in `src/main/java/crystal/champions/affix/` that extends `Affix` (or `ZombieVariantAffix` for zombies).
-2. Override `canApplyTo(Mob mob)` to limit it to your mob, for example `return mob instanceof Skeleton;`.
-3. Put permanent stat changes in `onApply(Mob mob)`, which runs once when the champion is created. Put ongoing behavior in `onTick`, `onAttack` or `onHurt`.
-4. Optionally return a name from `getExclusiveGroup()` so opposing variants can't roll together.
-5. Add it to `FACTORY_LIST` in `AffixRegistry`, add a matching `rN` toggle (the next number) and default to `ChampionsConfigAffixes`, and bump that config's `VERSION`.
-6. Add `"affix.<name>"` (the name shown above the champion's health bar) and `"affix.<name>.desc"` (its bestiary description) to `assets/champions/lang/en_us.json`. Override `getMobsKey()` to show which mobs can have it in the bestiary.
+1. Create a class in `src/main/java/crystal/champions/affix/` that extends `MobSpecificAffix`, passing its name, bestiary label, demo mob and which mobs can roll it:
+   ```java
+   super("sniper", "skeletons", EntityTypes.SKELETON, mob -> mob instanceof AbstractSkeleton);
+   ```
+2. Override the hooks it needs (see `Affix`):
+   - `onApply(mob)`: once when the champion is created (permanent stat changes)
+   - `onTick(entity)` / `onAttack(entity, mob)`: every tick (`mob.getTarget()` is its target)
+   - `onHurt(champion, target)`: its melee or slime-contact hit landed
+   - `onDamaged(champion, source, amount)`: it took a hit
+   - `onProjectileSpawn(owner, projectile)` / `onProjectileHit(owner, projectile, hit)`: its arrows, fireballs, potions, etc.
+3. Optionally return a name from `getExclusiveGroup()` so opposing affixes can't roll together.
+4. Add `Map.entry("<name>", YourAffix::new)` to `FACTORY_LIST` in `AffixRegistry`. The config toggle, the config screen entry, the bestiary page and `/champion` support come from that list automatically.
+5. Add `"affix.<name>"` (shown above the health bar) and `"affix.<name>.desc"` (bestiary text) to `assets/champions/lang/en_us.json`, plus `"champions.bestiary.mobs.<label>"` if you used a new label.
+6. Add a check for it to `src/gametest/.../AffixClientGameTest.java`.
 
 ## Changes from the original mods
 
 - Champions' separate spawn hooks were removed (the `initialize`, Wither/Dragon constructor and slime-split hooks). Champions are now rolled in the shared pipeline above. The original mods conflicted here: RpgDifficulty's "already strengthened" check skipped difficulty scaling for every champion.
 - `max_boss_tier` in `champions_common` is now respected. The original mod ignored it. With the default of `0`, the Wither and Ender Dragon never become champions.
-- RpgDifficulty's big/speed zombie variants are now the zombie-only champion affixes *Big* and *Speedy*. (In the original mod, big zombies also never got their bonus stats because of the same "already strengthened" check.)
+- RpgDifficulty's big zombie variant is now the *Big* champion affix, which works on any mob (it uses the scale attribute). (In the original mod, big zombies also never got their bonus stats because of the same "already strengthened" check.)
 - Creeper explosion power, after champion tier and difficulty scaling, is capped by `maxCreeperExplosionPower` (default 12; a vanilla creeper is 3).
 
 ## Configuration
@@ -100,7 +139,7 @@ Affix descriptions are the `affix.<name>.desc` keys in `assets/champions/lang/en
 | --- | --- |
 | `config/rpgdifficulty.json` | Time and (optional) distance scaling, bosses, and the champion scaling options (*Champions* category) |
 | `config/Champions/champions_common.properties` | Tier weights, affix counts, per-tier health/strength growth, `max_boss_tier` |
-| `config/Champions/champions_affixes.properties` | Enable or disable individual affixes, and each affix's settings (including the Big/Speedy zombie stats) |
+| `config/Champions/champions_affixes.properties` | Enable or disable individual affixes, and each affix's settings (including Big's stats) |
 | `config/Champions/champions_client.properties` | HUD colors and offsets |
 
 With Mod Menu installed, the config button opens a hub that links to both config screens.
@@ -150,7 +189,10 @@ Requires JDK 25 or newer.
 
 The jar is written to `build/libs/`.
 
-`./gradlew runClientGameTest` runs the automated client test in `src/gametest`. It creates a test world, spawns a champion, and saves screenshots of the champion HUD, the inventory bestiary button and the bestiary pages to `build/run/clientGameTest/screenshots/`. At runtime it needs Fabric API and Cloth Config; Mod Menu is optional. The mod declares `provides: ["rpgdifficulty", "champions"]`, so Fabric refuses to load it alongside the original mods.
+`./gradlew runClientGameTest` runs the automated client tests in `src/gametest` (the game window opens for about a minute):
+
+- `AffixClientGameTest` spawns a champion with each affix next to the player and checks its real effect in the world, plus the `/champion` commands. Results are logged as `AFFIX TEST: <affix> OK`.
+- `BestiaryClientGameTest` saves screenshots of the champion HUD, the inventory bestiary button and the bestiary pages to `build/run/clientGameTest/screenshots/`. At runtime it needs Fabric API and Cloth Config; Mod Menu is optional. The mod declares `provides: ["rpgdifficulty", "champions"]`, so Fabric refuses to load it alongside the original mods.
 
 ## License
 

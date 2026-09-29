@@ -4,12 +4,18 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AdaptiveMixin",
-    "BlindedAffix",
+    "AffixHooksMixin",
+    "BerserkerMixin",
+    "CubeMobAttackHooksMixin",
     "DampeningMixin",
-    "KnockingAffix",
-    "ParalyzingMixin",
+    "MobAttackHooksMixin",
+    "ProjectileHooksMixin",
+    "ProjectileSpawnHooksMixin",
     "ReflectionMixin",
-    "ShieldingMixin"
+    "ShieldingMixin",
+    "SniperMixin",
+    "SplitterMixin",
+    "SunproofMixin"
   ],
   "injectors": {
     "defaultRequire": 1

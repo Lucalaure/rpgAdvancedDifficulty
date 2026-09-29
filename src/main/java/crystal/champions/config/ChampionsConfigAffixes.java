@@ -6,10 +6,11 @@ import crystal.champions.util.SimpleConfig;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ChampionsConfigAffixes {
-    private static final int VERSION = 3;
+    private static final int VERSION = 5;
     private static ChampionsConfigAffixes instance;
 
     public final int cooldownBeforeBulletArtic;
@@ -25,7 +26,6 @@ public class ChampionsConfigAffixes {
     public final int maxSilverFishCount;
     public final short infectedSilverfish;
     public final float infectedFactorHealth;
-    public final double strength;
     public final int entityHeal;
     public final int entityHealNoTarget;
     public final int entityHealTime;
@@ -36,32 +36,13 @@ public class ChampionsConfigAffixes {
     public final int blindDuration;
     public final float paralyzeChance;
     public final int paralyzeDuration;
-    public final int magneticCooldown;
-    public final int magneticPullTime;
-    public final int bigZombieBonusHealth;
-    public final int bigZombieBonusDamage;
-    public final float bigZombieSlowness;
-    public final float bigZombieSize;
-    public final float speedyZombieSpeed;
-    public final int speedyZombieHealthMalus;
+    public final int bigBonusHealth;
+    public final int bigBonusDamage;
+    public final float bigSlowness;
+    public final float bigSize;
 
-    public final boolean r1;
-    public final boolean r2;
-    public final boolean r3;
-    public final boolean r4;
-    public final boolean r5;
-    public final boolean r6;
-    public final boolean r7;
-    public final boolean r8;
-    public final boolean r9;
-    public final boolean r10;
-    public final boolean r11;
-    public final boolean r12;
-    public final boolean r13;
-    public final boolean r14;
-    public final boolean r15;
-    public final boolean r16;
-    public final boolean r17;
+    // Affix name -> in the pool. Keys in the file are "<name>_affix"
+    private final Map<String, Boolean> enabled = new HashMap<>();
 
     // Использую SimpleConfig
     // https://github.com/magistermaks/fabric-simplelibs/blob/master/simple-config/SimpleConfig.java
@@ -91,9 +72,6 @@ public class ChampionsConfigAffixes {
         entityHealNoTarget = config.getOrDefault("entity_heal_no_target", 4);
         entityHealTime = config.getOrDefault("when_entity_heal", 20);
 
-        magneticCooldown = config.getOrDefault("magnetic_cooldown", 600);
-        magneticPullTime = config.getOrDefault("magnetic_pull_time", 150);
-        strength = config.getOrDefault("magnetic_strength", 1);
 
         cooldownBeforeBulletMolten = config.getOrDefault("cooldown_molten", 90);
 
@@ -111,57 +89,25 @@ public class ChampionsConfigAffixes {
         paralyzeChance = (float) config.getOrDefault("paralyzing_chance", 0.1);
         paralyzeDuration = config.getOrDefault("paralyzing_duration", 60);
 
-        r1 = config.getOrDefault("hasty_affix", true);
-        r2 = config.getOrDefault("arctic_affix", true);
-        r3 = config.getOrDefault("molten_affix", true);
-        r4 = config.getOrDefault("desecrating_affix", true);
-        r5 = config.getOrDefault("plagued_affix", true);
-        r6 = config.getOrDefault("infected_affix", true);
-        r7 = config.getOrDefault("adaptive_affix", true);
-        r8 = config.getOrDefault("knocking_affix", true);
-        r9 = config.getOrDefault("shielding_affix", true);
-        r10 = config.getOrDefault("reflective_affix", true);
-        r11 = config.getOrDefault("magnetic_affix", true);
-        r12 = config.getOrDefault("dampening_affix", true);
-        r13 = config.getOrDefault("lively_affix", true);
-        r14 = config.getOrDefault("blinded_affix", true);
-        r15 = config.getOrDefault("paralyzing_affix", true);
-        r16 = config.getOrDefault("big_affix", true);
-        r17 = config.getOrDefault("speedy_affix", true);
+        for (String name : AffixRegistry.NAMES) {
+            enabled.put(name, config.getOrDefault(toggleKey(name), true));
+        }
 
-        bigZombieBonusHealth = config.getOrDefault("big_zombie_bonus_health", 10);
-        bigZombieBonusDamage = config.getOrDefault("big_zombie_bonus_damage", 2);
-        bigZombieSlowness = (float) config.getOrDefault("big_zombie_slowness", 0.7);
-        bigZombieSize = (float) config.getOrDefault("big_zombie_size", 1.3);
-        speedyZombieSpeed = (float) config.getOrDefault("speedy_zombie_speed", 1.3);
-        speedyZombieHealthMalus = config.getOrDefault("speedy_zombie_health_malus", 10);
+        bigBonusHealth = config.getOrDefault("big_bonus_health", 10);
+        bigBonusDamage = config.getOrDefault("big_bonus_damage", 2);
+        bigSlowness = (float) config.getOrDefault("big_slowness", 0.7);
+        bigSize = (float) config.getOrDefault("big_size", 1.3);
     }
 
     private String defaultConfig(String filename) {
+        StringBuilder registry = new StringBuilder("# Registry\n# If true, the affix will be in the pool\n");
+        for (String name : AffixRegistry.NAMES) {
+            registry.append(toggleKey(name)).append(" = true\n");
+        }
         return """
                 # Champions Affixes
                 
-                # Registry
-                # If true, the affix will be in the pool
-                hasty_affix = true
-                arctic_affix = true
-                molten_affix = true
-                desecrating_affix = true
-                plagued_affix = true
-                infected_affix = true
-                adaptive_affix = true
-                knocking_affix = true
-                shielding_affix = true
-                reflective_affix = true
-                magnetic_affix = true
-                dampening_affix = true
-                lively_affix = true
-                blinded_affix = true
-                paralyzing_affix = true
-                # Zombie-only affixes
-                big_affix = true
-                speedy_affix = true
-                
+                %s                
                 # Arctic
                 # Cooldown between arctic bullets (ticks)
                 cooldown_arctic = 160
@@ -206,19 +152,12 @@ public class ChampionsConfigAffixes {
                 # Knocking
                 knocking_strength = 1.5
                 
-                # Magnetic
-                # Cooldown duration (ticks)
-                magnetic_cooldown = 600
-                # Pull time (ticks)
-                magnetic_pull_time = 150
-                # Pull strength
-                magnetic_strength = 1
                 
                 # Hasty
                 # Speed effect amplifier
                 hasty_amplifier = 4
                 
-                # Damage reduction multiplier (0.5 = 50% less damage taken)
+                # Damage reduction multiplier (0.5 = 50%% less damage taken)
                 dampening_amount = 0.5
                 
                 # Shield
@@ -239,19 +178,23 @@ public class ChampionsConfigAffixes {
                 # Paralyze effect duration (ticks)
                 paralyzing_duration = 60
 
-                # Big (zombies only)
-                big_zombie_bonus_health = 10
-                big_zombie_bonus_damage = 2
+                # Big
+                big_bonus_health = 10
+                big_bonus_damage = 2
                 # Movement speed multiplier
-                big_zombie_slowness = 0.7
+                big_slowness = 0.7
                 # Model and hitbox scale
-                big_zombie_size = 1.3
+                big_size = 1.3
+                """.formatted(registry);
+    }
 
-                # Speedy (zombies only)
-                # Movement speed multiplier
-                speedy_zombie_speed = 1.3
-                speedy_zombie_health_malus = 10
-                """;
+    /** Config key that toggles an affix. Reflection keeps its old key so existing files still work. */
+    public static String toggleKey(String affixName) {
+        return (affixName.equals("reflection") ? "reflective" : affixName) + "_affix";
+    }
+
+    public boolean isEnabled(String affixName) {
+        return enabled.getOrDefault(affixName, true);
     }
 
     public static void save(Map<String, Object> changes) {

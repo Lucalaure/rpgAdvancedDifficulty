@@ -6,7 +6,8 @@
   "environment": "*",
   "entrypoints": {
     "fabric-client-gametest": [
-      "net.rpgadvanceddifficulty.gametest.BestiaryClientGameTest"
+      "net.rpgadvanceddifficulty.gametest.BestiaryClientGameTest",
+      "net.rpgadvanceddifficulty.gametest.AffixClientGameTest"
     ]
   },
   "depends": {

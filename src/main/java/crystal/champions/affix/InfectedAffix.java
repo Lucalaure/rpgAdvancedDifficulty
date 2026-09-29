@@ -1,6 +1,8 @@
 package crystal.champions.affix;
 
+import net.minecraft.world.entity.Mob;
 import crystal.champions.config.ChampionsConfigAffixes;
+import crystal.champions.IChampions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -24,9 +26,10 @@ public class InfectedAffix extends Affix {
     ChampionsConfigAffixes config = ChampionsConfigAffixes.get();
 
     @Override
-    public void onTick(LivingEntity entity) {
-        if (entity.tickCount % config.timeBeforeInfected != 0) return;
-        
+    public void onAttack(LivingEntity entity, Mob mob) {
+        // Only while fighting (it has a target), so idle champions don't fill the area with silverfish
+        if (entity.tickCount % config.timeBeforeInfected != 0 || mob.getTarget() == null) return;
+
         ServerLevel world = (ServerLevel) entity.level();
 
         List<Silverfish> nearby = world.getEntitiesOfClass(Silverfish.class, entity.getBoundingBox().inflate(40.0), e -> true);
@@ -42,6 +45,8 @@ public class InfectedAffix extends Affix {
 
                 silverfish.snapTo(entity.getX(), entity.getY(), entity.getZ(), entity.getRandom().nextFloat() * 360.0F, 0.0F);
                 silverfish.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), EntitySpawnReason.EVENT, null);
+                // Minions can't roll as champions themselves (otherwise infested silverfish would snowball)
+                ((IChampions) silverfish).champions$setChampionTier(IChampions.NEVER_CHAMPION);
 
                 world.addFreshEntity(silverfish);
             }

@@ -20,12 +20,10 @@
     "entity.SmallFireballEntityMixin",
     "entity.WitherEntityMixin",
     "entity.WitherSkullEntityMixin",
-    "entity.WolfEntityMixin",
-    "entity.ZombieEntityMixin"
+    "entity.WolfEntityMixin"
   ],
   "client": [
-    "client.ScreenMixin",
-    "client.ZombieEntityRendererMixin"
+    "client.ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,6 +31,7 @@ public class ReflectionMixin {
     private void applyReflection(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this instanceof IChampions champion && champion.champions$getAffixesString().contains("reflection")) {
 
+            if (!cir.getReturnValueZ() || source.is(DamageTypes.THORNS)) return;
             if (!(source.getEntity() instanceof LivingEntity attacker) || source.getEntity() == null) return;
 
             DamageSource thorns = attacker.level().damageSources().thorns(source.getDirectEntity());

@@ -42,7 +42,7 @@ public class BestiaryClientGameTest implements FabricClientGameTest {
                 zombie.setYRot(90);
                 player.level().addFreshEntity(zombie);
                 ((IChampions) zombie).champions$setChampionTier(2);
-                ((IChampions) zombie).champions$setAffixesString("big,magnetic");
+                ((IChampions) zombie).champions$setAffixesString("big,hasty");
                 new BigAffix().onApply(zombie);
             });
             context.getInput().lookAt(-90, 10);
@@ -62,9 +62,9 @@ public class BestiaryClientGameTest implements FabricClientGameTest {
             context.takeScreenshot("bestiary_4_intro_page");
 
             showPage(context, 1, "bestiary_5_tiers_page");
-            showPage(context, 12, "bestiary_6_magnetic_page");
-            showPage(context, 17, "bestiary_7_big_page");
-            showPage(context, 2, "bestiary_8_undiscovered_page");
+            showPage(context, 2, "bestiary_6_hasty_page");
+            showPage(context, 16, "bestiary_7_big_page");
+            showPage(context, 3, "bestiary_8_undiscovered_page");
         }
     }
 

@@ -1,6 +1,9 @@
 package crystal.champions;
 
 import crystal.champions.bestiary.Bestiary;
+import crystal.champions.command.ChampionCommand;
+import crystal.champions.util.TemporaryBlocks;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import crystal.champions.config.ChampionsConfigAffixes;
 import crystal.champions.config.ChampionsConfigServer;
 import crystal.champions.effects.CustomStatusEffects;
@@ -31,6 +34,8 @@ public class Champions implements ModInitializer {
 
         Payload.register();
         Bestiary.register();
+        TemporaryBlocks.register();
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ChampionCommand.register(dispatcher, registryAccess));
         affixesRegister();
         CustomStatusEffects.registerEffects();
 

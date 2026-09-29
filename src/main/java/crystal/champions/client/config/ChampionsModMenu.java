@@ -2,6 +2,7 @@ package crystal.champions.client.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import crystal.champions.affix.AffixRegistry;
 import crystal.champions.config.ChampionsConfigAffixes;
 import crystal.champions.config.ChampionsConfigClient;
 import crystal.champions.config.ChampionsConfigServer;
@@ -367,156 +368,39 @@ public class ChampionsModMenu implements ModMenuApi {
         var registry = entryBuilder.startSubCategory(Component.translatable("champions.hud.registry"))
                 .setExpanded(true);
 
-        final String r1 = "hasty_affix";
-        final String r2 = "arctic_affix";
-        final String r3 = "molten_affix";
-        final String r4 = "desecrating_affix";
-        final String r5 = "plagued_affix";
-        final String r6 = "infected_affix";
-        final String r7 = "adaptive_affix";
-        final String r8 = "knocking_affix";
-        final String r9 = "shielding_affix";
-        final String r10 = "reflective_affix";
-        final String r11 = "magnetic_affix";
-        final String r12 = "dampening_affix";
-        final String r13 = "lively_affix";
-        final String r14 = "blinded_affix";
-        final String r15 = "paralyzing_affix";
-
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.hasty"), configA.r1)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r1, val))
-                .setTooltip(Component.translatable("champions.tooltip.hasty_affix"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.arctic"), configA.r2)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r2, val))
-                .setTooltip(Component.translatable("champions.tooltip.arctic_affix"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.molten"), configA.r3)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r3, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.molten"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.desecrating"), configA.r4)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r4, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.desecrating"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.plagued"), configA.r5)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r5, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.plagued"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.infected"), configA.r6)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r6, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.infected"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.adaptive"), configA.r7)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r7, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.adaptive"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.knocking"), configA.r8)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r8, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.knocking"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.shielding"), configA.r9)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r9, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.shielding"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.reflection"), configA.r10)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r10, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.reflection"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.magnetic"), configA.r11)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r11, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.magnetic"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.dampening"), configA.r12)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r12, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.dampening"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.lively"), configA.r13)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r13, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.lively"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.blinded"), configA.r14)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r14, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.blinded"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.paralyzing"), configA.r15)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put(r15, val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.paralyzing"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.big"), configA.r16)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put("big_affix", val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.big"))
-                .build());
-
-        registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix.speedy"), configA.r17)
-                .setDefaultValue(true)
-                .setSaveConsumer(val -> changesAffix.put("speedy_affix", val))
-                .setTooltip(Component.translatable("champions.tooltip.affix.speedy"))
-                .build());
+        // One toggle per affix, generated from the registry
+        for (String name : AffixRegistry.NAMES) {
+            final String key = ChampionsConfigAffixes.toggleKey(name);
+            registry.add(entryBuilder.startBooleanToggle(Component.translatable("affix." + name), configA.isEnabled(name))
+                    .setDefaultValue(true)
+                    .setSaveConsumer(val -> changesAffix.put(key, val))
+                    .setTooltip(Component.translatable("affix." + name + ".desc"))
+                    .build());
+        }
 
         affixes.addEntry(registry.build());
 
-        var zombieVariants = entryBuilder.startSubCategory(Component.translatable("champions.hud.zombie_variants"))
+        var big = entryBuilder.startSubCategory(Component.translatable("affix.big"))
                 .setExpanded(true);
 
-        zombieVariants.add(entryBuilder.startIntField(Component.translatable("champions.big_zombie_bonus_health"), configA.bigZombieBonusHealth)
+        big.add(entryBuilder.startIntField(Component.translatable("champions.big_bonus_health"), configA.bigBonusHealth)
                 .setDefaultValue(10).setMin(0).setMax(1000)
-                .setSaveConsumer(val -> changesAffix.put("big_zombie_bonus_health", val))
+                .setSaveConsumer(val -> changesAffix.put("big_bonus_health", val))
                 .build());
-        zombieVariants.add(entryBuilder.startIntField(Component.translatable("champions.big_zombie_bonus_damage"), configA.bigZombieBonusDamage)
+        big.add(entryBuilder.startIntField(Component.translatable("champions.big_bonus_damage"), configA.bigBonusDamage)
                 .setDefaultValue(2).setMin(0).setMax(100)
-                .setSaveConsumer(val -> changesAffix.put("big_zombie_bonus_damage", val))
+                .setSaveConsumer(val -> changesAffix.put("big_bonus_damage", val))
                 .build());
-        zombieVariants.add(entryBuilder.startFloatField(Component.translatable("champions.big_zombie_slowness"), configA.bigZombieSlowness)
+        big.add(entryBuilder.startFloatField(Component.translatable("champions.big_slowness"), configA.bigSlowness)
                 .setDefaultValue(0.7f).setMin(0.1f).setMax(2.0f)
-                .setSaveConsumer(val -> changesAffix.put("big_zombie_slowness", val))
+                .setSaveConsumer(val -> changesAffix.put("big_slowness", val))
                 .build());
-        zombieVariants.add(entryBuilder.startFloatField(Component.translatable("champions.big_zombie_size"), configA.bigZombieSize)
+        big.add(entryBuilder.startFloatField(Component.translatable("champions.big_size"), configA.bigSize)
                 .setDefaultValue(1.3f).setMin(0.5f).setMax(3.0f)
-                .setSaveConsumer(val -> changesAffix.put("big_zombie_size", val))
-                .build());
-        zombieVariants.add(entryBuilder.startFloatField(Component.translatable("champions.speedy_zombie_speed"), configA.speedyZombieSpeed)
-                .setDefaultValue(1.3f).setMin(0.1f).setMax(3.0f)
-                .setSaveConsumer(val -> changesAffix.put("speedy_zombie_speed", val))
-                .build());
-        zombieVariants.add(entryBuilder.startIntField(Component.translatable("champions.speedy_zombie_health_malus"), configA.speedyZombieHealthMalus)
-                .setDefaultValue(10).setMin(0).setMax(1000)
-                .setSaveConsumer(val -> changesAffix.put("speedy_zombie_health_malus", val))
+                .setSaveConsumer(val -> changesAffix.put("big_size", val))
                 .build());
 
-        affixes.addEntry(zombieVariants.build());
+        affixes.addEntry(big.build());
 
 
 

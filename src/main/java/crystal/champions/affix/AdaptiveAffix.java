@@ -18,27 +18,38 @@ public class AdaptiveAffix extends Affix {
         super("adaptive");
     }
 
+    /** Damage after adaptation; does not change the adaptation state. */
     public float calculateDamage(LivingEntity entity, DamageSource source, float amount) {
+        final String currentType = adaptationType(entity, source);
+        if (currentType == null) return amount;
 
-        if (!(source.getEntity() instanceof LivingEntity)) return amount;
         IChampions champion = (IChampions) entity;
-        Optional<ResourceKey<DamageType>> key = source.typeHolder().unwrapKey();
-        if (key.isEmpty()) return amount;
-        if (source.getDirectEntity() == champion&& source.getEntity() == champion) return amount;
-        final String currentType = key.get().identifier().toString();
-
-        final String lastType = champion.champions$getAdaptationType();
         final int count = champion.champions$getAdaptation();
-        if (lastType.equals(currentType)) {
-            champion.champions$setAdaptation(count + 1);
-            final float reduction = amount * 0.15f * count;
-            final float newAmount = amount - reduction;
-            final float minDamage = amount * 0.2f;
-            return Math.max(newAmount, minDamage);
+        if (!champion.champions$getAdaptationType().equals(currentType)) return amount;
+
+        final float reduction = amount * 0.15f * count;
+        final float minDamage = amount * 0.2f;
+        return Math.max(amount - reduction, minDamage);
+    }
+
+    /** Called only for hits that landed: same type in a row adapts further, a new type resets it. */
+    public void recordHit(LivingEntity entity, DamageSource source) {
+        final String currentType = adaptationType(entity, source);
+        if (currentType == null) return;
+
+        IChampions champion = (IChampions) entity;
+        if (champion.champions$getAdaptationType().equals(currentType)) {
+            champion.champions$setAdaptation(champion.champions$getAdaptation() + 1);
         } else {
             champion.champions$setAdaptationType(currentType);
             champion.champions$setAdaptation(1);
-            return amount;
         }
+    }
+
+    private static String adaptationType(LivingEntity entity, DamageSource source) {
+        if (!(source.getEntity() instanceof LivingEntity)) return null;
+        if (source.getDirectEntity() == entity && source.getEntity() == entity) return null;
+        Optional<ResourceKey<DamageType>> key = source.typeHolder().unwrapKey();
+        return key.map(k -> k.identifier().toString()).orElse(null);
     }
 }
