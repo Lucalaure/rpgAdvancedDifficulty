@@ -64,7 +64,7 @@ public class BestiaryScreen extends BookViewScreen {
             if (rank.tier() <= 0) continue;
             tiers.append("\n")
                     .append(Component.literal("★".repeat(rank.tier()) + " ").withStyle(ChatFormatting.GOLD))
-                    .append(Component.translatable(rank.affixes() == 1 ? "champions.bestiary.tier_affix" : "champions.bestiary.tier_affixes", rank.affixes()))
+                    .append(Component.translatable(rank.slots() == 1 ? "champions.bestiary.tier_slot" : "champions.bestiary.tier_slots", rank.slots()))
                     .append("\n")
                     .append(Component.translatable("champions.bestiary.tier_stats", format(rank.growth_h()), format(rank.growth_s()))
                             .withStyle(ChatFormatting.DARK_GRAY));
@@ -91,12 +91,13 @@ public class BestiaryScreen extends BookViewScreen {
                 .append(Component.translatable("champions.bestiary.difficulty_note").withStyle(ChatFormatting.DARK_GRAY)));
 
         pages.add(Component.empty()
-                .append(Component.translatable("champions.bestiary.affix_tiers").withStyle(ChatFormatting.BOLD))
+                .append(Component.translatable("champions.bestiary.affix_slots").withStyle(ChatFormatting.BOLD))
                 .append("\n\n")
-                .append(Component.translatable("champions.bestiary.affix_tiers_text")));
+                .append(Component.translatable("champions.bestiary.affix_slots_text",
+                        String.join(", ", ChampionRank.RANKS.stream().filter(rank -> rank.tier() > 0).map(rank -> String.valueOf(rank.slots())).toList()))));
 
-        // Affix pages grouped by tier (registry order within a tier)
-        List<Affix> sorted = affixes.stream().sorted(Comparator.comparingInt(Affix::getMinTier)).toList();
+        // Affix pages grouped by slot cost (registry order within the same cost)
+        List<Affix> sorted = affixes.stream().sorted(Comparator.comparingInt(Affix::getSlots)).toList();
         for (Affix affix : sorted) {
             String name = affix.getName();
             if (known.contains(name)) {
@@ -146,11 +147,10 @@ public class BestiaryScreen extends BookViewScreen {
     }
 
     private static Component tierLine(Affix affix) {
-        int tier = affix.getMinTier();
+        int slots = affix.getSlots();
         return Component.empty()
-                .append(Component.literal("★".repeat(tier) + " ").withStyle(ChatFormatting.GOLD))
-                .append(tier <= 1 ? Component.translatable("champions.bestiary.affix_tier_any")
-                        : Component.translatable("champions.bestiary.affix_tier", tier));
+                .append(Component.literal("◆".repeat(slots) + " ").withStyle(ChatFormatting.DARK_AQUA))
+                .append(Component.translatable(slots == 1 ? "champions.bestiary.affix_slot" : "champions.bestiary.affix_slots_cost", slots));
     }
 
     private static String format(double value) {

@@ -323,41 +323,41 @@ public class ChampionsModMenu implements ModMenuApi {
         var tiersA = entryBuilder.startSubCategory(Component.translatable("champions.hud.tiers_a"))
                 .setExpanded(true);
 
-        final String a1 = "tier1_affixes_count";
-        final String a2 = "tier2_affixes_count";
-        final String a3 = "tier3_affixes_count";
-        final String a4 = "tier4_affixes_count";
-        final String a5 = "tier5_affixes_count";
+        final String a1 = "tier1_affix_slots";
+        final String a2 = "tier2_affix_slots";
+        final String a3 = "tier3_affix_slots";
+        final String a4 = "tier4_affix_slots";
+        final String a5 = "tier5_affix_slots";
 
 
-        tiersA.add(entryBuilder.startIntField(Component.translatable("champions.tier1_affixes_count"), configS.a1)
+        tiersA.add(entryBuilder.startIntField(Component.translatable("champions.tier1_affix_slots"), configS.a1)
                 .setDefaultValue(1).setMin(0).setMax(30)
                 .setSaveConsumer(val -> changesServer.put(a1, val))
-                .setTooltip(Component.translatable("champions.tooltip.tier1_affixes_count"))
+                .setTooltip(Component.translatable("champions.tooltip.tier1_affix_slots"))
                 .build());
 
-        tiersA.add(entryBuilder.startIntField(Component.translatable("champions.tier2_affixes_count"), configS.a2)
+        tiersA.add(entryBuilder.startIntField(Component.translatable("champions.tier2_affix_slots"), configS.a2)
                 .setDefaultValue(2).setMin(0).setMax(30)
                 .setSaveConsumer(val -> changesServer.put(a2, val))
-                .setTooltip(Component.translatable("champions.tooltip.tier2_affixes_count"))
+                .setTooltip(Component.translatable("champions.tooltip.tier2_affix_slots"))
                 .build());
 
-        tiersA.add(entryBuilder.startIntField(Component.translatable("champions.tier3_affixes_count"), configS.a3)
+        tiersA.add(entryBuilder.startIntField(Component.translatable("champions.tier3_affix_slots"), configS.a3)
                 .setDefaultValue(3).setMin(0).setMax(30)
                 .setSaveConsumer(val -> changesServer.put(a3, val))
-                .setTooltip(Component.translatable("champions.tooltip.tier3_affixes_count"))
+                .setTooltip(Component.translatable("champions.tooltip.tier3_affix_slots"))
                 .build());
 
-        tiersA.add(entryBuilder.startIntField(Component.translatable("champions.tier4_affixes_count"), configS.a4)
+        tiersA.add(entryBuilder.startIntField(Component.translatable("champions.tier4_affix_slots"), configS.a4)
                 .setDefaultValue(4).setMin(0).setMax(30)
                 .setSaveConsumer(val -> changesServer.put(a4, val))
-                .setTooltip(Component.translatable("champions.tooltip.tier4_affixes_count"))
+                .setTooltip(Component.translatable("champions.tooltip.tier4_affix_slots"))
                 .build());
 
-        tiersA.add(entryBuilder.startIntField(Component.translatable("champions.tier5_affixes_count"), configS.a5)
+        tiersA.add(entryBuilder.startIntField(Component.translatable("champions.tier5_affix_slots"), configS.a5)
                 .setDefaultValue(8).setMin(0).setMax(30)
                 .setSaveConsumer(val -> changesServer.put(a5, val))
-                .setTooltip(Component.translatable("champions.tooltip.tier5_affixes_count"))
+                .setTooltip(Component.translatable("champions.tooltip.tier5_affix_slots"))
                 .build());
 
         server.addEntry(tiersA.build());
@@ -380,19 +380,19 @@ public class ChampionsModMenu implements ModMenuApi {
 
         affixes.addEntry(registry.build());
 
-        var affixTiers = entryBuilder.startSubCategory(Component.translatable("champions.hud.affix_tiers"))
+        var affixTiers = entryBuilder.startSubCategory(Component.translatable("champions.hud.affix_slots"))
                 .setExpanded(false);
-        affixTiers.add(entryBuilder.startFloatField(Component.translatable("champions.affix_tier_weight_bonus"), configA.affixTierWeightBonus)
+        affixTiers.add(entryBuilder.startFloatField(Component.translatable("champions.affix_slot_weight_bonus"), configA.affixSlotWeightBonus)
                 .setDefaultValue(0.6f).setMin(0.0f).setMax(10.0f)
-                .setSaveConsumer(val -> changesAffix.put("affix_tier_weight_bonus", val))
-                .setTooltip(Component.translatable("champions.tooltip.affix_tier_weight_bonus"))
+                .setSaveConsumer(val -> changesAffix.put("affix_slot_weight_bonus", val))
+                .setTooltip(Component.translatable("champions.tooltip.affix_slot_weight_bonus"))
                 .build());
         for (String name : AffixRegistry.NAMES) {
-            final String key = name + "_tier";
-            affixTiers.add(entryBuilder.startIntField(Component.translatable("affix." + name), configA.minTier(name))
-                    .setDefaultValue(AffixRegistry.defaultTier(name)).setMin(1).setMax(5)
+            final String key = name + "_slots";
+            affixTiers.add(entryBuilder.startIntField(Component.translatable("affix." + name), configA.slots(name))
+                    .setDefaultValue(AffixRegistry.defaultSlots(name)).setMin(1).setMax(8)
                     .setSaveConsumer(val -> changesAffix.put(key, val))
-                    .setTooltip(Component.translatable("champions.tooltip.affix_tier"))
+                    .setTooltip(Component.translatable("champions.tooltip.affix_slots"))
                     .build());
         }
         affixes.addEntry(affixTiers.build());

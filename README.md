@@ -34,7 +34,7 @@ On Hard, mobs top out at 4.5× health and damage (reached after about 23 hours o
 
 ## Champion tiers
 
-| Tier | Base chance (Normal) | Health | Damage | Affixes |
+| Tier | Base chance (Normal) | Health | Damage | Affix slots |
 | --- | --- | --- | --- | --- |
 | 1 | 4.0% | ×1.5 | ×1.5 | 1 |
 | 2 | 1.5% | ×2.5 | ×1.8 | 2 |
@@ -48,53 +48,53 @@ Champion creepers also explode bigger (radius × tier, capped by `maxCreeperExpl
 
 Each champion rolls its tier's number of affixes at random from the affixes it is allowed to have.
 
-**Affix tiers:** every affix has a minimum champion tier (the *Tier* column). A tier 2 champion can only roll tier 1–2 affixes, and so on. Once unlocked, stronger affixes are also picked more often: each affix's weight is `1 + 0.6 × (affix tier − 1)`, so a tier 4 affix is 2.8× as likely as a tier 1 affix. Tiers and the weight bonus can be changed in `champions_affixes.properties` (`<affix>_tier`, `affix_tier_weight_bonus`) or the Champions config screen.
+**Affix slots:** each champion tier has a slot budget (tier 1: 1, tier 2: 2, tier 3: 3, tier 4: 4, tier 5: 8), and each affix takes up 1–4 slots (the *Slots* column). Affixes are picked until the slots are full, so a tier 2 champion gets either two 1-slot affixes or one 2-slot affix, and a 3-slot affix can only appear on tier 3 or higher. Bigger affixes are picked more often when they fit: each affix's weight is `1 + 0.6 × (slots − 1)`, so a 4-slot affix is 2.8× as likely as a 1-slot one. Slot costs (`<affix>_slots`) and the weight bonus (`affix_slot_weight_bonus`) are in `champions_affixes.properties`, and the tier budgets (`tierN_affix_slots`) in `champions_common.properties`; both are also in the Champions config screen.
 
 ### General affixes (any champion)
 
-| Affix | Tier | Effect |
+| Affix | Slots | Effect |
 | --- | --- | --- |
-| Adaptive | 2+ | Takes less and less damage from the same damage type in a row |
-| Arctic | 3+ | Fires homing projectiles that slow its target |
-| Big | 1+ | 1.3× size, +10 health, +2 damage, 30% slower |
-| Blinded | 1+ | Its hits can blind the target for a few seconds |
-| Dampening | 1+ | Takes half damage from indirect attacks (projectiles, explosions, potions) |
-| Desecrating | 3+ | Periodically spawns a cloud of harming under its target |
-| Hasty | 1+ | Much faster movement |
-| Infested | 2+ | Spawns silverfish every so often while fighting |
-| Knocking | 1+ | Extra knockback, and slows the target briefly |
-| Lively | 1+ | Regenerates 1 HP/sec, or 4 HP/sec when it has no target |
-| Molten | 3+ | Fires homing projectiles that burn, and is fire-resistant |
-| Paralyzing | 3+ | Small chance per hit to root the target in place |
-| Plagued | 2+ | Poisons nearby creatures |
-| Reflection | 3+ | Hurts and pushes back anyone who damages it |
-| Shielding | 4+ | Periodically becomes immune to all damage |
+| Adaptive | 2 | Takes less and less damage from the same damage type in a row |
+| Arctic | 3 | Fires homing projectiles that slow its target |
+| Big | 1 | 1.3× size, +10 health, +2 damage, 30% slower |
+| Blinded | 1 | Its hits can blind the target for a few seconds |
+| Dampening | 1 | Takes half damage from indirect attacks (projectiles, explosions, potions) |
+| Desecrating | 3 | Periodically spawns a cloud of harming under its target |
+| Hasty | 1 | Much faster movement |
+| Infested | 2 | Spawns silverfish every so often while fighting |
+| Knocking | 1 | Extra knockback, and slows the target briefly |
+| Lively | 1 | Regenerates 1 HP/sec, or 4 HP/sec when it has no target |
+| Molten | 3 | Fires homing projectiles that burn, and is fire-resistant |
+| Paralyzing | 3 | Small chance per hit to root the target in place |
+| Plagued | 2 | Poisons nearby creatures |
+| Reflection | 3 | Hurts and pushes back anyone who damages it |
+| Shielding | 4 | Periodically becomes immune to all damage |
 
 ### Mob-specific affixes
 
 These only roll on the listed mobs.
 
-| Affix | Tier | Mobs | Effect |
+| Affix | Slots | Mobs | Effect |
 | --- | --- | --- | --- |
-| Horde Caller | 2+ | Zombies* | The first time it targets a player, 2–3 more zombies of its kind join the fight |
-| Sunproof | 1+ | Zombies*, skeletons† | Doesn't burn in daylight |
-| Sniper | 3+ | Skeletons† | Fires every 3 s instead of every 1–2 s, but arrows are 50% faster, perfectly aimed and deal +50% damage |
-| Volley | 2+ | Skeletons† | Every 3 s fires a spread of 3 arrows |
-| Frost Archer | 2+ | Strays | Its arrows freeze the target like powder snow |
-| Stalker | 3+ | Creepers | Invisible (effect particles still show) until it starts to hiss |
-| Webslinger | 2+ | Spiders‡ | Every 4 s throws a cobweb that traps the target where it lands; webs vanish after 5 s |
-| Brood Mother | 3+ | Spiders (not cave spiders) | Spawns 2 cave spiders when hurt (max 6 nearby) |
-| Pouncer | 1+ | Spiders‡ | Leaps at targets 4–12 blocks away |
-| Blink | 3+ | Endermen | Teleports behind its attacker after being hit |
-| Thief | 1+ | Endermen | 25% chance per hit to knock the item out of your hand |
-| Alchemist | 3+ | Witches | Every 5 s also throws a potion of Weakness, Mining Fatigue or Levitation |
-| Coven | 2+ | Witches | Every 2 s heals hostile mobs within 8 blocks |
-| Inferno | 3+ | Blazes, ghasts | Fireballs leave a 3×3 patch of fire (needs the `mob_griefing` gamerule) |
-| Barrage | 4+ | Blazes, ghasts | Every 4 s an extra burst: 5 small fireballs (blaze) or 2 large ones (ghast) |
-| Splitter | 3+ | Slimes, magma cubes | Splits into 2 extra pieces; each piece is a tier 1 champion with one of its affixes |
-| Sticky | 1+ | Slimes, magma cubes | Its hits give Slowness IV for 3 s |
-| Warlord | 3+ | Illagers | Other illagers within 16 blocks get Strength |
-| Berserker | 4+ | Vindicators | Attacks faster as its health drops (up to ~3× as often) |
+| Horde Caller | 2 | Zombies* | The first time it targets a player, 2–3 more zombies of its kind join the fight |
+| Sunproof | 1 | Zombies*, skeletons† | Doesn't burn in daylight |
+| Sniper | 3 | Skeletons† | Fires every 3 s instead of every 1–2 s, but arrows are 50% faster, perfectly aimed and deal +50% damage |
+| Volley | 2 | Skeletons† | Every 3 s fires a spread of 3 arrows |
+| Frost Archer | 2 | Strays | Its arrows freeze the target like powder snow |
+| Stalker | 3 | Creepers | Invisible (effect particles still show) until it starts to hiss |
+| Webslinger | 2 | Spiders‡ | Every 4 s throws a cobweb that traps the target where it lands; webs vanish after 5 s |
+| Brood Mother | 3 | Spiders (not cave spiders) | Spawns 2 cave spiders when hurt (max 6 nearby) |
+| Pouncer | 1 | Spiders‡ | Leaps at targets 4–12 blocks away |
+| Blink | 3 | Endermen | Teleports behind its attacker after being hit |
+| Thief | 1 | Endermen | 25% chance per hit to knock the item out of your hand |
+| Alchemist | 3 | Witches | Every 5 s also throws a potion of Weakness, Mining Fatigue or Levitation |
+| Coven | 2 | Witches | Every 2 s heals hostile mobs within 8 blocks |
+| Inferno | 3 | Blazes, ghasts | Fireballs leave a 3×3 patch of fire (needs the `mob_griefing` gamerule) |
+| Barrage | 4 | Blazes, ghasts | Every 4 s an extra burst: 5 small fireballs (blaze) or 2 large ones (ghast) |
+| Splitter | 3 | Slimes, magma cubes | Splits into 2 extra pieces; each piece is a champion with one of its affixes (at the lowest tier with enough slots for it) |
+| Sticky | 1 | Slimes, magma cubes | Its hits give Slowness IV for 3 s |
+| Warlord | 3 | Illagers | Other illagers within 16 blocks get Strength |
+| Berserker | 4 | Vindicators | Attacks faster as its health drops (up to ~3× as often) |
 
 \* Zombie, husk, drowned, zombie villager and zombified piglin. † Skeleton, stray, bogged and wither skeleton (anything that uses the skeleton bow logic). ‡ Includes cave spiders.
 
@@ -110,7 +110,7 @@ Operators (permission level 2) can spawn champions to try affixes out:
 | --- | --- |
 | `/champion list` | Lists every enabled affix and which mobs can have it |
 | `/champion demo <affix>` | Spawns a fitting mob with only that affix, 3 blocks in front of you |
-| `/champion spawn <mob> <affix> [affix...]` | Spawns any mob with any combination of affixes (space or comma separated). The tier is the number of affixes or the highest affix tier, whichever is higher (max 5). Commands otherwise ignore affix tiers, so any affix can be tested |
+| `/champion spawn <mob> <affix> [affix...]` | Spawns any mob with any combination of affixes (space or comma separated). The tier is the lowest one with enough slots for all the affixes (tier 5 if they need more than 8) |
 
 For example, `/champion demo webslinger` or `/champion spawn minecraft:skeleton sniper volley sunproof`. Affix names autocomplete, and the command refuses affixes the mob can't have.
 
@@ -125,8 +125,8 @@ Players learn what each affix does through the **bestiary**, a book opened from 
   - the champion tiers (read from the current config);
   - **Champion odds:** each tier's chance on your current game difficulty, calculated the same way the game rolls them;
   - **Game difficulty:** what your current difficulty changes (growth speed, max strength, champion odds);
-  - **Affix tiers:** how affix tiers work;
-  - one page per affix, grouped by affix tier, with its name, minimum champion tier, which mobs can have it, and what it does. Undiscovered affixes show "???" but still show their tier.
+  - **Affix slots:** how affix slots work;
+  - one page per affix, grouped by slot cost, with its name, how many slots it takes, which mobs can have it, and what it does. Undiscovered affixes show "???" but still show their slot cost.
 
 Affix descriptions are the `affix.<name>.desc` keys in `assets/champions/lang/en_us.json`.
 
@@ -143,7 +143,7 @@ Affix descriptions are the `affix.<name>.desc` keys in `assets/champions/lang/en
    - `onDamaged(champion, source, amount)`: it took a hit
    - `onProjectileSpawn(owner, projectile)` / `onProjectileHit(owner, projectile, hit)`: its arrows, fireballs, potions, etc.
 3. Optionally return a name from `getExclusiveGroup()` so opposing affixes can't roll together.
-4. Add `new Entry("<name>", <tier>, YourAffix::new)` to `FACTORY_LIST` in `AffixRegistry`, where `<tier>` is the lowest champion tier that can roll it. The config toggle, the config screen entry, the bestiary page and `/champion` support come from that list automatically.
+4. Add `new Entry("<name>", <slots>, YourAffix::new)` to `FACTORY_LIST` in `AffixRegistry`, where `<slots>` is how many affix slots it takes (1 for minor, up to 4 for the strongest). The config toggle, the config screen entry, the bestiary page and `/champion` support come from that list automatically.
 5. Add `"affix.<name>"` (shown above the health bar) and `"affix.<name>.desc"` (bestiary text) to `assets/champions/lang/en_us.json`, plus `"champions.bestiary.mobs.<label>"` if you used a new label.
 6. Add a check for it to `src/gametest/.../AffixClientGameTest.java`.
 
@@ -159,7 +159,7 @@ Affix descriptions are the `affix.<name>.desc` keys in `assets/champions/lang/en
 | File | What it controls |
 | --- | --- |
 | `config/rpgdifficulty.json` | Time and (optional) distance scaling, bosses, and the champion scaling options (*Champions* category) |
-| `config/Champions/champions_common.properties` | Tier weights, affix counts, per-tier health/strength growth, `max_boss_tier` |
+| `config/Champions/champions_common.properties` | Tier weights, affix slots per tier, per-tier health/strength growth, `max_boss_tier` |
 | `config/Champions/champions_affixes.properties` | Enable or disable individual affixes, and each affix's settings (including Big's stats) |
 | `config/Champions/champions_client.properties` | HUD colors and offsets |
 

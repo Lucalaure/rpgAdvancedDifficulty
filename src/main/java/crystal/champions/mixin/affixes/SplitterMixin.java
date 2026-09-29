@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Splitter: more pieces on death, and each piece is a tier 1 champion with one of the parent's affixes.
+ * Splitter: more pieces on death, and each piece is a champion with one of the parent's affixes
+ * (the lowest tier with enough slots for it).
  */
 @Mixin(AbstractCubeMob.class)
 public class SplitterMixin {
@@ -39,11 +40,13 @@ public class SplitterMixin {
         String[] affixes = ((IChampions) this).champions$getAffixesString().split(",");
         String inherited = affixes[cubeMob.getRandom().nextInt(affixes.length)];
 
-        IChampions piece = (IChampions) cubeMob;
-        piece.champions$setChampionTier(1);
-        piece.champions$setAffixesString(inherited);
-        PrepareChampions.prepareAttributes(cubeMob, ChampionRank.RANKS.get(1));
         Affix affix = AffixRegistry.ALL_AFFIXES.get(inherited);
+        // Lowest tier with enough slots for the inherited affix
+        ChampionRank rank = PrepareChampions.lowestRankWithSlots(affix != null ? affix.getSlots() : 1);
+        IChampions piece = (IChampions) cubeMob;
+        piece.champions$setChampionTier(rank.tier());
+        piece.champions$setAffixesString(inherited);
+        PrepareChampions.prepareAttributes(cubeMob, rank);
         if (affix != null) {
             affix.onApply(cubeMob);
         }

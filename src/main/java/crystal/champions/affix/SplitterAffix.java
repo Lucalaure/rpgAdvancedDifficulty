@@ -6,7 +6,8 @@ import net.minecraft.world.entity.monster.cubemob.Slime;
 
 /**
  * SplitterAffix (slimes and magma cubes)
- * Splits into 2 extra pieces, and each piece becomes a champion with one of its affixes.
+ * Splits into 2 extra pieces, and each piece becomes a champion with one of its affixes
+ * (at the lowest tier with enough slots for it).
  * Logic in SplitterMixin.
  */
 public class SplitterAffix extends MobSpecificAffix {

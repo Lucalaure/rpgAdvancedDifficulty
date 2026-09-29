@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class ChampionsConfigServer {
-    private static final int VERSION = 7;
+    private static final int VERSION = 8;
     private static ChampionsConfigServer instance;
 
     public final int a1;
@@ -43,11 +43,11 @@ public class ChampionsConfigServer {
                 .version(VERSION)
                 .request();
 
-        this.a1 = config.getOrDefault("tier1_affixes_count", 1);
-        this.a2 = config.getOrDefault("tier2_affixes_count", 2);
-        this.a3 = config.getOrDefault("tier3_affixes_count", 3);
-        this.a4 = config.getOrDefault("tier4_affixes_count", 4);
-        this.a5 = config.getOrDefault("tier5_affixes_count", 8);
+        this.a1 = config.getOrDefault("tier1_affix_slots", 1);
+        this.a2 = config.getOrDefault("tier2_affix_slots", 2);
+        this.a3 = config.getOrDefault("tier3_affix_slots", 3);
+        this.a4 = config.getOrDefault("tier4_affix_slots", 4);
+        this.a5 = config.getOrDefault("tier5_affix_slots", 8);
 
         this.w0 = config.getOrDefault("tier0_weight", 9320);
         this.w1 = config.getOrDefault("tier1_weight", 400);
@@ -75,36 +75,37 @@ public class ChampionsConfigServer {
     private String defaultConfig(String filename) {
         return """
                 # Champions Server
+                # Each tier has affix slots; each affix takes 1-4 slots (see champions_affixes)
                 
                 # Tier 0 (not champion)
                 tier0_weight = 9460
                 
                 # Tier 1
-                tier1_affixes_count = 1
+                tier1_affix_slots = 1
                 tier1_weight = 400
                 tier1_growth_health = 1.5
                 tier1_growth_strength = 1.5
 
                 # Tier 2
-                tier2_affixes_count = 2
+                tier2_affix_slots = 2
                 tier2_weight = 150
                 tier2_growth_health = 2.5
                 tier2_growth_strength = 1.8
 
                 # Tier 3
-                tier3_affixes_count = 3
+                tier3_affix_slots = 3
                 tier3_weight = 32
                 tier3_growth_health = 4.0
                 tier3_growth_strength = 2.2
 
                 # Tier 4
-                tier4_affixes_count = 4
+                tier4_affix_slots = 4
                 tier4_weight = 6
                 tier4_growth_health = 7.0
                 tier4_growth_strength = 3.5
 
                 # Tier 5
-                tier5_affixes_count = 8
+                tier5_affix_slots = 8
                 tier5_weight = 2
                 tier5_growth_health = 12.0
                 tier5_growth_strength = 5.0

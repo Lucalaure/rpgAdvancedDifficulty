@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntToDoubleFunction;
 
-public record ChampionRank(int tier, int affixes, int weight, float growth_h, float growth_s) {
+/** slots = affix slot budget for this tier. */
+public record ChampionRank(int tier, int slots, int weight, float growth_h, float growth_s) {
 
     public static List<ChampionRank> RANKS = new ArrayList<>();
     private static int TOTAL_WEIGHT = 0;

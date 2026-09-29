@@ -132,7 +132,7 @@ public class AffixClientGameTest implements FabricClientGameTest {
             run("berserker", this::testBerserker);
             run("sunproof", this::testSunproof);
             run("commands", this::testCommands);
-            run("affix tiers", this::testAffixTiers);
+            run("affix slots", this::testAffixSlots);
             run("game difficulty", this::testGameDifficulty);
 
             log("all affix checks passed");
@@ -525,7 +525,10 @@ public class AffixClientGameTest implements FabricClientGameTest {
             for (Slime piece : pieces) {
                 IChampions champion = (IChampions) piece;
                 String affixes = champion.champions$getAffixesString();
-                check(champion.champions$getChampionTier() == 1 && (affixes.equals("splitter") || affixes.equals("sticky")),
+                // The piece is the lowest tier with enough slots for its inherited affix (Splitter 3 slots, Sticky 1)
+                boolean oneAffix = affixes.equals("splitter") || affixes.equals("sticky");
+                int expectedTier = oneAffix ? PrepareChampions.lowestRankWithSlots(affix(affixes).getSlots()).tier() : -1;
+                check(oneAffix && champion.champions$getChampionTier() == expectedTier,
                         "splitter: a piece did not inherit one affix (tier " + champion.champions$getChampionTier() + ", '" + affixes + "')");
             }
         });
@@ -613,8 +616,8 @@ public class AffixClientGameTest implements FabricClientGameTest {
             List<Creeper> creepers = nearby(s, Creeper.class);
             check(creepers.size() == 1, "commands: /champion spawn creeper did not spawn one creeper");
             IChampions creeper = (IChampions) creepers.getFirst();
-            // Stalker is a tier 3 affix, so the champion is tier 3 even with 2 affixes
-            check(creeper.champions$getChampionTier() == 3 && creeper.champions$hasAffix("stalker") && creeper.champions$hasAffix("big"),
+            // Stalker (3 slots) + Big (1 slot) = 4 slots, so the champion is tier 4
+            check(creeper.champions$getChampionTier() == 4 && creeper.champions$hasAffix("stalker") && creeper.champions$hasAffix("big"),
                     "commands: creeper has tier " + creeper.champions$getChampionTier() + " and '" + creeper.champions$getAffixesString() + "'");
             check(nearby(s, Pig.class).isEmpty(), "commands: spawned a pig with a skeleton-only affix");
         });
@@ -622,22 +625,24 @@ public class AffixClientGameTest implements FabricClientGameTest {
 
     // --- Tiers and difficulty
 
-    private void testAffixTiers() {
+    private void testAffixSlots() {
         server.runOnServer(s -> {
             Zombie zombie = EntityTypes.ZOMBIE.create(level(s), EntitySpawnReason.COMMAND);
-            boolean tier5GotTier4 = false;
-            for (int i = 0; i < 300; i++) {
-                for (String name : PrepareChampions.prepareAffixes(ChampionRank.RANKS.get(1), zombie).split(",")) {
-                    check(affix(name).getMinTier() <= 1, "affix tiers: tier 1 champion rolled " + name + " (tier " + affix(name).getMinTier() + ")");
-                }
-                for (String name : PrepareChampions.prepareAffixes(ChampionRank.RANKS.get(3), zombie).split(",")) {
-                    check(affix(name).getMinTier() <= 3, "affix tiers: tier 3 champion rolled " + name + " (tier " + affix(name).getMinTier() + ")");
-                }
-                for (String name : PrepareChampions.prepareAffixes(ChampionRank.RANKS.get(5), zombie).split(",")) {
-                    if (affix(name).getMinTier() == 4) tier5GotTier4 = true;
+            boolean tier2Double = false, tier2Single = false, tier5GotFour = false;
+            for (int i = 0; i < 400; i++) {
+                for (int tier = 1; tier <= 5; tier++) {
+                    ChampionRank rank = ChampionRank.RANKS.get(tier);
+                    List<String> names = List.of(PrepareChampions.prepareAffixes(rank, zombie).split(","));
+                    int used = names.stream().mapToInt(name -> affix(name).getSlots()).sum();
+                    check(used <= rank.slots(), "affix slots: tier " + tier + " used " + used + " of " + rank.slots() + " slots " + names);
+                    check(used == rank.slots(), "affix slots: tier " + tier + " left slots empty " + names);
+                    if (tier == 2 && names.size() == 2) tier2Double = true;
+                    if (tier == 2 && names.size() == 1) tier2Single = true;
+                    if (tier == 5 && names.stream().anyMatch(name -> affix(name).getSlots() == 4)) tier5GotFour = true;
                 }
             }
-            check(tier5GotTier4, "affix tiers: tier 5 champions never rolled a tier 4 affix");
+            check(tier2Double && tier2Single, "affix slots: tier 2 should get either two 1-slot or one 2-slot affix");
+            check(tier5GotFour, "affix slots: tier 5 champions never got a 4-slot affix");
         });
     }
 

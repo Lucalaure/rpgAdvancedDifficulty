@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 /**
  * Регистрация всех аффиксов, чтобы не по отдельности их делать
- * Each affix is listed with its name (config keys "<name>_affix" / "<name>_tier", translation key "affix.<name>") and default minimum tier.
+ * Each affix is listed with its name (config keys "<name>_affix" / "<name>_slots", translation key "affix.<name>") and default slot cost.
  */
 public class AffixRegistry {
     private AffixRegistry() {
@@ -18,8 +18,8 @@ public class AffixRegistry {
     }
     public static final Map<String, Affix> ALL_AFFIXES = new LinkedHashMap<>();
 
-    /** An affix with its default minimum champion tier (more powerful affixes need a higher tier). */
-    public record Entry(String name, int tier, Supplier<Affix> factory) {
+    /** An affix with its default slot cost (more powerful affixes take more of a champion's slots). */
+    public record Entry(String name, int slots, Supplier<Affix> factory) {
     }
 
     private static final List<Entry> FACTORY_LIST = List.of(
@@ -63,8 +63,8 @@ public class AffixRegistry {
     /** Every affix name, enabled or not (config toggles, config screen, commands). */
     public static final List<String> NAMES = FACTORY_LIST.stream().map(Entry::name).toList();
 
-    public static int defaultTier(String name) {
-        return FACTORY_LIST.stream().filter(entry -> entry.name().equals(name)).mapToInt(Entry::tier).findFirst().orElse(1);
+    public static int defaultSlots(String name) {
+        return FACTORY_LIST.stream().filter(entry -> entry.name().equals(name)).mapToInt(Entry::slots).findFirst().orElse(1);
     }
 
     public static void affixesRegister() {
@@ -73,7 +73,7 @@ public class AffixRegistry {
         for (Entry entry : FACTORY_LIST) {
             if (config.isEnabled(entry.name())) {
                 Affix affix = entry.factory().get();
-                affix.setMinTier(config.minTier(entry.name()));
+                affix.setSlots(config.slots(entry.name()));
                 ALL_AFFIXES.put(affix.getName(), affix);
             }
         }
