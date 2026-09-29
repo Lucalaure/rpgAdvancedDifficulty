@@ -5,6 +5,7 @@ import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntToDoubleFunction;
 
 public record ChampionRank(int tier, int affixes, int weight, float growth_h, float growth_s) {
 
@@ -40,20 +41,26 @@ public record ChampionRank(int tier, int affixes, int weight, float growth_h, fl
     }
 
     /**
-     * Weighted roll where champion tiers become more likely as difficulty rises.
-     * Each tier's weight is multiplied by min(maxMultiplier, 1 + progress * scaling * tier),
-     * so higher tiers gain the most. Tiers above maxTier are never rolled.
+     * Weight of each tier (index = position in RANKS). Champion tiers become more likely as
+     * difficulty rises: each tier's weight is multiplied by min(maxMultiplier, 1 + progress * scaling * tier),
+     * so higher tiers gain the most, then by the game difficulty multiplier for that tier.
+     * Tiers above maxTier get weight 0.
      */
-    public static ChampionRank getRandomRank(RandomSource random, double progress, double scaling, double maxMultiplier, int maxTier) {
+    public static double[] tierWeights(double progress, double scaling, double maxMultiplier, int maxTier, IntToDoubleFunction difficultyMultiplier) {
         double[] weights = new double[RANKS.size()];
-        double total = 0;
         for (int i = 0; i < RANKS.size(); i++) {
             ChampionRank rank = RANKS.get(i);
             if (rank.weight() <= 0 || rank.tier() > maxTier) continue;
-            double multiplier = rank.tier() == 0 ? 1.0 : Math.min(maxMultiplier, 1.0 + progress * scaling * rank.tier());
+            double multiplier = rank.tier() == 0 ? 1.0
+                    : Math.min(maxMultiplier, 1.0 + progress * scaling * rank.tier()) * difficultyMultiplier.applyAsDouble(rank.tier());
             weights[i] = rank.weight() * Math.max(0.0, multiplier);
-            total += weights[i];
         }
+        return weights;
+    }
+
+    public static ChampionRank getRandomRank(RandomSource random, double[] weights) {
+        double total = 0;
+        for (double weight : weights) total += weight;
         if (total <= 0) return RANKS.getFirst();
 
         double roll = random.nextDouble() * total;

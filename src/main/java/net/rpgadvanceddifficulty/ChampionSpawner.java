@@ -46,7 +46,9 @@ public final class ChampionSpawner {
         if (maxTier <= 0 || (!isBoss && !canBeChampion(mob))) return;
 
         double progress = config.championsScaleWithDifficulty ? Math.max(0.0, difficultyFactor - 1.0) : 0.0;
-        ChampionRank rank = ChampionRank.getRandomRank(mob.getRandom(), progress, config.championChanceScaling, config.maxChampionChanceMultiplier, maxTier);
+        double[] weights = ChampionRank.tierWeights(progress, config.championChanceScaling, config.maxChampionChanceMultiplier, maxTier,
+                tier -> DifficultyModes.tierMultiplier(mob.level(), tier));
+        ChampionRank rank = ChampionRank.getRandomRank(mob.getRandom(), weights);
         if (rank.tier() > 0) {
             champion.champions$setChampionTier(rank.tier());
             prepareAttributes(mob, rank);

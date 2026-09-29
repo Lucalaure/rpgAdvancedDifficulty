@@ -191,5 +191,22 @@
   "affix.warlord": "Warlord",
   "affix.warlord.desc": "Nearby illagers get Strength while it lives.",
   "affix.berserker": "Berserker",
-  "affix.berserker.desc": "Attacks faster the more it's hurt."
+  "affix.berserker.desc": "Attacks faster the more it's hurt.",
+  "champions.hud.affix_tiers": "Affix tiers",
+  "champions.affix_tier_weight_bonus": "Higher tier pick bonus",
+  "champions.tooltip.affix_tier_weight_bonus": "Once unlocked, higher-tier affixes are picked more often: weight = 1 + bonus × (affix tier − 1)",
+  "champions.tooltip.affix_tier": "Lowest champion tier that can roll this affix",
+  "champions.bestiary.affix_tier": "Tier %s+ champions",
+  "champions.bestiary.affix_tier_any": "Any tier",
+  "champions.bestiary.odds": "Champion odds",
+  "champions.bestiary.odds_difficulty": "On %s:",
+  "champions.bestiary.odds_note": "Chance per hostile mob when a world starts. Odds rise as mobs get stronger over time.",
+  "champions.bestiary.difficulty": "Game difficulty",
+  "champions.bestiary.affix_tiers": "Affix tiers",
+  "champions.bestiary.affix_tiers_text": "Stronger affixes only appear on higher-tier champions, and once unlocked they are picked more often. Each page below shows the lowest tier that can have it.",
+  "champions.bestiary.difficulty_growth": "Growth speed: ×%s",
+  "champions.bestiary.difficulty_cap": "Max strength: ×%s",
+  "champions.bestiary.difficulty_champions": "Champions: ×%s",
+  "champions.bestiary.difficulty_tiers": "Higher tiers: ×%s each",
+  "champions.bestiary.difficulty_note": "Easy and Peaceful are gentler, Hard is harsher. Change it in the game options."
 }

@@ -2,7 +2,6 @@
     "text.autoconfig.rpgdifficulty.title": "Rpg Difficulty Config",
     "text.autoconfig.rpgdifficulty.category.default": "General Settings",
     "text.autoconfig.rpgdifficulty.category.monster_setting": "Specific Settings",
-
     "text.autoconfig.rpgdifficulty.option.enableDistanceScaling": "Enable Distance Scaling",
     "text.autoconfig.rpgdifficulty.option.increasingDistance": "Increasing Distance",
     "text.autoconfig.rpgdifficulty.option.distanceFactor": "Distance Factor",
@@ -28,7 +27,6 @@
     "text.autoconfig.rpgdifficulty.option.moreLootChance": "More Loot Chance",
     "text.autoconfig.rpgdifficulty.option.maxLootChance": "Max Loot Chance",
     "text.autoconfig.rpgdifficulty.option.chanceForEachItem": "Chance For Each Item",
-
     "text.autoconfig.rpgdifficulty.option.dynamicBossModification": "Dynamic Boss Modification",
     "text.autoconfig.rpgdifficulty.option.dynamicBossModificator": "Dynamic Boss Modificator",
     "text.autoconfig.rpgdifficulty.option.bossMaxFactor": "Boss Max Modificator",
@@ -38,26 +36,34 @@
     "text.autoconfig.rpgdifficulty.option.creeperExplosionFactor": "Creeper Explosion Factor",
     "text.autoconfig.rpgdifficulty.option.affectAnimalBabies": "Affect Animal Babies",
     "text.autoconfig.rpgdifficulty.option.maxCreeperExplosionPower": "Max Creeper Explosion Power",
-
     "text.autoconfig.rpgdifficulty.category.champions": "Champions",
     "text.autoconfig.rpgdifficulty.option.enableChampions": "Enable Champions",
     "text.autoconfig.rpgdifficulty.option.championsScaleWithDifficulty": "Champions Scale With Difficulty",
     "text.autoconfig.rpgdifficulty.option.championChanceScaling": "Champion Chance Scaling",
     "text.autoconfig.rpgdifficulty.option.maxChampionChanceMultiplier": "Max Champion Chance Multiplier",
-
     "rpgadvanceddifficulty.config.title": "RPG Advanced Difficulty",
     "rpgadvanceddifficulty.config.difficulty": "Difficulty Scaling",
     "rpgadvanceddifficulty.config.champions": "Champions",
-
     "text.autoconfig.rpgdifficulty.clock": "Time in minutes: %d",
-
     "text.rpgdifficulty.title": "Lv. %d",
-
     "commands.rpgdifficulty.difficulty_zone_created": "Difficulty zone created: %s (ID: %s)",
     "commands.rpgdifficulty.difficulty_zone_not_found": "Difficulty zone %s not found",
     "commands.rpgdifficulty.difficulty_zone_deleted": "Difficulty zone %s deleted",
     "commands.rpgdifficulty.difficulty_zone_deleted_2": "Difficulty zone %s deleted (ID: %s)",
     "commands.rpgdifficulty.difficulty_zone_unavailable": "You are not in any difficulty zone",
     "commands.rpgdifficulty.difficulty_zone_undefined": "There are no difficulty zones undefined",
-    "commands.rpgdifficulty.difficulty_zone_defined": "Defined difficulty zones %s"
+    "commands.rpgdifficulty.difficulty_zone_defined": "Defined difficulty zones %s",
+    "text.autoconfig.rpgdifficulty.category.game_difficulty": "Game Difficulty",
+    "text.autoconfig.rpgdifficulty.option.easyGrowthMultiplier": "Easy: Growth Rate",
+    "text.autoconfig.rpgdifficulty.option.normalGrowthMultiplier": "Normal: Growth Rate",
+    "text.autoconfig.rpgdifficulty.option.hardGrowthMultiplier": "Hard: Growth Rate",
+    "text.autoconfig.rpgdifficulty.option.easyCapMultiplier": "Easy: Max Strength",
+    "text.autoconfig.rpgdifficulty.option.normalCapMultiplier": "Normal: Max Strength",
+    "text.autoconfig.rpgdifficulty.option.hardCapMultiplier": "Hard: Max Strength",
+    "text.autoconfig.rpgdifficulty.option.easyChampionChance": "Easy: Champion Chance",
+    "text.autoconfig.rpgdifficulty.option.normalChampionChance": "Normal: Champion Chance",
+    "text.autoconfig.rpgdifficulty.option.hardChampionChance": "Hard: Champion Chance",
+    "text.autoconfig.rpgdifficulty.option.easyChampionTierBonus": "Easy: Higher Tier Bonus",
+    "text.autoconfig.rpgdifficulty.option.normalChampionTierBonus": "Normal: Higher Tier Bonus",
+    "text.autoconfig.rpgdifficulty.option.hardChampionTierBonus": "Hard: Higher Tier Bonus"
 }

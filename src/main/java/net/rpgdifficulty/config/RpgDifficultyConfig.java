@@ -90,6 +90,35 @@ public class RpgDifficultyConfig implements ConfigData {
     @Comment("Caps creeper explosion power after difficulty and champion tier scaling (vanilla creeper = 3, charged = 6)")
     public float maxCreeperExplosionPower = 12.0F;
 
+    @ConfigEntry.Category("game_difficulty")
+    @Comment("How fast mobs get stronger on Easy (and Peaceful). 0.5 = half as fast")
+    public double easyGrowthMultiplier = 0.5D;
+    @ConfigEntry.Category("game_difficulty")
+    public double normalGrowthMultiplier = 1.0D;
+    @ConfigEntry.Category("game_difficulty")
+    public double hardGrowthMultiplier = 1.5D;
+    @ConfigEntry.Category("game_difficulty")
+    @Comment("Multiplies the max health/damage/protection factors. 1.5 on Hard = 4.5x max health instead of 3x")
+    public double easyCapMultiplier = 0.75D;
+    @ConfigEntry.Category("game_difficulty")
+    public double normalCapMultiplier = 1.0D;
+    @ConfigEntry.Category("game_difficulty")
+    public double hardCapMultiplier = 1.5D;
+    @ConfigEntry.Category("game_difficulty")
+    @Comment("Multiplies the chance of every champion tier")
+    public double easyChampionChance = 0.5D;
+    @ConfigEntry.Category("game_difficulty")
+    public double normalChampionChance = 1.0D;
+    @ConfigEntry.Category("game_difficulty")
+    public double hardChampionChance = 1.5D;
+    @ConfigEntry.Category("game_difficulty")
+    @Comment("Extra multiplier per champion tier above 1 (1.25 on Hard: tier 5 is 1.25^4 = 2.4x more likely on top)")
+    public double easyChampionTierBonus = 0.8D;
+    @ConfigEntry.Category("game_difficulty")
+    public double normalChampionTierBonus = 1.0D;
+    @ConfigEntry.Category("game_difficulty")
+    public double hardChampionTierBonus = 1.25D;
+
     @ConfigEntry.Category("champions")
     @Comment("Allow mobs to spawn as Champions (tiers, affixes and loot are set in config/Champions)")
     public boolean enableChampions = true;

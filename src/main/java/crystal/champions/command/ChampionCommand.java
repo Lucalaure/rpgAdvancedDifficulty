@@ -41,7 +41,7 @@ import static net.minecraft.commands.Commands.literal;
  * Testing commands (operators only):
  * /champion list                              - all enabled affixes and which mobs can have them
  * /champion demo <affix>                      - spawns a fitting mob with just that affix in front of you
- * /champion spawn <mob> <affix> [affix...]    - any mob with any affixes (tier = number of affixes, max 5)
+ * /champion spawn <mob> <affix> [affix...]    - any mob with any affixes (tier = number of affixes or the highest affix tier, max 5)
  */
 public final class ChampionCommand {
     private ChampionCommand() {
@@ -77,6 +77,7 @@ public final class ChampionCommand {
         for (Affix affix : AffixRegistry.ALL_AFFIXES.values()) {
             message.append(Component.literal("\n" + affix.getName()).withStyle(ChatFormatting.YELLOW))
                     .append(Component.literal(" - ").withStyle(ChatFormatting.DARK_GRAY))
+                    .append(Component.literal("tier " + affix.getMinTier() + "+, ").withStyle(ChatFormatting.GRAY))
                     .append(Component.translatable(affix.getMobsKey()).withStyle(ChatFormatting.GRAY));
         }
         source.sendSuccess(() -> message, false);
@@ -103,7 +104,9 @@ public final class ChampionCommand {
         mob.snapTo(pos.x, pos.y, pos.z, source.getRotation().y + 180.0F, 0.0F);
         mob.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(pos)), EntitySpawnReason.COMMAND, null);
 
-        int tier = Math.max(1, Math.min(affixNames.size(), ChampionRank.RANKS.size() - 1));
+        // At least the number of affixes and at least the highest affix tier (max 5)
+        int highestAffixTier = affixNames.stream().mapToInt(name -> AffixRegistry.ALL_AFFIXES.get(name).getMinTier()).max().orElse(1);
+        int tier = Math.max(1, Math.min(Math.max(affixNames.size(), highestAffixTier), ChampionRank.RANKS.size() - 1));
         IChampions champion = (IChampions) mob;
         champion.champions$setChampionTier(tier);
         champion.champions$setAffixesString(String.join(",", affixNames));

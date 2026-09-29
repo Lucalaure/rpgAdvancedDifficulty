@@ -11,9 +11,14 @@ import org.jspecify.annotations.Nullable;
 
 public class Affix {
     private final String name;
+    private int minTier = 1;
     public Affix(String name) {this.name = name;}
 
     public String getName() { return name; }
+
+    /** Lowest champion tier that can roll this affix (set from the config when registering). */
+    public int getMinTier() { return minTier; }
+    public void setMinTier(int minTier) { this.minTier = Math.max(1, minTier); }
 
     /** Which mobs can roll this affix. Override to make a mob-specific variant (see MobSpecificAffix). */
     public boolean canApplyTo(Mob mob) { return true; }

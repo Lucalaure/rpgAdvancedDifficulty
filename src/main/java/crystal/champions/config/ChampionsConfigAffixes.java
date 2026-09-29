@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChampionsConfigAffixes {
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
     private static ChampionsConfigAffixes instance;
 
     public final int cooldownBeforeBulletArtic;
@@ -43,6 +43,10 @@ public class ChampionsConfigAffixes {
 
     // Affix name -> in the pool. Keys in the file are "<name>_affix"
     private final Map<String, Boolean> enabled = new HashMap<>();
+    // Affix name -> minimum champion tier. Keys in the file are "<name>_tier"
+    private final Map<String, Integer> minTiers = new HashMap<>();
+    /** Higher-tier affixes are picked more often: weight = 1 + bonus * (affix tier - 1). */
+    public final float affixTierWeightBonus;
 
     // Использую SimpleConfig
     // https://github.com/magistermaks/fabric-simplelibs/blob/master/simple-config/SimpleConfig.java
@@ -91,7 +95,9 @@ public class ChampionsConfigAffixes {
 
         for (String name : AffixRegistry.NAMES) {
             enabled.put(name, config.getOrDefault(toggleKey(name), true));
+            minTiers.put(name, Math.max(1, Math.min(5, config.getOrDefault(name + "_tier", AffixRegistry.defaultTier(name)))));
         }
+        affixTierWeightBonus = (float) config.getOrDefault("affix_tier_weight_bonus", 0.6);
 
         bigBonusHealth = config.getOrDefault("big_bonus_health", 10);
         bigBonusDamage = config.getOrDefault("big_bonus_damage", 2);
@@ -104,6 +110,12 @@ public class ChampionsConfigAffixes {
         for (String name : AffixRegistry.NAMES) {
             registry.append(toggleKey(name)).append(" = true\n");
         }
+        registry.append("\n# Minimum champion tier (1-5) that can roll each affix\n");
+        for (String name : AffixRegistry.NAMES) {
+            registry.append(name).append("_tier = ").append(AffixRegistry.defaultTier(name)).append("\n");
+        }
+        registry.append("# Higher-tier affixes are picked more often once unlocked: weight = 1 + bonus * (affix tier - 1)\n");
+        registry.append("affix_tier_weight_bonus = 0.6\n");
         return """
                 # Champions Affixes
                 
@@ -191,6 +203,10 @@ public class ChampionsConfigAffixes {
     /** Config key that toggles an affix. Reflection keeps its old key so existing files still work. */
     public static String toggleKey(String affixName) {
         return (affixName.equals("reflection") ? "reflective" : affixName) + "_affix";
+    }
+
+    public int minTier(String affixName) {
+        return minTiers.getOrDefault(affixName, AffixRegistry.defaultTier(affixName));
     }
 
     public boolean isEnabled(String affixName) {

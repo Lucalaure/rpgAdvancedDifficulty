@@ -380,6 +380,23 @@ public class ChampionsModMenu implements ModMenuApi {
 
         affixes.addEntry(registry.build());
 
+        var affixTiers = entryBuilder.startSubCategory(Component.translatable("champions.hud.affix_tiers"))
+                .setExpanded(false);
+        affixTiers.add(entryBuilder.startFloatField(Component.translatable("champions.affix_tier_weight_bonus"), configA.affixTierWeightBonus)
+                .setDefaultValue(0.6f).setMin(0.0f).setMax(10.0f)
+                .setSaveConsumer(val -> changesAffix.put("affix_tier_weight_bonus", val))
+                .setTooltip(Component.translatable("champions.tooltip.affix_tier_weight_bonus"))
+                .build());
+        for (String name : AffixRegistry.NAMES) {
+            final String key = name + "_tier";
+            affixTiers.add(entryBuilder.startIntField(Component.translatable("affix." + name), configA.minTier(name))
+                    .setDefaultValue(AffixRegistry.defaultTier(name)).setMin(1).setMax(5)
+                    .setSaveConsumer(val -> changesAffix.put(key, val))
+                    .setTooltip(Component.translatable("champions.tooltip.affix_tier"))
+                    .build());
+        }
+        affixes.addEntry(affixTiers.build());
+
         var big = entryBuilder.startSubCategory(Component.translatable("affix.big"))
                 .setExpanded(true);
 

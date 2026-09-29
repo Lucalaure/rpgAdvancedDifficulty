@@ -6,6 +6,8 @@ import crystal.champions.affix.Affix;
 import crystal.champions.affix.AffixEvents;
 import crystal.champions.affix.AffixRegistry;
 import crystal.champions.effects.CustomStatusEffects;
+import crystal.champions.util.ChampionRank;
+import crystal.champions.util.PrepareChampions;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
@@ -54,6 +56,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.rpgadvanceddifficulty.DifficultyModes;
 import net.rpgdifficulty.mixin.access.AbstractArrowAccess;
 
 import java.lang.reflect.Field;
@@ -129,6 +132,8 @@ public class AffixClientGameTest implements FabricClientGameTest {
             run("berserker", this::testBerserker);
             run("sunproof", this::testSunproof);
             run("commands", this::testCommands);
+            run("affix tiers", this::testAffixTiers);
+            run("game difficulty", this::testGameDifficulty);
 
             log("all affix checks passed");
         }
@@ -608,10 +613,61 @@ public class AffixClientGameTest implements FabricClientGameTest {
             List<Creeper> creepers = nearby(s, Creeper.class);
             check(creepers.size() == 1, "commands: /champion spawn creeper did not spawn one creeper");
             IChampions creeper = (IChampions) creepers.getFirst();
-            check(creeper.champions$getChampionTier() == 2 && creeper.champions$hasAffix("stalker") && creeper.champions$hasAffix("big"),
+            // Stalker is a tier 3 affix, so the champion is tier 3 even with 2 affixes
+            check(creeper.champions$getChampionTier() == 3 && creeper.champions$hasAffix("stalker") && creeper.champions$hasAffix("big"),
                     "commands: creeper has tier " + creeper.champions$getChampionTier() + " and '" + creeper.champions$getAffixesString() + "'");
             check(nearby(s, Pig.class).isEmpty(), "commands: spawned a pig with a skeleton-only affix");
         });
+    }
+
+    // --- Tiers and difficulty
+
+    private void testAffixTiers() {
+        server.runOnServer(s -> {
+            Zombie zombie = EntityTypes.ZOMBIE.create(level(s), EntitySpawnReason.COMMAND);
+            boolean tier5GotTier4 = false;
+            for (int i = 0; i < 300; i++) {
+                for (String name : PrepareChampions.prepareAffixes(ChampionRank.RANKS.get(1), zombie).split(",")) {
+                    check(affix(name).getMinTier() <= 1, "affix tiers: tier 1 champion rolled " + name + " (tier " + affix(name).getMinTier() + ")");
+                }
+                for (String name : PrepareChampions.prepareAffixes(ChampionRank.RANKS.get(3), zombie).split(",")) {
+                    check(affix(name).getMinTier() <= 3, "affix tiers: tier 3 champion rolled " + name + " (tier " + affix(name).getMinTier() + ")");
+                }
+                for (String name : PrepareChampions.prepareAffixes(ChampionRank.RANKS.get(5), zombie).split(",")) {
+                    if (affix(name).getMinTier() == 4) tier5GotTier4 = true;
+                }
+            }
+            check(tier5GotTier4, "affix tiers: tier 5 champions never rolled a tier 4 affix");
+        });
+    }
+
+    private void testGameDifficulty() {
+        double[] easy = new double[6], normal = new double[6], hard = new double[6];
+        for (String mode : List.of("easy", "normal", "hard")) {
+            server.runCommand("difficulty " + mode);
+            context.waitTicks(2);
+            double[] shares = server.computeOnServer(s -> {
+                double[] weights = ChampionRank.tierWeights(0.0, 1.0, 8.0, Integer.MAX_VALUE, tier -> DifficultyModes.tierMultiplier(level(s), tier));
+                double total = 0;
+                for (double weight : weights) total += weight;
+                double[] result = new double[weights.length];
+                for (int i = 0; i < weights.length; i++) result[i] = weights[i] / total;
+                return result;
+            });
+            double cap = server.computeOnServer(s -> DifficultyModes.cap(level(s)));
+            double growth = server.computeOnServer(s -> DifficultyModes.growth(level(s)));
+            switch (mode) {
+                case "easy" -> { easy = shares; check(cap == 0.75 && growth == 0.5, "difficulty: easy multipliers " + growth + "/" + cap); }
+                case "normal" -> { normal = shares; check(cap == 1.0 && growth == 1.0, "difficulty: normal multipliers " + growth + "/" + cap); }
+                default -> { hard = shares; check(cap == 1.5 && growth == 1.5, "difficulty: hard multipliers " + growth + "/" + cap); }
+            }
+        }
+        for (int tier = 1; tier <= 5; tier++) {
+            check(easy[tier] < normal[tier] && normal[tier] < hard[tier], "difficulty: tier " + tier + " odds don't rise with difficulty");
+        }
+        // Higher tiers scale more: tier 5 grows more from Normal to Hard than tier 1 does
+        check(hard[5] / normal[5] > hard[1] / normal[1] * 1.5, "difficulty: higher tiers don't scale more on Hard");
+        server.runCommand("difficulty normal");
     }
 
     // --- Helpers
