@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvi
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction;
+import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
 import net.minecraft.world.level.storage.loot.entries.UniformContainerBase;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.Item;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
@@ -51,8 +53,7 @@ public class ChampionsLootTable extends SimpleFabricLootTableSubProvider {
                 .add(item(Items.GOLD_INGOT, 15, 1, 3))
                 .add(item(Items.EXPERIENCE_BOTTLE, 15, 1, 3))
                 .add(item(Items.EMERALD, 10, 1, 2))
-                .add(item(Items.ARROW, 10, 4, 10))
-                .add(book(8, 5, 10, false))));
+                .add(book(7, 5, 10, false))));
 
         // Tier 2: two rolls, better materials, rare golden apple or diamond
         exporter.accept(key(2), LootTable.lootTable().withPool(LootPool.lootPool()
@@ -66,7 +67,7 @@ public class ChampionsLootTable extends SimpleFabricLootTableSubProvider {
                 .add(item(Items.DIAMOND, 4, 1, 1))
                 .add(book(10, 10, 18, false))));
 
-        // Tier 3: two rolls, valuables and mid-level books or gear
+        // Tier 3: two rolls, valuables, mid-level books and random enchanted iron gear
         exporter.accept(key(3), LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(ContextIntProviders.exactly(2))
                 .add(item(Items.EXPERIENCE_BOTTLE, 15, 4, 8))
@@ -74,11 +75,10 @@ public class ChampionsLootTable extends SimpleFabricLootTableSubProvider {
                 .add(item(Items.DIAMOND, 10, 1, 2))
                 .add(item(Items.GOLDEN_APPLE, 8, 1, 2))
                 .add(item(Items.ENDER_PEARL, 8, 1, 3))
-                .add(item(Items.NAME_TAG, 5, 1, 1))
-                .add(enchanted(Items.BOW, 5, 15, 25, false))
-                .add(book(15, 18, 25, false))));
+                .add(randomGear(IRON_GEAR, 6, 15, 25))
+                .add(book(20, 18, 25, false))));
 
-        // Tier 4: three rolls, strong books and gear, rare netherite scrap or totem
+        // Tier 4: three rolls, strong books and random enchanted diamond gear, rare netherite scrap, totem or armor trim
         exporter.accept(key(4), LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(ContextIntProviders.exactly(3))
                 .add(item(Items.DIAMOND, 12, 2, 4))
@@ -87,9 +87,9 @@ public class ChampionsLootTable extends SimpleFabricLootTableSubProvider {
                 .add(item(Items.GOLDEN_APPLE, 8, 2, 2))
                 .add(item(Items.NETHERITE_SCRAP, 5, 1, 1))
                 .add(item(Items.TOTEM_OF_UNDYING, 3, 1, 1))
-                .add(enchanted(Items.DIAMOND_SWORD, 4, 20, 30, false))
-                .add(enchanted(Items.DIAMOND_CHESTPLATE, 4, 20, 30, false))
-                .add(book(18, 25, 30, false))));
+                .add(randomGear(DIAMOND_GEAR, 8, 20, 30))
+                .add(NestedLootTable.inlineLootTable(LootTable.lootTable().withPool(armorTrims(ContextIntProviders.exactly(1))).build()).setWeight(5))
+                .add(book(24, 25, 30, false))));
 
         // Tier 5: boss-level rewards; the only tier whose books can have treasure enchantments (Mending etc.)
         exporter.accept(key(5), LootTable.lootTable()
@@ -108,6 +108,20 @@ public class ChampionsLootTable extends SimpleFabricLootTableSubProvider {
                         .add(item(Items.GOLDEN_APPLE, 8, 2, 4))
                         .add(item(Items.TOTEM_OF_UNDYING, 5, 1, 1))
                         .add(item(Items.ENCHANTED_GOLDEN_APPLE, 2, 1, 1))));
+    }
+
+    private static final List<Item> IRON_GEAR = List.of(Items.IRON_SWORD, Items.IRON_AXE, Items.IRON_PICKAXE, Items.IRON_SHOVEL,
+            Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS, Items.BOW, Items.CROSSBOW);
+    private static final List<Item> DIAMOND_GEAR = List.of(Items.DIAMOND_SWORD, Items.DIAMOND_AXE, Items.DIAMOND_PICKAXE, Items.DIAMOND_SHOVEL,
+            Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS, Items.BOW, Items.CROSSBOW);
+
+    /** One pool entry (with the given weight) that picks a random piece of gear, enchanted at the given levels. */
+    private UniformContainerBase.Builder<?> randomGear(List<Item> gear, int weight, int minLevels, int maxLevels) {
+        LootPool.Builder pool = LootPool.lootPool().setRolls(ContextIntProviders.exactly(1));
+        for (Item item : gear) {
+            pool.add(enchanted(item, 1, minLevels, maxLevels, false));
+        }
+        return NestedLootTable.inlineLootTable(LootTable.lootTable().withPool(pool).build()).setWeight(weight);
     }
 
     private static ResourceKey<LootTable> key(int tier) {

@@ -58,19 +58,6 @@
         {
           "type": "minecraft:item",
           "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 10,
-              "min": 4
-            }
-          },
-          "name": "minecraft:arrow",
-          "weight": 10
-        },
-        {
-          "type": "minecraft:item",
-          "modifier": {
             "type": "minecraft:enchant_with_levels",
             "levels": {
               "type": "minecraft:uniform",
@@ -80,7 +67,7 @@
             "options": "#minecraft:in_enchanting_table"
           },
           "name": "minecraft:book",
-          "weight": 8
+          "weight": 7
         }
       ],
       "rolls": 1

@@ -50,11 +50,13 @@ Champions drop their normal loot plus extra rolls from their tier's pool. Enchan
 
 | Tier | Rolls | Pool (weight) | Books |
 | --- | --- | --- | --- |
-| 1 | 1 | Iron ingots 1–3 (20), gold ingots 1–3 (15), XP bottles 1–3 (15), emeralds 1–2 (10), arrows 4–10 (10) | Weight 8 (about 1 in 10), levels 5–10 |
+| 1 | 1 | Iron ingots 1–3 (20), gold ingots 1–3 (15), XP bottles 1–3 (15), emeralds 1–2 (10) | Weight 7 (about 1 in 10), levels 5–10 |
 | 2 | 2 | Iron 2–5 (15), gold 2–5 (12), XP bottles 2–5 (15), emeralds 2–4 (12), lapis 4–10 (8), golden apple (5), diamond (4) | Weight 10, levels 10–18 |
-| 3 | 2 | XP bottles 4–8 (15), emeralds 3–6 (12), diamonds 1–2 (10), golden apples 1–2 (8), ender pearls 1–3 (8), name tag (5), enchanted bow (5, levels 15–25) | Weight 15, levels 18–25 |
-| 4 | 3 | Diamonds 2–4 (12), emeralds 5–10 (10), XP bottles 6–12 (12), 2 golden apples (8), netherite scrap (5), totem of undying (3), enchanted diamond sword or chestplate (4 each, levels 20–30) | Weight 18, levels 25–30 |
+| 3 | 2 | XP bottles 4–8 (15), emeralds 3–6 (12), diamonds 1–2 (10), golden apples 1–2 (8), ender pearls 1–3 (8), random enchanted iron gear (6, levels 15–25) | Weight 20, levels 18–25 |
+| 4 | 3 | Diamonds 2–4 (12), emeralds 5–10 (10), XP bottles 6–12 (12), 2 golden apples (8), netherite scrap (5), totem of undying (3), random enchanted diamond gear (8, levels 20–30), random armor trim template (5) | Weight 24, levels 25–30 |
 | 5 | — | Wither skeleton skull or nether star; 1–2 armor trim templates; 3 rolls of diamonds 3–6 (12), netherite scrap 1–3 (8), golden apples 2–4 (8), totem (5), enchanted golden apple (2) | Always 2, level 30, treasure possible |
+
+*Random gear* is one of: sword, axe, pickaxe, shovel, helmet, chestplate, leggings, boots (iron at tier 3, diamond at tier 4), bow or crossbow.
 
 The loot tables are built in `ChampionsLootTable.java`; run `./gradlew runDatagen` after changing it to regenerate the JSON in `src/main/generated`. Split slime pieces never drop champion loot. The bestiary has a *Champion loot* page summarising this.
 

@@ -66,32 +66,224 @@
           "weight": 3
         },
         {
-          "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:enchant_with_levels",
-            "levels": {
-              "type": "minecraft:uniform",
-              "max": 30,
-              "min": 20
-            },
-            "options": "#minecraft:in_enchanting_table"
+          "type": "minecraft:loot_table",
+          "value": {
+            "pools": [
+              {
+                "entries": [
+                  {
+                    "type": "minecraft:item",
+                    "modifier": {
+                      "type": "minecraft:enchant_with_levels",
+                      "levels": {
+                        "type": "minecraft:uniform",
+                        "max": 30,
+                        "min": 20
+                      },
+                      "options": "#minecraft:in_enchanting_table"
+                    },
+                    "name": "minecraft:diamond_sword"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "modifier": {
+                      "type": "minecraft:enchant_with_levels",
+                      "levels": {
+                        "type": "minecraft:uniform",
+                        "max": 30,
+                        "min": 20
+                      },
+                      "options": "#minecraft:in_enchanting_table"
+                    },
+                    "name": "minecraft:diamond_axe"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "modifier": {
+                      "type": "minecraft:enchant_with_levels",
+                      "levels": {
+                        "type": "minecraft:uniform",
+                        "max": 30,
+                        "min": 20
+                      },
+                      "options": "#minecraft:in_enchanting_table"
+                    },
+                    "name": "minecraft:diamond_pickaxe"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "modifier": {
+                      "type": "minecraft:enchant_with_levels",
+                      "levels": {
+                        "type": "minecraft:uniform",
+                        "max": 30,
+                        "min": 20
+                      },
+                      "options": "#minecraft:in_enchanting_table"
+                    },
+                    "name": "minecraft:diamond_shovel"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "modifier": {
+                      "type": "minecraft:enchant_with_levels",
+                      "levels": {
+                        "type": "minecraft:uniform",
+                        "max": 30,
+                        "min": 20
+                      },
+                      "options": "#minecraft:in_enchanting_table"
+                    },
+                    "name": "minecraft:diamond_helmet"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "modifier": {
+                      "type": "minecraft:enchant_with_levels",
+                      "levels": {
+                        "type": "minecraft:uniform",
+                        "max": 30,
+                        "min": 20
+                      },
+                      "options": "#minecraft:in_enchanting_table"
+                    },
+                    "name": "minecraft:diamond_chestplate"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "modifier": {
+                      "type": "minecraft:enchant_with_levels",
+                      "levels": {
+                        "type": "minecraft:uniform",
+                        "max": 30,
+                        "min": 20
+                      },
+                      "options": "#minecraft:in_enchanting_table"
+                    },
+                    "name": "minecraft:diamond_leggings"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "modifier": {
+                      "type": "minecraft:enchant_with_levels",
+                      "levels": {
+                        "type": "minecraft:uniform",
+                        "max": 30,
+                        "min": 20
+                      },
+                      "options": "#minecraft:in_enchanting_table"
+                    },
+                    "name": "minecraft:diamond_boots"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "modifier": {
+                      "type": "minecraft:enchant_with_levels",
+                      "levels": {
+                        "type": "minecraft:uniform",
+                        "max": 30,
+                        "min": 20
+                      },
+                      "options": "#minecraft:in_enchanting_table"
+                    },
+                    "name": "minecraft:bow"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "modifier": {
+                      "type": "minecraft:enchant_with_levels",
+                      "levels": {
+                        "type": "minecraft:uniform",
+                        "max": 30,
+                        "min": 20
+                      },
+                      "options": "#minecraft:in_enchanting_table"
+                    },
+                    "name": "minecraft:crossbow"
+                  }
+                ],
+                "rolls": 1
+              }
+            ]
           },
-          "name": "minecraft:diamond_sword",
-          "weight": 4
+          "weight": 8
         },
         {
-          "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:enchant_with_levels",
-            "levels": {
-              "type": "minecraft:uniform",
-              "max": 30,
-              "min": 20
-            },
-            "options": "#minecraft:in_enchanting_table"
+          "type": "minecraft:loot_table",
+          "value": {
+            "pools": [
+              {
+                "entries": [
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:sentry_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:wild_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:vex_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:rib_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:shaper_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:host_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:ward_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:tide_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:spire_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:silence_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:coast_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:eye_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:snout_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:wayfinder_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:raiser_armor_trim_smithing_template"
+                  },
+                  {
+                    "type": "minecraft:item",
+                    "name": "minecraft:dune_armor_trim_smithing_template"
+                  }
+                ],
+                "rolls": 1
+              }
+            ]
           },
-          "name": "minecraft:diamond_chestplate",
-          "weight": 4
+          "weight": 5
         },
         {
           "type": "minecraft:item",
@@ -105,7 +297,7 @@
             "options": "#minecraft:in_enchanting_table"
           },
           "name": "minecraft:book",
-          "weight": 18
+          "weight": 24
         }
       ],
       "rolls": 3

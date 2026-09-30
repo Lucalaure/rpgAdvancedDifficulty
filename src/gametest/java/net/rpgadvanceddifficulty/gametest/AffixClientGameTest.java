@@ -587,6 +587,8 @@ public class AffixClientGameTest implements FabricClientGameTest {
             int[] maxLevel = new int[6];
             boolean[] treasure = new boolean[6];
             int[] books = new int[6];
+            java.util.Map<Integer, java.util.Set<net.minecraft.world.item.Item>> gear = new java.util.HashMap<>();
+            boolean[] trims = new boolean[6];
             for (int tier = 1; tier <= 5; tier++) {
                 LootTable table = s.reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE,
                         Identifier.fromNamespaceAndPath("champions", "champions/tier_" + tier)));
@@ -597,6 +599,9 @@ public class AffixClientGameTest implements FabricClientGameTest {
                             .withParameter(LootContextParams.DAMAGE_SOURCE, level(s).damageSources().playerAttack(player(s)))
                             .create(LootContextParamSets.ENTITY);
                     for (ItemStack stack : table.getRandomItems(params)) {
+                        check(!stack.is(Items.ARROW) && !stack.is(Items.NAME_TAG), "loot: tier " + tier + " dropped " + stack.getItem());
+                        if (net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath().endsWith("_armor_trim_smithing_template")) trims[tier] = true;
+                        if (stack.isEnchanted()) gear.computeIfAbsent(tier, k -> new java.util.HashSet<>()).add(stack.getItem());
                         ItemEnchantments stored = stack.get(DataComponents.STORED_ENCHANTMENTS);
                         if (stored == null || stored.isEmpty()) continue;
                         books[tier]++;
@@ -616,6 +621,11 @@ public class AffixClientGameTest implements FabricClientGameTest {
             }
             check(maxLevel[4] >= 3, "loot: tier 4 books never above level " + maxLevel[4]);
             check(books[5] == 1000, "loot: tier 5 should always drop 2 books, got " + books[5] + " in 500");
+            int tier3Gear = gear.getOrDefault(3, java.util.Set.of()).size();
+            int tier4Gear = gear.getOrDefault(4, java.util.Set.of()).size();
+            log("loot gear types (tier 3, 4): " + tier3Gear + ", " + tier4Gear);
+            check(tier3Gear >= 6 && tier4Gear >= 6, "loot: enchanted gear isn't varied (" + tier3Gear + " / " + tier4Gear + " item types)");
+            check(!trims[3] && trims[4], "loot: armor trims should start dropping at tier 4");
             check(treasure[5], "loot: tier 5 books never had a treasure enchantment");
         });
     }
