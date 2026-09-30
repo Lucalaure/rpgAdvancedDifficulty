@@ -26,6 +26,13 @@ public final class AffixEvents {
         }
     }
 
+    public static void onDeath(LivingEntity champion, net.minecraft.world.damagesource.DamageSource source) {
+        if (champion.level().isClientSide()) return;
+        for (Affix affix : affixes(champion)) {
+            affix.onDeath(champion, source);
+        }
+    }
+
     public static void onProjectileSpawn(Projectile projectile) {
         if (projectile.level().isClientSide() || !(projectile.getOwner() instanceof Mob owner)) return;
         for (Affix affix : affixes(owner)) {

@@ -318,6 +318,7 @@ public class SimpleConfig {
 
             List<String> l = Files.readAllLines(path);
             List<String> newLines = new ArrayList<>();
+            Set<String> written = new HashSet<>();
 
             for (String line : l) {
                 String trimmed = line.trim();
@@ -325,11 +326,16 @@ public class SimpleConfig {
                     String key = trimmed.split("=")[0].trim();
                     if (changes.containsKey(key)) {
                         newLines.add(key + " = " + changes.get(key));
+                        written.add(key);
                         continue;
                     }
                 }
                 newLines.add(line);
             }
+            // Keys added in a newer version (e.g. new affixes) aren't in older files yet: append them
+            changes.forEach((key, value) -> {
+                if (!written.contains(key)) newLines.add(key + " = " + value);
+            });
             Files.write(path, newLines);
             Champions.LOGGER.info("Saved config");
         } catch (IOException e) {

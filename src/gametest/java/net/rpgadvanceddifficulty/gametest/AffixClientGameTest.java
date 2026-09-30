@@ -118,6 +118,12 @@ public class AffixClientGameTest implements FabricClientGameTest {
             run("plagued", this::testPlagued);
             run("infected", this::testInfected);
             run("big", this::testBig);
+            run("vampiric", this::testVampiric);
+            run("enraged", this::testEnraged);
+            run("withering", this::testWithering);
+            run("volatile", this::testVolatile);
+            run("undying", this::testUndying);
+            run("stormcaller", this::testStormcaller);
             run("creeper fuse", this::testCreeperFuse);
 
             // Mob-specific affixes
@@ -333,6 +339,89 @@ public class AffixClientGameTest implements FabricClientGameTest {
         });
     }
 
+    private void testVampiric() {
+        UUID id = spawnChampion(EntityTypes.ZOMBIE, "vampiric", 1.5);
+        server.runOnServer(s -> {
+            Mob mob = champion(s, id);
+            mob.setHealth(mob.getMaxHealth() * 0.5f);
+            float before = mob.getHealth();
+            check(mob.doHurtTarget(level(s), resetPlayer(s)), "vampiric: attack did not land");
+            check(mob.getHealth() > before, "vampiric: champion did not heal from its hit");
+        });
+    }
+
+    private void testEnraged() {
+        UUID id = spawnChampion(EntityTypes.ZOMBIE, "enraged", 3.0);
+        server.runOnServer(s -> {
+            Mob mob = champion(s, id);
+            mob.tickCount = 10;
+            affix("enraged").onTick(mob);
+            check(!mob.hasEffect(MobEffects.STRENGTH), "enraged: enraged at full health");
+            mob.setHealth(mob.getMaxHealth() * 0.3f);
+            affix("enraged").onTick(mob);
+            check(mob.hasEffect(MobEffects.STRENGTH) && mob.hasEffect(MobEffects.SPEED), "enraged: no Strength/Speed below 40% health");
+        });
+    }
+
+    private void testWithering() {
+        UUID id = spawnChampion(EntityTypes.ZOMBIE, "withering", 1.5);
+        server.runOnServer(s -> {
+            ServerPlayer player = resetPlayer(s);
+            check(champion(s, id).doHurtTarget(level(s), player), "withering: attack did not land");
+            check(player.hasEffect(MobEffects.WITHER) && player.getEffect(MobEffects.WITHER).getAmplifier() == 1, "withering: no Wither II on the target");
+        });
+    }
+
+    private void testVolatile() {
+        UUID id = spawnChampion(EntityTypes.ZOMBIE, "volatile", 2.0);
+        AtomicReference<BlockPos> ground = new AtomicReference<>();
+        server.runOnServer(s -> {
+            Mob mob = champion(s, id);
+            ground.set(mob.blockPosition().below());
+            resetPlayer(s);
+            mob.hurtServer(level(s), level(s).damageSources().playerAttack(player(s)), 10000.0f);
+            check(!mob.isAlive(), "volatile: champion did not die");
+        });
+        context.waitTicks(10);
+        server.runOnServer(s -> check(player(s).getHealth() == player(s).getMaxHealth(), "volatile: exploded without a warning delay"));
+        context.waitTicks(30);
+        server.runOnServer(s -> {
+            check(player(s).getHealth() < player(s).getMaxHealth(), "volatile: no explosion after the fuse");
+            check(!level(s).getBlockState(ground.get()).isAir(), "volatile: the explosion broke blocks");
+        });
+    }
+
+    private void testUndying() {
+        UUID id = spawnChampion(EntityTypes.ZOMBIE, "undying", 3.0);
+        server.runOnServer(s -> {
+            Mob mob = champion(s, id);
+            mob.hurtServer(level(s), level(s).damageSources().playerAttack(player(s)), 10000.0f);
+            check(mob.isAlive(), "undying: champion died on its first death");
+            check(Math.abs(mob.getHealth() - mob.getMaxHealth() * 0.5f) < 1.0f, "undying: revived with " + mob.getHealth() + " of " + mob.getMaxHealth());
+        });
+        context.waitTicks(50); // the revive gives 2 seconds of invulnerability
+        server.runOnServer(s -> {
+            Mob mob = champion(s, id);
+            mob.damageCooldownTime = 0;
+            mob.hurtServer(level(s), level(s).damageSources().playerAttack(player(s)), 10000.0f);
+            check(!mob.isAlive(), "undying: champion revived a second time");
+        });
+    }
+
+    private void testStormcaller() {
+        UUID id = spawnChampion(EntityTypes.ZOMBIE, "stormcaller", 6.0);
+        server.runOnServer(s -> {
+            Mob mob = champion(s, id);
+            check(!mob.hurtServer(level(s), level(s).damageSources().lightningBolt(), 5.0f), "stormcaller: champion is hurt by lightning");
+            mob.tickCount = 120;
+            affix("stormcaller").onAttack(mob, mob);
+            List<net.minecraft.world.entity.LightningBolt> bolts = nearby(s, net.minecraft.world.entity.LightningBolt.class);
+            check(bolts.size() >= 1 && bolts.size() <= 3, "stormcaller: " + bolts.size() + " lightning bolts (expected 1-3)");
+            bolts.forEach(bolt -> check(bolt.distanceTo(mob) >= 3.9, "stormcaller: lightning struck right next to the champion"));
+            bolts.forEach(bolt -> check(bolt.distanceTo(player(s)) < 6.5, "stormcaller: lightning struck far from the target"));
+        });
+    }
+
     private void testCreeperFuse() throws ReflectiveOperationException {
         UUID id = spawnChampion(EntityTypes.CREEPER, "hasty", 6.0, 5);
         context.waitTicks(SECOND);
@@ -465,12 +554,21 @@ public class AffixClientGameTest implements FabricClientGameTest {
     private void testThief() {
         UUID id = spawnChampion(EntityTypes.ENDERMAN, "thief", 1.5);
         server.runOnServer(s -> player(s).setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD)));
+        int[] landed = {0};
         for (int attempt = 0; attempt < 60; attempt++) {
-            server.runOnServer(s -> champion(s, id).doHurtTarget(level(s), resetPlayer(s)));
+            if (server.computeOnServer(s -> champion(s, id).doHurtTarget(level(s), resetPlayer(s)))) landed[0]++;
             if (server.computeOnServer(s -> player(s).getMainHandItem().isEmpty())) break;
         }
         server.runOnServer(s -> {
-            check(player(s).getMainHandItem().isEmpty(), "thief: never knocked the item away in 60 hits (25% chance each)");
+            ServerPlayer p = player(s);
+            String state = p.getMainHandItem().isEmpty() ? "" : "; player invulnerable=" + p.isInvulnerable() + " abilities.invulnerable=" + p.getAbilities().invulnerable
+                    + " dead=" + p.isDeadOrDying() + " mode=" + p.gameMode.getGameModeForPlayer() + " health=" + p.getHealth()
+                    + " directHit=" + p.hurtServer(level(s), level(s).damageSources().mobAttack(champion(s, id)), 1.0f)
+                    + " invulnerableTo=" + p.isInvulnerableTo(level(s), level(s).damageSources().mobAttack(champion(s, id)))
+                    + " difficulty=" + level(s).getDifficulty() + " genericHit=" + p.hurtServer(level(s), level(s).damageSources().generic(), 1.0f)
+                    + " shielding=" + ((IChampions) p).champions$isShielding() + " affixes='" + ((IChampions) p).champions$getAffixesString() + "'"
+                    + " enderman alive=" + champion(s, id).isAlive() + " pos=" + champion(s, id).position() + " player pos=" + p.position();
+            check(p.getMainHandItem().isEmpty(), "thief: never knocked the item away in 60 hits (25% chance each); " + landed[0] + " hits landed" + state);
             check(nearby(s, ItemEntity.class).stream().anyMatch(item -> item.getItem().is(Items.DIAMOND_SWORD)), "thief: dropped item not found");
         });
     }
@@ -843,6 +941,12 @@ public class AffixClientGameTest implements FabricClientGameTest {
             player.setTicksFrozen(0);
             player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             player.teleportTo(px, py, pz);
+            // Put out fire left by lightning, Inferno etc.
+            BlockPos center = BlockPos.containing(px, py, pz);
+            BlockPos.betweenClosedStream(center.offset(-12, -2, -12), center.offset(12, 4, 12))
+                    .filter(pos -> level(s).getBlockState(pos).is(net.minecraft.tags.BlockTags.FIRE))
+                    .map(BlockPos::immutable).toList()
+                    .forEach(pos -> level(s).removeBlock(pos, false));
         });
         context.waitTicks(2);
     }

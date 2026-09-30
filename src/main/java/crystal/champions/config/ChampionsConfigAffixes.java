@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChampionsConfigAffixes {
-    private static final int VERSION = 9;
+    private static final int VERSION = 10;
     private static ChampionsConfigAffixes instance;
 
     public final int cooldownBeforeBulletArtic;

@@ -215,5 +215,17 @@
   "champions.bestiary.loot_tier3": "Pearls, gear",
   "champions.bestiary.loot_tier4": "Totems, scrap",
   "champions.bestiary.loot_tier5": "Stars, trims",
-  "champions.bestiary.loot_note": "Any tier can drop an enchanted book, and higher tiers drop stronger ones. Only ★★★★★ books can have Mending."
+  "champions.bestiary.loot_note": "Any tier can drop an enchanted book, and higher tiers drop stronger ones. Only ★★★★★ books can have Mending.",
+  "affix.vampiric": "Vampiric",
+  "affix.vampiric.desc": "Heals for half the damage it deals to you.",
+  "affix.enraged": "Enraged",
+  "affix.enraged.desc": "Below 40% health it gets stronger and faster, and glows with red particles.",
+  "affix.withering": "Withering",
+  "affix.withering.desc": "Its hits and projectiles inflict Wither II.",
+  "affix.volatile": "Volatile",
+  "affix.volatile.desc": "Explodes 1.5 seconds after it dies. Back off after the killing blow.",
+  "affix.undying": "Undying",
+  "affix.undying.desc": "The first time it dies, it comes back at half health like a totem of undying.",
+  "affix.stormcaller": "Stormcaller",
+  "affix.stormcaller.desc": "Calls down lightning around you every few seconds. Keep moving."
 }

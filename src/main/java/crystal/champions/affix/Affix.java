@@ -44,6 +44,9 @@ public class Affix {
     /** The champion took damage (the hit landed). */
     public void onDamaged(LivingEntity champion, DamageSource source, float amount) { /* After being hurt */ }
 
+    /** The champion died (after Undying and totems had their chance). */
+    public void onDeath(LivingEntity champion, DamageSource source) { /* On death */ }
+
     /** A projectile owned by the champion is being added to the world (arrows, fireballs, potions...). */
     public void onProjectileSpawn(Mob owner, Projectile projectile) { /* Projectile fired */ }
 

@@ -98,6 +98,12 @@ Each champion rolls its tier's number of affixes at random from the affixes it i
 | Plagued | 2 | Poisons nearby creatures, and is immune to poison itself |
 | Reflection | 3 | Hurts and pushes back anyone who damages it |
 | Shielding | 4 | Periodically becomes immune to all damage |
+| Stormcaller | 4 | Every 6 s calls 1–3 lightning bolts around its target; immune to lightning itself |
+| Undying | 4 | The first time it would die, revives at 50% health like a totem, with 2 s of invulnerability |
+| Vampiric | 3 | Heals for 50% of the damage it deals (melee and projectiles) |
+| Enraged | 3 | Below 40% health, gets Strength and Speed and gives off red particles |
+| Withering | 3 | Its hits and projectiles apply Wither II for 4 s |
+| Volatile | 3 | Explodes 1.5 s after dying (smoke and hiss warning); doesn't break blocks |
 
 ### Mob-specific affixes
 
@@ -107,7 +113,7 @@ These only roll on the listed mobs.
 | --- | --- | --- | --- |
 | Horde Caller | 2 | Zombies* | The first time it targets a player, 2–3 more zombies of its kind join the fight |
 | Sunproof | 1 | Zombies*, skeletons† | Doesn't burn in daylight |
-| Sniper | 3 | Skeletons† | Fires every 3 s instead of every 1–2 s, but arrows are 50% faster, perfectly aimed and deal +50% damage |
+| Sniper | 2 | Skeletons† | Fires every 3 s instead of every 1–2 s, but arrows are 50% faster, perfectly aimed and deal +50% damage |
 | Volley | 2 | Skeletons† | Every 3 s fires a spread of 3 arrows |
 | Frost Archer | 2 | Strays | Its arrows freeze the target like powder snow |
 | Stalker | 3 | Creepers | Invisible (effect particles still show) until it starts to hiss |
@@ -118,9 +124,9 @@ These only roll on the listed mobs.
 | Thief | 2 | Endermen | 25% chance per hit to knock the item out of your hand |
 | Alchemist | 2 | Witches | Every 5 s also throws a potion of Weakness, Mining Fatigue or Levitation |
 | Coven | 2 | Witches | Arrives with 1–3 extra monsters (zombie/skeleton/spider), and every 2 s heals hostile mobs within 8 blocks |
-| Inferno | 3 | Blazes, ghasts | Fireballs leave a 3×3 patch of fire (needs the `mob_griefing` gamerule) |
-| Barrage | 4 | Blazes, ghasts | Every 4 s an extra burst: 5 small fireballs (blaze) or 2 large ones (ghast) |
-| Splitter | 3 | Slimes, magma cubes | Splits into 2 extra pieces; each piece has a 50% chance to keep one of its other affixes (never Splitter). Pieces never drop champion loot |
+| Inferno | 2 | Blazes, ghasts | Fireballs leave a 3×3 patch of fire (needs the `mob_griefing` gamerule) |
+| Barrage | 3 | Blazes, ghasts | Every 4 s an extra burst: 5 small fireballs (blaze) or 2 large ones (ghast) |
+| Splitter | 2 | Slimes, magma cubes | Splits into 2 extra pieces; each piece has a 50% chance to keep one of its other affixes (never Splitter). Pieces never drop champion loot |
 | Sticky | 1 | Slimes, magma cubes | Its hits give Slowness IV for 3 s |
 | Warlord | 3 | Illagers | Arrives with 2–3 extra pillagers/vindicators, and other illagers within 16 blocks get Strength |
 | Berserker | 2 | Vindicators | Attacks faster as its health drops (up to ~3× as often) |
