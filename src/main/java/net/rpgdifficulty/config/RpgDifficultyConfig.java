@@ -130,5 +130,5 @@ public class RpgDifficultyConfig implements ConfigData {
     public double championChanceScaling = 1.0D;
     @ConfigEntry.Category("champions")
     @Comment("Upper limit for the tier weight multiplier")
-    public double maxChampionChanceMultiplier = 8.0D;
+    public double maxChampionChanceMultiplier = 12.0D;
 }

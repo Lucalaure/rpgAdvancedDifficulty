@@ -201,13 +201,13 @@ public class ChampionsModMenu implements ModMenuApi {
 
 
         tiersWeight.add(entryBuilder.startIntField(Component.translatable("champions.tier0_weight"), configS.w0)
-                .setDefaultValue(9460).setMin(0)
+                .setDefaultValue(9450).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(w0, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier0_weight"))
                 .build());
 
         tiersWeight.add(entryBuilder.startIntField(Component.translatable("champions.tier1_weight"), configS.w1)
-                .setDefaultValue(400).setMin(0)
+                .setDefaultValue(280).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(w1, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier1_weight"))
                 .build());
@@ -219,19 +219,19 @@ public class ChampionsModMenu implements ModMenuApi {
                 .build());
 
         tiersWeight.add(entryBuilder.startIntField(Component.translatable("champions.tier3_weight"), configS.w3)
-                .setDefaultValue(32).setMin(0)
+                .setDefaultValue(80).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(w3, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier3_weight"))
                 .build());
 
         tiersWeight.add(entryBuilder.startIntField(Component.translatable("champions.tier4_weight"), configS.w4)
-                .setDefaultValue(6).setMin(0)
+                .setDefaultValue(30).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(w4, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier4_weight"))
                 .build());
 
         tiersWeight.add(entryBuilder.startIntField(Component.translatable("champions.tier5_weight"), configS.w5)
-                .setDefaultValue(2).setMin(0)
+                .setDefaultValue(10).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(w5, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier5_weight"))
                 .build());

@@ -14,7 +14,7 @@ Every mob spawn goes through a single pipeline:
 
    `tier weight × min(maxChampionChanceMultiplier, 1 + (factor − 1) × championChanceScaling × tier)`
 
-   With the defaults, about 6% of eligible spawns are champions near spawn. Once the factor reaches 3.0 (about 20 hours of world time by default), about 19% are, and tier 4–5 champions are up to 8× as common.
+   With the defaults on Normal, about 5.5% of hostile spawns are champions in a new world. Once the factor reaches 3.0 (after 20 hours of world time), about 21% are, and tier 3–5 champions are up to 12× as common (the `maxChampionChanceMultiplier` cap).
 3. **Champion stats and affixes.** The tier's health and strength multipliers apply on top of the already-scaled stats. The champion then gets its random affixes (see below), which may include mob-specific ones such as Sniper for skeletons or Webslinger for spiders. Arrows and other projectiles from champions also deal the champion strength bonus.
 
 A mob is processed only once. A flag saved on the mob (`RpgDifficultyApplied`) stops scaling from being applied twice.
@@ -36,11 +36,24 @@ On Hard, mobs top out at 4.5× health and damage (reached after about 23 hours o
 
 | Tier | Base chance (Normal) | Health | Damage | Affix slots |
 | --- | --- | --- | --- | --- |
-| 1 | 4.0% | ×1.5 | ×1.5 | 1 |
+| 1 | 2.8% | ×1.5 | ×1.5 | 1 |
 | 2 | 1.5% | ×2.5 | ×1.8 | 2 |
-| 3 | 0.3% | ×4 | ×2.2 | 3 |
-| 4 | 0.06% | ×7 | ×3.5 | 4 |
-| 5 | 0.02% | ×12 | ×5 | 8 |
+| 3 | 0.8% | ×4 | ×2.2 | 3 |
+| 4 | 0.3% | ×7 | ×3.5 | 4 |
+| 5 | 0.1% | ×12 | ×5 | 8 |
+
+Base chances are for a new world on Normal (tier weights 9450 / 280 / 150 / 80 / 30 / 10 in `champions_common.properties`). They rise over time and with game difficulty:
+
+| | Any champion | Tier 1 | Tier 2 | Tier 3 | Tier 4 | Tier 5 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Easy, new world | 2.4% | 1.4% | 0.6% | 0.3% | 0.08% | 0.02% |
+| Easy, max (25 h) | 7.0% | 3.1% | 2.1% | 1.2% | 0.5% | 0.1% |
+| Normal, new world | 5.5% | 2.8% | 1.5% | 0.8% | 0.3% | 0.1% |
+| Normal, 10 h | 14.0% | 5.1% | 4.1% | 2.9% | 1.4% | 0.5% |
+| Normal, max (20 h) | 21.1% | 7.0% | 6.3% | 4.7% | 2.3% | 0.9% |
+| Hard, new world | 9.7% | 4.0% | 2.7% | 1.8% | 0.8% | 0.3% |
+| Hard, 10 h | 30.4% | 7.7% | 8.3% | 7.6% | 4.5% | 2.3% |
+| Hard, max (23 h) | 44.9% | 10.9% | 12.9% | 12.4% | 6.1% | 2.6% |
 
 Champion creepers also explode bigger (radius × tier, capped by `maxCreeperExplosionPower`), and tier 4–5 creepers have a longer fuse.
 
