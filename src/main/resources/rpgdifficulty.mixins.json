@@ -23,7 +23,8 @@
     "entity.WolfEntityMixin"
   ],
   "client": [
-    "client.ScreenMixin"
+    "client.ScreenMixin",
+    "client.DebugScreenEntryListMixin"
   ],
   "injectors": {
     "defaultRequire": 1

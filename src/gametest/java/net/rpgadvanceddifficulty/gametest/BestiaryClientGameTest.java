@@ -4,6 +4,8 @@ import crystal.champions.IChampions;
 import crystal.champions.affix.BigAffix;
 import crystal.champions.client.bestiary.BestiaryButton;
 import crystal.champions.client.bestiary.BestiaryScreen;
+import net.rpgadvanceddifficulty.DifficultyReport;
+import net.rpgadvanceddifficulty.client.DifficultyDebugEntry;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
@@ -70,6 +72,32 @@ public class BestiaryClientGameTest implements FabricClientGameTest {
             showPage(context, 6, "bestiary_10_hasty_page");
             showPage(context, 11, "bestiary_11_big_page");
             showPage(context, 7, "bestiary_12_undiscovered_page");
+
+            // F3 readout: skip 5 hours of world time (5 steps of +10% on Normal) and check the synced value
+            context.setScreen(() -> null);
+            singleplayer.getServer().runCommand("rpgdifficulty time set 5");
+            context.waitTicks(45);
+            float serverFactor = singleplayer.getServer().computeOnServer(server -> {
+                var player = server.getPlayerList().getPlayers().getFirst();
+                return DifficultyReport.compute(player.level(), player.position()).factor();
+            });
+            if (Math.abs(serverFactor - 1.5f) > 0.001f) {
+                throw new AssertionError("F3 readout: expected 1.5x after 5 hours on Normal, got " + serverFactor);
+            }
+            float clientFactor = context.computeOnClient(client -> DifficultyDebugEntry.latest() == null ? -1f : DifficultyDebugEntry.latest().factor());
+            if (Math.abs(clientFactor - serverFactor) > 0.001f) {
+                throw new AssertionError("F3 readout: client shows " + clientFactor + " but the server has " + serverFactor);
+            }
+            boolean shownByDefault = context.computeOnClient(client -> {
+                client.debugEntries.setOverlayVisible(true);
+                return client.debugEntries.isCurrentlyEnabled(DifficultyDebugEntry.ID);
+            });
+            if (!shownByDefault) {
+                throw new AssertionError("F3 readout: the RPG Difficulty entry is not shown on the F3 screen by default");
+            }
+            context.waitTicks(2);
+            context.takeScreenshot("bestiary_13_f3_difficulty");
+            context.runOnClient(client -> client.debugEntries.setOverlayVisible(false));
         }
     }
 

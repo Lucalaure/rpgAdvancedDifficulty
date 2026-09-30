@@ -1,5 +1,7 @@
 package net.rpgdifficulty;
 
+import net.rpgadvanceddifficulty.client.DifficultyDebugEntry;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,6 +20,7 @@ public class RpgDifficultyClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        DifficultyDebugEntry.register();
         HudElementRegistry.addLast(Identifier.fromNamespaceAndPath("rpgdifficulty", "hud_testing"), (drawContext, tickDelta) -> {
             Minecraft client = Minecraft.getInstance();
             if (RpgDifficultyMain.CONFIG.hudTesting && !client.gui.hud.isHidden() && client.hitResult != null && client.hitResult.getType() == HitResult.Type.ENTITY) {

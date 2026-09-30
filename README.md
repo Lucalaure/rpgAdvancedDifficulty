@@ -118,6 +118,17 @@ Minions summoned by affixes (Horde Caller, Coven and Warlord followers, Brood Mo
 
 Every affix can be switched off in `champions_affixes.properties` or the Champions config screen. Big's stats are set there too.
 
+## F3 readout
+
+The F3 screen shows two extra lines (on by default, can be switched off in the F3 debug options, F3 + F6):
+
+```
+RPG Difficulty: 1.50x / 3.00x max (next increase in 1h 0m)
+Champion chance: 9.6% of hostile spawns
+```
+
+This is what a normal mob spawning where you stand would get right now: the strength multiplier, the most it can reach on the current game difficulty, when it next goes up, and the chance of it being a champion. It's calculated on the server (including zones, dimension datapacks and server config) and synced once a second.
+
 ## Testing commands
 
 Operators (permission level 2) can spawn champions to try affixes out:
@@ -127,6 +138,16 @@ Operators (permission level 2) can spawn champions to try affixes out:
 | `/champion list` | Lists every enabled affix and which mobs can have it |
 | `/champion demo <affix>` | Spawns a fitting mob with only that affix, 3 blocks in front of you |
 | `/champion spawn <mob> <affix> [affix...]` | Spawns any mob with any combination of affixes (space or comma separated). The tier is the lowest one with enough slots for all the affixes (tier 5 if they need more than 8) |
+
+To test difficulty growth without waiting, operators can change the world age (the time that drives scaling; the time of day is unaffected):
+
+| Command | What it does |
+| --- | --- |
+| `/rpgdifficulty time query` | World age in hours, plus the difficulty and champion chance where you stand |
+| `/rpgdifficulty time add <hours>` | Skips the world age forward (negative values go back) |
+| `/rpgdifficulty time set <hours>` | Sets the world age, e.g. `set 0` for a fresh world or `set 20` for full strength on Normal |
+
+Mobs that already exist keep their stats; only new spawns use the new difficulty.
 
 For example, `/champion demo webslinger` or `/champion spawn minecraft:skeleton sniper volley sunproof`. Affix names autocomplete, and the command refuses affixes the mob can't have.
 

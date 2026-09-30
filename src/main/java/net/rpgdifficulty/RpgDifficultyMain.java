@@ -12,6 +12,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.rpgadvanceddifficulty.DifficultySync;
+import net.rpgadvanceddifficulty.DifficultyTimeCommand;
 import net.rpgdifficulty.config.RpgDifficultyConfig;
 import net.rpgdifficulty.data.DifficultyLoader;
 import net.rpgdifficulty.zone.DifficultyZoneCommand;
@@ -34,6 +36,8 @@ public class RpgDifficultyMain implements ModInitializer {
         ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(DifficultyLoader.ID, new DifficultyLoader());
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> DifficultyZoneCommand.register(dispatcher, registryAccess));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> DifficultyTimeCommand.register(dispatcher));
+        DifficultySync.register();
         PayloadTypeRegistry.clientboundPlay().register(ZoneSyncManager.ZoneSyncPayload.TYPE, ZoneSyncManager.ZoneSyncPayload.CODEC);
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> ZoneSyncManager.syncToPlayer(handler.getPlayer()));
     }
