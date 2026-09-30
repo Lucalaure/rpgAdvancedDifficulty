@@ -26,7 +26,7 @@ public class RpgDifficultyConfig implements ConfigData {
 
     @Comment("2.0 = double")
     public double maxFactorHealth = 3.0D;
-    public double maxFactorDamage = 3.0D;
+    public double maxFactorDamage = 2.0D;
     public double maxFactorProtection = 1.5D;
 
     public boolean allowRandomValues = false;
@@ -98,12 +98,12 @@ public class RpgDifficultyConfig implements ConfigData {
     @ConfigEntry.Category("game_difficulty")
     public double hardGrowthMultiplier = 1.5D;
     @ConfigEntry.Category("game_difficulty")
-    @Comment("Multiplies the max health/damage/protection factors. 1.5 on Hard = 4.5x max health instead of 3x")
+    @Comment("Multiplies the max health/damage/protection factors. 1.25 on Hard = 3.75x max health and 2.5x max damage")
     public double easyCapMultiplier = 0.75D;
     @ConfigEntry.Category("game_difficulty")
     public double normalCapMultiplier = 1.0D;
     @ConfigEntry.Category("game_difficulty")
-    public double hardCapMultiplier = 1.5D;
+    public double hardCapMultiplier = 1.25D;
     @ConfigEntry.Category("game_difficulty")
     @Comment("Multiplies the chance of every champion tier")
     public double easyChampionChance = 0.5D;
@@ -118,6 +118,10 @@ public class RpgDifficultyConfig implements ConfigData {
     public double normalChampionTierBonus = 1.0D;
     @ConfigEntry.Category("game_difficulty")
     public double hardChampionTierBonus = 1.25D;
+
+    @ConfigEntry.Category("champions")
+    @Comment("Hard limit on how much harder than vanilla any mob can hit, after difficulty scaling and champion tier (5.0 = 5x)")
+    public double maxTotalDamageMultiplier = 5.0D;
 
     @ConfigEntry.Category("champions")
     @Comment("Allow mobs to spawn as Champions (tiers, affixes and loot are set in config/Champions)")

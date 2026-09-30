@@ -218,7 +218,7 @@ public class MobStrengthener {
             }
 
             if (persistentProjectileEntity != null) {
-                persistentProjectileEntity.setBaseDamage(((AbstractArrowAccess) persistentProjectileEntity).rpgdifficulty$getBaseDamage() * mobDamageFactor * ChampionSpawner.getStrengthMultiplier(mobEntity));
+                persistentProjectileEntity.setBaseDamage(((AbstractArrowAccess) persistentProjectileEntity).rpgdifficulty$getBaseDamage() * ChampionSpawner.projectileDamageMultiplier(mobEntity, mobDamageFactor));
             } else
                 // Check if mob already has increased strength
                 if (mobEntityDefaultAttributes != null && !isStrengthened(mobEntity)) {
@@ -237,6 +237,8 @@ public class MobStrengthener {
 
                     // Champion roll on top of the scaled stats, more likely the harder it gets
                     ChampionSpawner.tryMakeChampion(mobEntity, mobHealthFactor);
+                    // Whatever stacked up (difficulty, champion tier, affixes), stay within the overall damage limit
+                    ChampionSpawner.limitDamage(mobEntity);
                 }
         }
     }

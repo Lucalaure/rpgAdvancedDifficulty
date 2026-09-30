@@ -4,6 +4,9 @@ import crystal.champions.IChampions;
 import crystal.champions.config.ChampionsConfigServer;
 import crystal.champions.util.ChampionRank;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.animal.polarbear.PolarBear;
@@ -18,6 +21,7 @@ import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.minecraft.world.entity.monster.spider.CaveSpider;
 import net.rpgdifficulty.RpgDifficultyMain;
+import net.rpgdifficulty.api.MobStrengthener;
 import net.rpgdifficulty.config.RpgDifficultyConfig;
 
 import static crystal.champions.util.PrepareChampions.prepareAffixes;
@@ -53,10 +57,30 @@ public final class ChampionSpawner {
             champion.champions$setChampionTier(rank.tier());
             prepareAttributes(mob, rank);
             champion.champions$setAffixesString(prepareAffixes(rank, mob));
-            // One-time affix effects, e.g. the zombie Big/Speedy builds
+            // One-time affix effects, e.g. Big
             champion.champions$getActiveAffixes().forEach(affix -> affix.onApply(mob));
+            limitDamage(mob);
             mob.setHealth(mob.getMaxHealth());
         }
+    }
+
+    /**
+     * Keeps a mob's melee damage within maxTotalDamageMultiplier times its vanilla damage,
+     * however difficulty scaling, champion tier and affixes stack.
+     */
+    public static void limitDamage(Mob mob) {
+        AttributeInstance damage = mob.getAttribute(Attributes.ATTACK_DAMAGE);
+        AttributeSupplier defaults = MobStrengthener.getDefaultAttributes(mob);
+        if (damage == null || defaults == null || !defaults.hasAttribute(Attributes.ATTACK_DAMAGE)) return;
+        double limit = defaults.getBaseValue(Attributes.ATTACK_DAMAGE) * RpgDifficultyMain.CONFIG.maxTotalDamageMultiplier;
+        if (damage.getBaseValue() > limit) {
+            damage.setBaseValue(limit);
+        }
+    }
+
+    /** Damage multiplier for a projectile: difficulty factor times champion strength, within the overall limit. */
+    public static double projectileDamageMultiplier(Mob owner, double difficultyFactor) {
+        return Math.min(difficultyFactor * getStrengthMultiplier(owner), RpgDifficultyMain.CONFIG.maxTotalDamageMultiplier);
     }
 
     /**

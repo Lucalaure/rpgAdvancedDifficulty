@@ -254,25 +254,25 @@ public class ChampionsModMenu implements ModMenuApi {
                 .build());
 
         tiersGh.add(entryBuilder.startFloatField(Component.translatable("tier2_growth_health"), configS.gh2)
-                .setDefaultValue(2.5F).setMin(0)
+                .setDefaultValue(2.0F).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(gh2, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier2_growth_health"))
                 .build());
 
         tiersGh.add(entryBuilder.startFloatField(Component.translatable("tier3_growth_health"), configS.gh3)
-                .setDefaultValue(4F).setMin(0)
+                .setDefaultValue(3.0F).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(gh3, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier3_growth_health"))
                 .build());
 
         tiersGh.add(entryBuilder.startFloatField(Component.translatable("tier4_growth_health"), configS.gh4)
-                .setDefaultValue(7F).setMin(0)
+                .setDefaultValue(4.5F).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(gh4, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier4_growth_health"))
                 .build());
 
         tiersGh.add(entryBuilder.startFloatField(Component.translatable("tier5_growth_health"), configS.gh5)
-                .setDefaultValue(12F).setMin(0)
+                .setDefaultValue(6.0F).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(gh5, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier5_growth_health"))
                 .build());
@@ -289,31 +289,31 @@ public class ChampionsModMenu implements ModMenuApi {
         final String gs5 = "tier5_growth_strength";
 
         tiersGs.add(entryBuilder.startFloatField(Component.translatable("tier1_growth_strength"), configS.gs1)
-                .setDefaultValue(1.5F).setMin(0)
+                .setDefaultValue(1.25F).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(gs1, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier1_growth_strength"))
                 .build());
 
         tiersGs.add(entryBuilder.startFloatField(Component.translatable("tier2_growth_strength"), configS.gs2)
-                .setDefaultValue(1.8F).setMin(0)
+                .setDefaultValue(1.4F).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(gs2, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier2_growth_strength"))
                 .build());
 
         tiersGs.add(entryBuilder.startFloatField(Component.translatable("tier3_growth_strength"), configS.gs3)
-                .setDefaultValue(2.2F).setMin(0)
+                .setDefaultValue(1.6F).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(gs3, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier3_growth_strength"))
                 .build());
 
         tiersGs.add(entryBuilder.startFloatField(Component.translatable("tier4_growth_strength"), configS.gs4)
-                .setDefaultValue(3.5F).setMin(0)
+                .setDefaultValue(1.8F).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(gs4, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier4_growth_strength"))
                 .build());
 
         tiersGs.add(entryBuilder.startFloatField(Component.translatable("tier5_growth_strength"), configS.gs5)
-                .setDefaultValue(5F).setMin(0)
+                .setDefaultValue(2.0F).setMin(0)
                 .setSaveConsumer(val -> changesServer.put(gs5, val))
                 .setTooltip(Component.translatable("champions.tooltip.tier5_growth_strength"))
                 .build());

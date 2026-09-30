@@ -26,21 +26,23 @@ The game difficulty (Easy, Normal, Hard) changes both systems. Peaceful uses the
 | | Easy | Normal | Hard |
 | --- | --- | --- | --- |
 | Growth speed | ×0.5 | ×1 | ×1.5 |
-| Max strength (health/damage cap) | ×0.75 (2.25×) | ×1 (3×) | ×1.5 (4.5×) |
+| Max strength (cap multiplier) | ×0.75 (2.25× health, 1.5× damage) | ×1 (3× health, 2× damage) | ×1.25 (3.75× health, 2.5× damage) |
 | Champion chance (all tiers) | ×0.5 | ×1 | ×1.5 |
 | Extra per tier above 1 | ×0.8 each | ×1 | ×1.25 each |
 
-On Hard, mobs top out at 4.5× health and damage (reached after about 23 hours of world time), and tier 5 champions are about 3.7× as common as on Normal (tier 1: 1.5×). On Easy, tier 5 champions are about 0.2× as common. All of these are in the *Game Difficulty* section of the difficulty config. Vanilla's own difficulty effects (like mobs hitting players harder on Hard) still apply on top.
+On Hard, mobs top out at 3.75× health and 2.5× damage (reached after about 19 hours of world time), and tier 5 champions are about 3.7× as common as on Normal at the start of a world (tier 1: 1.5×). On Easy, tier 5 champions are about 0.2× as common. All of these are in the *Game Difficulty* section of the difficulty config. Vanilla's own difficulty effects (like mobs hitting players 1.5× harder on Hard) still apply on top.
+
+**Damage limit:** however difficulty scaling, champion tier and affixes stack, no mob hits harder than `maxTotalDamageMultiplier` × its vanilla damage (default 5×, in the *Champions* section of the difficulty config). This covers melee and projectiles; Sniper's +50% arrow damage and creeper explosions (capped by `maxCreeperExplosionPower`) are separate.
 
 ## Champion tiers
 
 | Tier | Base chance (Normal) | Health | Damage | Affix slots |
 | --- | --- | --- | --- | --- |
-| 1 | 2.8% | ×1.5 | ×1.5 | 1 |
-| 2 | 1.5% | ×2.5 | ×1.8 | 2 |
-| 3 | 0.8% | ×4 | ×2.2 | 3 |
-| 4 | 0.3% | ×7 | ×3.5 | 4 |
-| 5 | 0.1% | ×12 | ×5 | 8 |
+| 1 | 2.8% | ×1.5 | ×1.25 | 1 |
+| 2 | 1.5% | ×2 | ×1.4 | 2 |
+| 3 | 0.8% | ×3 | ×1.6 | 3 |
+| 4 | 0.3% | ×4.5 | ×1.8 | 4 |
+| 5 | 0.1% | ×6 | ×2 | 8 |
 
 Base chances are for a new world on Normal (tier weights 9450 / 280 / 150 / 80 / 30 / 10 in `champions_common.properties`). They rise over time and with game difficulty:
 
@@ -53,7 +55,7 @@ Base chances are for a new world on Normal (tier weights 9450 / 280 / 150 / 80 /
 | Normal, max (20 h) | 21.1% | 7.0% | 6.3% | 4.7% | 2.3% | 0.9% |
 | Hard, new world | 9.7% | 4.0% | 2.7% | 1.8% | 0.8% | 0.3% |
 | Hard, 10 h | 30.4% | 7.7% | 8.3% | 7.6% | 4.5% | 2.3% |
-| Hard, max (23 h) | 44.9% | 10.9% | 12.9% | 12.4% | 6.1% | 2.6% |
+| Hard, max (19 h) | 41.2% | 9.8% | 11.4% | 10.8% | 6.6% | 2.7% |
 
 Champion creepers also explode bigger (radius × tier, capped by `maxCreeperExplosionPower`), and tier 4–5 creepers have a longer fuse.
 

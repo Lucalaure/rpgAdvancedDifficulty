@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class ChampionsConfigServer {
-    private static final int VERSION = 9;
+    private static final int VERSION = 10;
     private static ChampionsConfigServer instance;
 
     public final int a1;
@@ -57,16 +57,16 @@ public class ChampionsConfigServer {
         this.w5 = config.getOrDefault("tier5_weight", 10);
 
         this.gh1 = ((float) config.getOrDefault("tier1_growth_health", 1.5));
-        this.gh2 = ((float) config.getOrDefault("tier2_growth_health", 2.5));
-        this.gh3 = ((float) config.getOrDefault("tier3_growth_health", 4.0));
-        this.gh4 = ((float) config.getOrDefault("tier4_growth_health", 7.0));
-        this.gh5 = ((float) config.getOrDefault("tier5_growth_health", 12.0));
+        this.gh2 = ((float) config.getOrDefault("tier2_growth_health", 2.0));
+        this.gh3 = ((float) config.getOrDefault("tier3_growth_health", 3.0));
+        this.gh4 = ((float) config.getOrDefault("tier4_growth_health", 4.5));
+        this.gh5 = ((float) config.getOrDefault("tier5_growth_health", 6.0));
 
-        this.gs1 = ((float) config.getOrDefault("tier1_growth_strength", 1.5));
-        this.gs2 = ((float) config.getOrDefault("tier2_growth_strength", 1.8));
-        this.gs3 = ((float) config.getOrDefault("tier3_growth_strength", 2.2));
-        this.gs4 = ((float) config.getOrDefault("tier4_growth_strength", 3.5));
-        this.gs5 = ((float) config.getOrDefault("tier5_growth_strength", 5.0));
+        this.gs1 = ((float) config.getOrDefault("tier1_growth_strength", 1.25));
+        this.gs2 = ((float) config.getOrDefault("tier2_growth_strength", 1.4));
+        this.gs3 = ((float) config.getOrDefault("tier3_growth_strength", 1.6));
+        this.gs4 = ((float) config.getOrDefault("tier4_growth_strength", 1.8));
+        this.gs5 = ((float) config.getOrDefault("tier5_growth_strength", 2.0));
 
         this.maxBossTier = config.getOrDefault("max_boss_tier", 0);
 
@@ -84,31 +84,31 @@ public class ChampionsConfigServer {
                 tier1_affix_slots = 1
                 tier1_weight = 280
                 tier1_growth_health = 1.5
-                tier1_growth_strength = 1.5
+                tier1_growth_strength = 1.25
 
                 # Tier 2
                 tier2_affix_slots = 2
                 tier2_weight = 150
-                tier2_growth_health = 2.5
-                tier2_growth_strength = 1.8
+                tier2_growth_health = 2.0
+                tier2_growth_strength = 1.4
 
                 # Tier 3
                 tier3_affix_slots = 3
                 tier3_weight = 80
-                tier3_growth_health = 4.0
-                tier3_growth_strength = 2.2
+                tier3_growth_health = 3.0
+                tier3_growth_strength = 1.6
 
                 # Tier 4
                 tier4_affix_slots = 4
                 tier4_weight = 30
-                tier4_growth_health = 7.0
-                tier4_growth_strength = 3.5
+                tier4_growth_health = 4.5
+                tier4_growth_strength = 1.8
 
                 # Tier 5
                 tier5_affix_slots = 8
                 tier5_weight = 10
-                tier5_growth_health = 12.0
-                tier5_growth_strength = 5.0
+                tier5_growth_health = 6.0
+                tier5_growth_strength = 2.0
                 
                 # Maximum tier for bosses (Wither, Ender Dragon)
                 max_boss_tier = 0
