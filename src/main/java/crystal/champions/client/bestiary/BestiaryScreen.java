@@ -75,6 +75,17 @@ public class BestiaryScreen extends BookViewScreen {
         String difficulty = level.getDifficulty().getDisplayName().getString();
         pages.add(oddsPage(level, difficulty));
 
+        MutableComponent loot = Component.empty()
+                .append(Component.translatable("champions.bestiary.loot").withStyle(ChatFormatting.BOLD))
+                .append("\n");
+        for (int tier = 1; tier <= 5; tier++) {
+            loot.append("\n")
+                    .append(Component.literal("★".repeat(tier) + " ").withStyle(ChatFormatting.GOLD))
+                    .append(Component.translatable("champions.bestiary.loot_tier" + tier));
+        }
+        pages.add(loot.append("\n\n")
+                .append(Component.translatable("champions.bestiary.loot_note").withStyle(ChatFormatting.DARK_GRAY)));
+
         pages.add(Component.empty()
                 .append(Component.translatable("champions.bestiary.difficulty").withStyle(ChatFormatting.BOLD))
                 .append("\n")

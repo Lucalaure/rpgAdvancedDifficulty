@@ -63,12 +63,13 @@ public class BestiaryClientGameTest implements FabricClientGameTest {
 
             showPage(context, 1, "bestiary_5_tiers_page");
             showPage(context, 2, "bestiary_6_odds_page");
-            showPage(context, 3, "bestiary_7_difficulty_page");
-            showPage(context, 4, "bestiary_8_affix_tiers_page");
-            // Affix pages start at 5, sorted by tier: hasty, knocking, dampening, lively, blinded, big, ...
-            showPage(context, 5, "bestiary_9_hasty_page");
-            showPage(context, 10, "bestiary_10_big_page");
-            showPage(context, 6, "bestiary_11_undiscovered_page");
+            showPage(context, 3, "bestiary_7_loot_page");
+            showPage(context, 4, "bestiary_8_difficulty_page");
+            showPage(context, 5, "bestiary_9_affix_slots_page");
+            // Affix pages start at 6, sorted by slots: hasty, knocking, dampening, lively, blinded, big, ...
+            showPage(context, 6, "bestiary_10_hasty_page");
+            showPage(context, 11, "bestiary_11_big_page");
+            showPage(context, 7, "bestiary_12_undiscovered_page");
         }
     }
 

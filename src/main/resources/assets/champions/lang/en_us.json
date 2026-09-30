@@ -208,5 +208,12 @@
   "champions.bestiary.affix_slot": "Takes 1 slot",
   "champions.bestiary.affix_slots_cost": "Takes %s slots",
   "champions.bestiary.affix_slots": "Affix slots",
-  "champions.bestiary.affix_slots_text": "Each champion tier has affix slots (tiers 1-5: %s). Stronger affixes take up more slots, so a tier 2 champion gets two 1-slot affixes or one 2-slot affix. Bigger affixes are picked more often when they fit."
+  "champions.bestiary.affix_slots_text": "Each champion tier has affix slots (tiers 1-5: %s). Stronger affixes take up more slots, so a tier 2 champion gets two 1-slot affixes or one 2-slot affix. Bigger affixes are picked more often when they fit.",
+  "champions.bestiary.loot": "Champion loot",
+  "champions.bestiary.loot_tier1": "Materials, XP",
+  "champions.bestiary.loot_tier2": "Gold apples, gems",
+  "champions.bestiary.loot_tier3": "Pearls, gear",
+  "champions.bestiary.loot_tier4": "Totems, scrap",
+  "champions.bestiary.loot_tier5": "Stars, trims",
+  "champions.bestiary.loot_note": "Any tier can drop an enchanted book, and higher tiers drop stronger ones. Only ★★★★★ books can have Mending."
 }

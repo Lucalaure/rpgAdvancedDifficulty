@@ -83,8 +83,8 @@
       ],
       "rolls": {
         "type": "minecraft:uniform",
-        "max": 5,
-        "min": 3
+        "max": 2,
+        "min": 1
       }
     },
     {
@@ -92,13 +92,68 @@
         {
           "type": "minecraft:item",
           "modifier": {
-            "type": "minecraft:enchant_randomly",
+            "type": "minecraft:enchant_with_levels",
+            "levels": 30,
             "options": "#minecraft:on_random_loot"
           },
           "name": "minecraft:book"
         }
       ],
-      "rolls": 4
+      "rolls": 2
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 6,
+              "min": 3
+            }
+          },
+          "name": "minecraft:diamond",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 3,
+              "min": 1
+            }
+          },
+          "name": "minecraft:netherite_scrap",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 4,
+              "min": 2
+            }
+          },
+          "name": "minecraft:golden_apple",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:totem_of_undying",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_golden_apple",
+          "weight": 2
+        }
+      ],
+      "rolls": 3
     }
   ]
 }

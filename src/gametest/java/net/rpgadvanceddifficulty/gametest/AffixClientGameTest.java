@@ -16,6 +16,15 @@ import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.EnchantmentTags;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -128,6 +137,7 @@ public class AffixClientGameTest implements FabricClientGameTest {
             run("barrage", this::testBarrage);
             run("splitter", this::testSplitter);
             run("champion loot", this::testChampionLoot);
+            run("loot tables", this::testLootTables);
             run("sticky", this::testSticky);
             run("warlord", this::testWarlord);
             run("berserker", this::testBerserker);
@@ -552,21 +562,61 @@ public class AffixClientGameTest implements FabricClientGameTest {
     }
 
     private void testChampionLoot() {
-        UUID normal = spawnChampion(EntityTypes.ZOMBIE, "hasty", 3.0, 1);
-        UUID noLoot = spawnChampion(EntityTypes.ZOMBIE, "hasty", -3.0, 1);
+        // Spiders: their own drops (string, spider eyes) don't overlap with champion loot
+        UUID normal = spawnChampion(EntityTypes.SPIDER, "hasty", 3.0, 1);
+        UUID noLoot = spawnChampion(EntityTypes.SPIDER, "hasty", -3.0, 1);
         server.runOnServer(s -> {
             ((IChampions) champion(s, noLoot)).champions$setDropsChampionLoot(false);
             for (UUID id : List.of(normal, noLoot)) {
-                Mob mob = champion(s, id);
-                mob.hurtServer(level(s), level(s).damageSources().playerAttack(player(s)), 10000.0f);
+                champion(s, id).hurtServer(level(s), level(s).damageSources().playerAttack(player(s)), 10000.0f);
             }
         });
         context.waitTicks(30);
         server.runOnServer(s -> {
-            List<ItemEntity> books = nearby(s, ItemEntity.class).stream()
-                    .filter(item -> item.getItem().is(Items.ENCHANTED_BOOK) || item.getItem().is(Items.BOOK)).toList();
-            check(books.size() == 1, "champion loot: expected 1 book (from the normal champion only), found " + books.size());
-            check(books.getFirst().getX() > px, "champion loot: the book came from the champion that shouldn't drop loot");
+            List<ItemEntity> championLoot = nearby(s, ItemEntity.class).stream()
+                    .filter(item -> !item.getItem().is(Items.STRING) && !item.getItem().is(Items.SPIDER_EYE)).toList();
+            check(!championLoot.isEmpty(), "champion loot: the tier 1 champion dropped no champion loot");
+            check(championLoot.stream().allMatch(item -> item.getX() > px), "champion loot: the champion that shouldn't drop loot did");
+        });
+    }
+
+    /** Rolls each tier's loot table many times and checks book strength scales with the tier. */
+    private void testLootTables() {
+        server.runOnServer(s -> {
+            Mob mob = create(s, EntityTypes.SPIDER, 3.0);
+            int[] maxLevel = new int[6];
+            boolean[] treasure = new boolean[6];
+            int[] books = new int[6];
+            for (int tier = 1; tier <= 5; tier++) {
+                LootTable table = s.reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE,
+                        Identifier.fromNamespaceAndPath("champions", "champions/tier_" + tier)));
+                for (int i = 0; i < 500; i++) {
+                    LootParams params = new LootParams.Builder(level(s))
+                            .withParameter(LootContextParams.THIS_ENTITY, mob)
+                            .withParameter(LootContextParams.ORIGIN, mob.position())
+                            .withParameter(LootContextParams.DAMAGE_SOURCE, level(s).damageSources().playerAttack(player(s)))
+                            .create(LootContextParamSets.ENTITY);
+                    for (ItemStack stack : table.getRandomItems(params)) {
+                        ItemEnchantments stored = stack.get(DataComponents.STORED_ENCHANTMENTS);
+                        if (stored == null || stored.isEmpty()) continue;
+                        books[tier]++;
+                        for (var entry : stored.entrySet()) {
+                            maxLevel[tier] = Math.max(maxLevel[tier], entry.getIntValue());
+                            if (entry.getKey().is(EnchantmentTags.TREASURE)) treasure[tier] = true;
+                        }
+                    }
+                }
+            }
+            log("loot books per 500 kills (tier 1-5): " + books[1] + ", " + books[2] + ", " + books[3] + ", " + books[4] + ", " + books[5]
+                    + "; highest enchantment level: " + maxLevel[1] + ", " + maxLevel[2] + ", " + maxLevel[3] + ", " + maxLevel[4] + ", " + maxLevel[5]);
+            check(books[1] > 10 && books[1] < 100, "loot: tier 1 dropped " + books[1] + " books in 500 kills (expected about 50)");
+            check(maxLevel[1] <= 2, "loot: a tier 1 book had a level " + maxLevel[1] + " enchantment");
+            for (int tier = 1; tier <= 4; tier++) {
+                check(!treasure[tier], "loot: a tier " + tier + " book had a treasure enchantment");
+            }
+            check(maxLevel[4] >= 3, "loot: tier 4 books never above level " + maxLevel[4]);
+            check(books[5] == 1000, "loot: tier 5 should always drop 2 books, got " + books[5] + " in 500");
+            check(treasure[5], "loot: tier 5 books never had a treasure enchantment");
         });
     }
 

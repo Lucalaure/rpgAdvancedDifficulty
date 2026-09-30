@@ -44,6 +44,20 @@ On Hard, mobs top out at 4.5× health and damage (reached after about 23 hours o
 
 Champion creepers also explode bigger (radius × tier, capped by `maxCreeperExplosionPower`), and tier 4–5 creepers have a longer fuse.
 
+## Champion loot
+
+Champions drop their normal loot plus extra rolls from their tier's pool. Enchanted books are only one possible roll, and their strength scales with the tier: they're enchanted like an enchanting table at the listed levels, and only tier 5 books can have treasure enchantments such as Mending.
+
+| Tier | Rolls | Pool (weight) | Books |
+| --- | --- | --- | --- |
+| 1 | 1 | Iron ingots 1–3 (20), gold ingots 1–3 (15), XP bottles 1–3 (15), emeralds 1–2 (10), arrows 4–10 (10) | Weight 8 (about 1 in 10), levels 5–10 |
+| 2 | 2 | Iron 2–5 (15), gold 2–5 (12), XP bottles 2–5 (15), emeralds 2–4 (12), lapis 4–10 (8), golden apple (5), diamond (4) | Weight 10, levels 10–18 |
+| 3 | 2 | XP bottles 4–8 (15), emeralds 3–6 (12), diamonds 1–2 (10), golden apples 1–2 (8), ender pearls 1–3 (8), name tag (5), enchanted bow (5, levels 15–25) | Weight 15, levels 18–25 |
+| 4 | 3 | Diamonds 2–4 (12), emeralds 5–10 (10), XP bottles 6–12 (12), 2 golden apples (8), netherite scrap (5), totem of undying (3), enchanted diamond sword or chestplate (4 each, levels 20–30) | Weight 18, levels 25–30 |
+| 5 | — | Wither skeleton skull or nether star; 1–2 armor trim templates; 3 rolls of diamonds 3–6 (12), netherite scrap 1–3 (8), golden apples 2–4 (8), totem (5), enchanted golden apple (2) | Always 2, level 30, treasure possible |
+
+The loot tables are built in `ChampionsLootTable.java`; run `./gradlew runDatagen` after changing it to regenerate the JSON in `src/main/generated`. Split slime pieces never drop champion loot. The bestiary has a *Champion loot* page summarising this.
+
 ## Affixes
 
 Each champion rolls its tier's number of affixes at random from the affixes it is allowed to have.
@@ -124,6 +138,7 @@ Players learn what each affix does through the **bestiary**, a book opened from 
   - an intro with discovery progress;
   - the champion tiers (read from the current config);
   - **Champion odds:** each tier's chance on your current game difficulty, calculated the same way the game rolls them;
+  - **Champion loot:** what each tier can drop;
   - **Game difficulty:** what your current difficulty changes (growth speed, max strength, champion odds);
   - **Affix slots:** how affix slots work;
   - one page per affix, grouped by slot cost, with its name, how many slots it takes, which mobs can have it, and what it does. Undiscovered affixes show "???" but still show their slot cost.
