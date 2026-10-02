@@ -227,5 +227,11 @@
   "affix.undying": "Undying",
   "affix.undying.desc": "The first time it dies, it comes back at half health like a totem of undying.",
   "affix.stormcaller": "Stormcaller",
-  "affix.stormcaller.desc": "Calls down lightning around you every few seconds. Keep moving."
+  "affix.stormcaller.desc": "Calls down lightning around you every few seconds. Keep moving.",
+  "advancements.champions.champion_slayer.title": "Champion Slayer",
+  "advancements.champions.champion_slayer.description": "Defeat a champion",
+  "advancements.champions.apex_hunter.title": "Apex Hunter",
+  "advancements.champions.apex_hunter.description": "Defeat a max tier ★★★★★ champion",
+  "advancements.champions.know_thy_enemy.title": "Know Thy Enemy",
+  "advancements.champions.know_thy_enemy.description": "Discover every affix in the bestiary"
 }

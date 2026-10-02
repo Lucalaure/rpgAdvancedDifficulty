@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:adventure/kill_a_mob",
+  "display": {
+    "icon": {
+      "id": "minecraft:golden_sword"
+    },
+    "title": {
+      "translate": "advancements.champions.champion_slayer.title"
+    },
+    "description": {
+      "translate": "advancements.champions.champion_slayer.description"
+    },
+    "frame": "task"
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "requirement"
+    ]
+  ]
+}

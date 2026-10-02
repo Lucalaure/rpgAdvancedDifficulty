@@ -1,5 +1,6 @@
 package crystal.champions.mixin.affixes;
 
+import crystal.champions.ChampionAdvancements;
 import crystal.champions.IChampions;
 import crystal.champions.affix.AffixEvents;
 import crystal.champions.affix.UndyingAffix;
@@ -68,6 +69,7 @@ public class AffixLifecycleMixin {
         // die() does nothing for entities that are already dead, so only fire once
         if (!self.isRemoved() && !this.dead) {
             AffixEvents.onDeath(self, source);
+            ChampionAdvancements.onChampionKilled(self, source);
         }
     }
 }

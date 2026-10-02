@@ -139,6 +139,18 @@ Minions summoned by affixes (Horde Caller, Coven and Warlord followers, Brood Mo
 
 Every affix can be switched off in `champions_affixes.properties` or the Champions config screen. Big's stats are set there too.
 
+## Advancements
+
+Three advancements in the Adventure tab, following on from *Monster Hunter*:
+
+| Advancement | How to get it | Frame |
+| --- | --- | --- |
+| Champion Slayer | Kill a champion of any tier (melee or projectile) | Task |
+| Apex Hunter | Kill a max tier (★★★★★) champion | Goal |
+| Know Thy Enemy | Discover every enabled affix in the bestiary (+100 XP) | Challenge |
+
+They're in `data/champions/advancement` and awarded by `ChampionAdvancements`. Know Thy Enemy is also checked when a player joins, so it stays reachable if affixes are disabled later.
+
 ## F3 readout
 
 The F3 screen shows two extra lines (on by default, can be switched off in the F3 debug options, F3 + F6):

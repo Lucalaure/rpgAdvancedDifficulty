@@ -1,0 +1,28 @@
+{
+  "parent": "champions:apex_hunter",
+  "display": {
+    "icon": {
+      "id": "minecraft:written_book"
+    },
+    "title": {
+      "translate": "advancements.champions.know_thy_enemy.title"
+    },
+    "description": {
+      "translate": "advancements.champions.know_thy_enemy.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "requirement"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

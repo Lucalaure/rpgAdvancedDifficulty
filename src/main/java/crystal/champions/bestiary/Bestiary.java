@@ -1,7 +1,9 @@
 package crystal.champions.bestiary;
 
 import com.mojang.serialization.Codec;
+import crystal.champions.ChampionAdvancements;
 import crystal.champions.Champions;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
@@ -32,6 +34,8 @@ public final class Bestiary {
 
     /** Loads the attachment type during mod init. */
     public static void register() {
+        // In case the affix list changed (e.g. affixes disabled) since the player last discovered one
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> ChampionAdvancements.checkBestiary(handler.getPlayer()));
     }
 
     /** Called while a champion is close to the player; unlocks any affixes they haven't seen yet. */
@@ -54,6 +58,7 @@ public final class Bestiary {
         for (String name : added) {
             player.sendSystemMessage(Component.translatable("champions.bestiary.discovered", Component.translatable("affix." + name)), true);
         }
+        ChampionAdvancements.checkBestiary(player);
     }
 
     public static List<String> getDiscovered(Player player) {

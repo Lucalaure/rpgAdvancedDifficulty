@@ -1,0 +1,25 @@
+{
+  "parent": "champions:champion_slayer",
+  "display": {
+    "icon": {
+      "id": "minecraft:nether_star"
+    },
+    "title": {
+      "translate": "advancements.champions.apex_hunter.title"
+    },
+    "description": {
+      "translate": "advancements.champions.apex_hunter.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "requirement"
+    ]
+  ]
+}
