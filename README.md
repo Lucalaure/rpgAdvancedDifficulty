@@ -139,6 +139,17 @@ Minions summoned by affixes (Horde Caller, Coven and Warlord followers, Brood Mo
 
 Every affix can be switched off in `champions_affixes.properties` or the Champions config screen. Big's stats are set there too.
 
+## Champion odds tags (mod compatibility)
+
+Other mods, datapacks and commands can raise (or lower) the champion odds of specific mobs with entity tags, added before the mob spawns. No code dependency on this mod is needed:
+
+| Tag | Effect |
+| --- | --- |
+| `rpgadvanceddifficulty.champion_chance.<number>` | Every champion tier is that many times as likely, e.g. `.2.5` |
+| `rpgadvanceddifficulty.champion_tier_bonus.<number>` | Each tier above 1 gets that multiplier again, so higher tiers gain more, e.g. `.1.2` |
+
+They stack on top of the normal odds (time, game difficulty). Example: `/summon minecraft:zombie ~ ~ ~ {Tags:["rpgadvanceddifficulty.champion_chance.10"]}`. [Bloodmoon Events](https://github.com/Lucalaure/BloodmoonEvents) uses these to make Blood Moon hordes more likely to be champions on later Blood Moons.
+
 ## Advancements
 
 Three advancements in the Adventure tab, following on from *Monster Hunter*:
