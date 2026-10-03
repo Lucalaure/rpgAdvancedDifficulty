@@ -1,3 +1,5 @@
+<p align="center"><img src="media/logo.png" width="160" alt="RPG Advanced Difficulty logo"></p>
+
 # RPG Advanced Difficulty
 
 A Fabric mod for Minecraft 26.3 that combines two mods. (The 1.21.1 version is available as release v1.0.0.)

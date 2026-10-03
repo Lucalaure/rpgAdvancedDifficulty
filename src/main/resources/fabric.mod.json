@@ -13,7 +13,7 @@
     "sources": "https://github.com/Lucalaure/rpgAdvancedDifficulty",
     "issues": "https://github.com/Lucalaure/rpgAdvancedDifficulty/issues"
   },
-  "icon": "assets/champions/icon.png",
+  "icon": "assets/rpgadvanceddifficulty/icon.png",
   "environment": "*",
   "provides": [
     "rpgdifficulty",
