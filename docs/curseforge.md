@@ -7,7 +7,7 @@ Everything to enter when creating the project at https://authors.curseforge.com/
 | Field | Value |
 | --- | --- |
 | Project name | RPG Advanced Difficulty |
-| Summary | Mobs grow stronger as your world ages, and elite champions with deadly affixes rise to meet you. |
+| Summary | Mobs grow stronger as your world ages, and elite champions rise to meet you. |
 | Logo / avatar | `media/logo.png` (512×512) |
 | Main category | Adventure and RPG |
 | Additional categories | Mobs (under World Gen) |
@@ -26,53 +26,32 @@ Paste this into the description editor (switch it to Markdown):
 ```markdown
 # RPG Advanced Difficulty
 
-**The longer you play, the deadlier the night becomes.**
+**The longer you play, the deadlier your world becomes.**
 
-RPG Advanced Difficulty makes mobs grow stronger as your world ages, and turns some of them into **champions**: elite enemies with a tier, boosted stats, special abilities and better loot. The further into a world you get, and the harder your difficulty setting, the more often champions appear and the higher their tiers climb.
+Mobs grow stronger as your world ages, and some spawn as **champions**: elite enemies with tiers, special abilities and better loot.
 
-## Mobs that grow with your world
-- Mobs get **+10% health, damage and armor for every hour** your world has been running, up to **3×** on Normal.
-- Your **game difficulty matters**: Easy grows half as fast and caps lower, Hard grows 50% faster and caps higher.
-- Optional **distance scaling** makes mobs stronger the further you travel from spawn.
-- Stronger mobs drop more XP.
-- A **damage limit** keeps any mob from hitting more than 5× its vanilla damage, however everything stacks.
+## Who it's for
+- **Survival players** who find the late game too easy once they have diamond gear.
+- **Long-term worlds and SMP servers** that want a challenge that keeps growing instead of staying flat.
+- **RPG and adventure modpacks** that want tougher, more varied fights that reward you for winning them.
 
-## Champions
-Any hostile mob can spawn as a **champion** of tier 1 to 5, with a coloured particle aura, a custom health bar showing its affixes, and up to 6× health.
+It starts gentle, so early game stays familiar, and everything can be tuned in the config.
 
-Champions get **affixes**: special abilities that take up affix slots. Higher tiers have more slots and roll stronger affixes. There are **40 affixes**, including:
-- **General:** Shielding, Molten, Arctic, Vampiric, Undying, Stormcaller, Enraged, Withering, Volatile, Reflection, Adaptive and more.
-- **Mob-specific:** Sniper and Volley skeletons, Webslinger and Brood Mother spiders, invisible Stalker creepers, Blink and Thief endermen, Coven and Alchemist witches, Inferno and Barrage blazes, Splitter slimes, Warlord illagers, Berserker vindicators, Horde Caller zombies and more.
-
-## Rewarding loot
-Champions drop extra loot from a pool for their tier: materials, XP, golden apples, diamonds, enchanted gear, totems, netherite scrap and armor trims. Enchanted books get stronger with the tier, and only tier 5 champions can drop treasure enchantments like Mending.
-
-## The Bestiary
-A book button next to the recipe book opens the **bestiary**. Get close to a champion to record its affixes. It explains what each affix does, which mobs can have it and how many slots it takes, along with champion odds, loot and difficulty for your current game.
-
-## And more
-- **F3 readout** of the difficulty and champion chance where you stand.
-- **Advancements**: Champion Slayer, Apex Hunter, and the challenge Know Thy Enemy for discovering every affix.
-- **Commands** for testing: `/champion demo <affix>`, `/champion spawn <mob> <affixes>`, `/rpgdifficulty time add <hours>`.
-- **Fully configurable** through Mod Menu: growth speed, caps, champion odds, affix slots, every affix on or off.
-- Works with **[Bloodmoon Events](https://github.com/Lucalaure/BloodmoonEvents)**: Blood Moon hordes bring more and stronger champions.
+## Features
+- **Scaling mobs:** +10% health, damage and armor per hour of world time, faster on Hard and slower on Easy.
+- **Champions (tiers 1 to 5):** boosted stats, a health bar, and up to 8 affix slots.
+- **40 affixes:** like Shielding, Vampiric, Undying, Stormcaller, invisible Stalker creepers, Sniper skeletons and Webslinger spiders.
+- **Tiered loot:** higher tiers drop better rewards, up to nether stars and Mending books.
+- **Bestiary:** a book that records each affix you encounter and explains it.
+- **Extras:** advancements, an F3 difficulty readout, testing commands, and full Mod Menu config.
 
 ## Requirements
-- Fabric Loader and **Fabric API**
-- **Cloth Config**
-- Mod Menu (optional, for the in-game config screens)
-- Java 25
+Fabric API, Cloth Config and Java 25. Mod Menu is optional. Install on both client and server.
 
-Install on **both the client and the server**.
+Don't use it with RpgDifficulty or Champions; it already includes both.
 
 ## Credits
-Built on two great mods:
-- [RpgDifficulty](https://github.com/Globox1997/RpgDifficulty) by Globox_Z (MIT)
-- [Champions](https://github.com/crystalx375/Champions) by Crystal (GPLv3)
-
-Don't install it together with RpgDifficulty or Champions; it already includes both.
-
-Source code and issues: https://github.com/Lucalaure/rpgAdvancedDifficulty
+Based on [RpgDifficulty](https://github.com/Globox1997/RpgDifficulty) by Globox_Z and [Champions](https://github.com/crystalx375/Champions) by Crystal. Source: [GitHub](https://github.com/Lucalaure/rpgAdvancedDifficulty)
 ```
 
 ## Uploading the file
