@@ -58,14 +58,14 @@ Based on [RpgDifficulty](https://github.com/Globox1997/RpgDifficulty) by Globox_
 
 | Field | Value |
 | --- | --- |
-| File | `rpgadvanceddifficulty-2.1.0+26.3.jar` (from the GitHub v2.1.0 release, or `build/libs/` after `./gradlew build`). Not the `-sources` jar. |
-| Display name | RPG Advanced Difficulty 2.1.0 |
+| File | `rpgadvanceddifficulty-2.2.0+26.3.jar` (from the GitHub v2.2.0 release, or `build/libs/` after `./gradlew build`). Not the `-sources` jar. |
+| Display name | RPG Advanced Difficulty 2.2.0 |
 | Release type | Release (or Beta if you'd like feedback first) |
 | Game version | 26.3 |
 | Mod loader | Fabric |
 | Java version | Java 25 |
 | Environment | Client and Server |
-| Changelog | The v2.1.0 release notes from GitHub |
+| Changelog | The v2.2.0 release notes from GitHub |
 
 ### Relations
 
