@@ -236,5 +236,7 @@
   "advancements.champions.know_thy_enemy.description": "Discover every affix in the bestiary",
   "item.champions.bestiary": "Bestiary",
   "champions.bestiary.given": "Gave a bestiary to %s",
-  "champions.bestiary.given_many": "Gave a bestiary to %s players"
+  "champions.bestiary.given_many": "Gave a bestiary to %s players",
+  "champions.bestiary.reset": "Reset the bestiary of %s",
+  "champions.bestiary.reset_many": "Reset the bestiary of %s players"
 }

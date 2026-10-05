@@ -202,6 +202,7 @@ For example, `/champion demo webslinger` or `/champion spawn minecraft:skeleton 
 Players learn what each affix does through the **bestiary**, a book item. Every player is given one the first time they join a world; right-click it to open it. It's also in the creative *Tools & Utilities* tab.
 
 - **Replacing it:** `/bestiary` gives yourself a new copy (any player); operators can use `/bestiary give <players>`.
+- **Resetting it:** operators can clear discovered affixes with `/bestiary reset` (yourself) or `/bestiary reset <players>`. Advancements already earned are kept.
 - **No need to carry it:** discoveries are stored on the player, not the book, so they keep updating when the book isn't in your inventory, and any copy shows everything you've found.
 
 - **Discovery:** a champion's affixes are recorded when you look at it (crosshair on it) from within 24 blocks with nothing in the way (`bestiaryDiscoveryRange` in the *Champions* section of the difficulty config). A "Bestiary updated" message appears above the hotbar.

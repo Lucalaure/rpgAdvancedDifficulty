@@ -99,6 +99,11 @@ public final class Bestiary {
         return blocked.getType() == HitResult.Type.MISS || blocked.getLocation().distanceToSqr(eye) >= hit.get().distanceToSqr(eye);
     }
 
+    /** Forgets every affix the player has discovered (the change syncs to their client). */
+    public static void reset(ServerPlayer player) {
+        player.setAttached(DISCOVERED_AFFIXES, List.of());
+    }
+
     public static List<String> getDiscovered(Player player) {
         List<String> known = player.getAttached(DISCOVERED_AFFIXES);
         return known == null ? List.of() : known;
