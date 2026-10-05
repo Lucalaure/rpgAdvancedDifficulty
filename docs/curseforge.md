@@ -42,7 +42,7 @@ It starts gentle, so early game stays familiar, and everything can be tuned in t
 - **Champions (tiers 1 to 5):** boosted stats, a health bar, and up to 8 affix slots.
 - **40 affixes:** like Shielding, Vampiric, Undying, Stormcaller, invisible Stalker creepers, Sniper skeletons and Webslinger spiders.
 - **Tiered loot:** higher tiers drop better rewards, up to nether stars and Mending books.
-- **Bestiary:** a book that records each affix you encounter and explains it.
+- **Bestiary:** a book you start with that records each affix you encounter and explains it.
 - **Extras:** advancements, an F3 difficulty readout, testing commands, and full Mod Menu config.
 
 ## Requirements

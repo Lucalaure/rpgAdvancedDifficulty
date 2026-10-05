@@ -1,6 +1,8 @@
 package crystal.champions;
 
 import crystal.champions.bestiary.Bestiary;
+import crystal.champions.bestiary.BestiaryItem;
+import crystal.champions.command.BestiaryCommand;
 import crystal.champions.command.ChampionCommand;
 import crystal.champions.util.DelayedExplosions;
 import crystal.champions.util.TemporaryBlocks;
@@ -35,6 +37,8 @@ public class Champions implements ModInitializer {
 
         Payload.register();
         Bestiary.register();
+        BestiaryItem.register();
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> BestiaryCommand.register(dispatcher));
         TemporaryBlocks.register();
         DelayedExplosions.register();
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ChampionCommand.register(dispatcher, registryAccess));

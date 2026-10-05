@@ -233,5 +233,8 @@
   "advancements.champions.apex_hunter.title": "Apex Hunter",
   "advancements.champions.apex_hunter.description": "Defeat a max tier ★★★★★ champion",
   "advancements.champions.know_thy_enemy.title": "Know Thy Enemy",
-  "advancements.champions.know_thy_enemy.description": "Discover every affix in the bestiary"
+  "advancements.champions.know_thy_enemy.description": "Discover every affix in the bestiary",
+  "item.champions.bestiary": "Bestiary",
+  "champions.bestiary.given": "Gave a bestiary to %s",
+  "champions.bestiary.given_many": "Gave a bestiary to %s players"
 }

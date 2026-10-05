@@ -1,7 +1,9 @@
 package crystal.champions.client;
 
 import crystal.champions.Champions;
-import crystal.champions.client.bestiary.BestiaryButtons;
+import crystal.champions.bestiary.BestiaryItem;
+import crystal.champions.client.bestiary.BestiaryScreen;
+import net.minecraft.client.Minecraft;
 import crystal.champions.client.particle.ChampionsParticle;
 import crystal.champions.client.render.ChampionHudRender;
 import crystal.champions.config.ChampionsConfigClient;
@@ -20,7 +22,7 @@ public class ChampionsClient implements ClientModInitializer {
         ChampionsConfigClient.get();
         HudElementRegistry.addLast(Identifier.fromNamespaceAndPath("champions", "champion_hud"), new ChampionHudRender() {});
         registerPackets();
-        BestiaryButtons.register();
+        BestiaryItem.clientOpener = player -> Minecraft.getInstance().gui.setScreen(new BestiaryScreen(null, player));
 
         ParticleProviderRegistry.getInstance().register(Champions.CHAMPIONS_SPELL,
                 spriteProvider -> (type, world, x, y, z, vx, vy, vz, random) -> {

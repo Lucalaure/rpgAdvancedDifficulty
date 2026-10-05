@@ -199,10 +199,13 @@ For example, `/champion demo webslinger` or `/champion spawn minecraft:skeleton 
 
 ## Bestiary
 
-Players learn what each affix does through the **bestiary**, a book opened from the button to the right of the recipe book in the survival inventory.
+Players learn what each affix does through the **bestiary**, a book item. Every player is given one the first time they join a world; right-click it to open it. It's also in the creative *Tools & Utilities* tab.
+
+- **Replacing it:** `/bestiary` gives yourself a new copy (any player); operators can use `/bestiary give <players>`.
+- **No need to carry it:** discoveries are stored on the player, not the book, so they keep updating when the book isn't in your inventory, and any copy shows everything you've found.
 
 - **Discovery:** when a player gets within 15 blocks of a champion (the range where its health bar and affixes appear), each of its affixes is added to that player's bestiary, with a "Bestiary updated" message above the hotbar.
-- **Saved per player:** discoveries are stored on the player (per world), kept on death, and synced to their client.
+- **Saved per player:** discoveries are stored on the player (per world), kept on death, and synced to their client. The first-join book is only given once per player.
 - **Pages:**
   - an intro with discovery progress;
   - the champion tiers (read from the current config);

@@ -32,10 +32,23 @@ public final class Bestiary {
                     .copyOnDeath()
                     .syncWith(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), AttachmentSyncPredicate.targetOnly()));
 
-    /** Loads the attachment type during mod init. */
+    /** Whether the player has already been given their first bestiary book (only happens once). */
+    public static final AttachmentType<Boolean> RECEIVED_BOOK = AttachmentRegistry.create(
+            Identifier.fromNamespaceAndPath(Champions.MOD_ID, "received_bestiary"),
+            builder -> builder.persistent(Codec.BOOL).copyOnDeath());
+
+    /** Loads the attachment types during mod init. */
     public static void register() {
-        // In case the affix list changed (e.g. affixes disabled) since the player last discovered one
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> ChampionAdvancements.checkBestiary(handler.getPlayer()));
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            ServerPlayer player = handler.getPlayer();
+            // New players start with a bestiary book; lost copies can be replaced with /bestiary
+            if (!Boolean.TRUE.equals(player.getAttached(RECEIVED_BOOK))) {
+                player.setAttached(RECEIVED_BOOK, true);
+                BestiaryItem.give(player);
+            }
+            // In case the affix list changed (e.g. affixes disabled) since the player last discovered one
+            ChampionAdvancements.checkBestiary(player);
+        });
     }
 
     /** Called while a champion is close to the player; unlocks any affixes they haven't seen yet. */
