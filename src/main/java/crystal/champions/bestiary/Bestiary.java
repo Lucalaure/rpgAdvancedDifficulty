@@ -11,10 +11,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.rpgdifficulty.RpgDifficultyMain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Tracks which affixes each player has encountered. Saved on the player, kept on death,
@@ -51,7 +58,7 @@ public final class Bestiary {
         });
     }
 
-    /** Called while a champion is close to the player; unlocks any affixes they haven't seen yet. */
+    /** Called while the player is looking at a champion (see isLookingAt); unlocks any affixes they haven't seen yet. */
     public static void discover(ServerPlayer player, String affixes) {
         if (affixes.isEmpty()) return;
 
@@ -72,6 +79,24 @@ public final class Bestiary {
             player.sendSystemMessage(Component.translatable("champions.bestiary.discovered", Component.translatable("affix." + name)), true);
         }
         ChampionAdvancements.checkBestiary(player);
+    }
+
+    /**
+     * True if the player is aiming at the champion (crosshair on it), it's within the discovery range,
+     * and no blocks are in the way. This is when its affixes count as encountered.
+     */
+    public static boolean isLookingAt(ServerPlayer player, Entity champion) {
+        double range = RpgDifficultyMain.CONFIG.bestiaryDiscoveryRange;
+        if (player.isSpectator() || player.distanceTo(champion) > range + champion.getBbWidth()) return false;
+
+        Vec3 eye = player.getEyePosition();
+        Vec3 end = eye.add(player.getViewVector(1.0F).scale(range));
+        // A little leeway, since the server's copy of the player's rotation lags slightly behind the client
+        Optional<Vec3> hit = champion.getBoundingBox().inflate(0.3).clip(eye, end);
+        if (hit.isEmpty()) return false;
+
+        BlockHitResult blocked = player.level().clip(new ClipContext(eye, hit.get(), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+        return blocked.getType() == HitResult.Type.MISS || blocked.getLocation().distanceToSqr(eye) >= hit.get().distanceToSqr(eye);
     }
 
     public static List<String> getDiscovered(Player player) {

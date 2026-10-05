@@ -65,5 +65,6 @@
     "text.autoconfig.rpgdifficulty.option.hardChampionChance": "Hard: Champion Chance",
     "text.autoconfig.rpgdifficulty.option.easyChampionTierBonus": "Easy: Higher Tier Bonus",
     "text.autoconfig.rpgdifficulty.option.normalChampionTierBonus": "Normal: Higher Tier Bonus",
-    "text.autoconfig.rpgdifficulty.option.hardChampionTierBonus": "Hard: Higher Tier Bonus"
+    "text.autoconfig.rpgdifficulty.option.hardChampionTierBonus": "Hard: Higher Tier Bonus",
+    "text.autoconfig.rpgdifficulty.option.bestiaryDiscoveryRange": "Bestiary Discovery Range"
 }

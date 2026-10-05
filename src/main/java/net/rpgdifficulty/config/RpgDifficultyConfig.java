@@ -124,6 +124,10 @@ public class RpgDifficultyConfig implements ConfigData {
     public double maxTotalDamageMultiplier = 5.0D;
 
     @ConfigEntry.Category("champions")
+    @Comment("Bestiary: a champion's affixes are recorded when you look at it from within this many blocks with nothing in the way")
+    public double bestiaryDiscoveryRange = 24.0D;
+
+    @ConfigEntry.Category("champions")
     @Comment("Allow mobs to spawn as Champions (tiers, affixes and loot are set in config/Champions)")
     public boolean enableChampions = true;
     @ConfigEntry.Category("champions")

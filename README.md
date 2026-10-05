@@ -204,7 +204,7 @@ Players learn what each affix does through the **bestiary**, a book item. Every 
 - **Replacing it:** `/bestiary` gives yourself a new copy (any player); operators can use `/bestiary give <players>`.
 - **No need to carry it:** discoveries are stored on the player, not the book, so they keep updating when the book isn't in your inventory, and any copy shows everything you've found.
 
-- **Discovery:** when a player gets within 15 blocks of a champion (the range where its health bar and affixes appear), each of its affixes is added to that player's bestiary, with a "Bestiary updated" message above the hotbar.
+- **Discovery:** a champion's affixes are recorded when you look at it (crosshair on it) from within 24 blocks with nothing in the way (`bestiaryDiscoveryRange` in the *Champions* section of the difficulty config). A "Bestiary updated" message appears above the hotbar.
 - **Saved per player:** discoveries are stored on the player (per world), kept on death, and synced to their client. The first-join book is only given once per player.
 - **Pages:**
   - an intro with discovery progress;

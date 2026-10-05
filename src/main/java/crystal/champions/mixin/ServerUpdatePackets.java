@@ -57,11 +57,15 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
             final UUID uuid = player.getUUID();
             final double distance = player.distanceToSqr(this);
 
+            // Bestiary: only affixes of champions the player is actually looking at, up close
+            if (this.tickCount % 5 == 0 && Bestiary.isLookingAt(player, mob)) {
+                Bestiary.discover(player, champions$getAffixesString());
+            }
+
             if (!BOSSES) {
                 if (distance <= 1600) {
                     if (distance <= 225.0) {
                         ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
-                        Bestiary.discover(player, champions$getAffixesString());
                         trackedPlayerIds.add(uuid);
                         currentIds.add(uuid);
                     }
@@ -69,7 +73,6 @@ public abstract class ServerUpdatePackets extends LivingEntity implements IChamp
                 }
             } else {
                 ChampionsNetworking.sendUpdateS(player, mob, champions$getChampionTier(), champions$getAffixesString());
-                Bestiary.discover(player, champions$getAffixesString());
                 ChampionsNetworking.sendUpdateC(player, mob, champions$getChampionTier(), champions$getAffixesString());
                 trackedPlayerIds.add(uuid);
                 currentIds.add(uuid);
