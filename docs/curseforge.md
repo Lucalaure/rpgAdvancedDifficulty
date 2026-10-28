@@ -38,7 +38,7 @@ Mobs grow stronger as your world ages, and some spawn as **champions**: elite en
 It starts gentle, so early game stays familiar, and everything can be tuned in the config.
 
 ## Features
-- **Scaling mobs:** +10% health, damage and armor per hour of world time, faster on Hard and slower on Easy.
+- **Scaling mobs:** health, damage and armor grow with world time and all reach their max together after 20 hours, faster on Hard and slower on Easy.
 - **Champions (tiers 1 to 5):** boosted stats, a health bar, and up to 8 affix slots.
 - **40 affixes:** like Shielding, Vampiric, Undying, Stormcaller, invisible Stalker creepers, Sniper skeletons and Webslinger spiders.
 - **Tiered loot:** higher tiers drop better rewards, up to nether stars and Mending books.

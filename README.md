@@ -11,7 +11,7 @@ A Fabric mod for Minecraft 1.21.1 that combines two mods. This is the 1.21.1 bra
 
 Every mob spawn goes through a single pipeline:
 
-1. **Difficulty scaling.** A difficulty factor is computed from world time (by default +10% for every hour the world has been running, up to 3×, on Normal; see Game difficulty), plus distance from spawn if `enableDistanceScaling` is on. A difficulty zone or dimension datapack can override it. The factor scales health, damage and armor.
+1. **Difficulty scaling.** Mobs get stronger with world time, plus distance from spawn if `enableDistanceScaling` is on. Health, damage and armor all grow at the same pace towards their own max, so they reach it together: by default on Normal, health goes up 10% for every hour the world has been running, damage 5% and armor 2.5%, reaching 3×, 2× and 1.5× after 20 hours (see Game difficulty). The stat with the most room to grow (health by default) moves by `timeFactor` per `increasingTime` and the others follow proportionally. A difficulty zone or dimension datapack can override it.
 2. **Champion roll.** The mob then rolls for a champion tier. With `championsScaleWithDifficulty` on, the difficulty factor also raises champion odds, and higher tiers gain the most:
 
    `tier weight × min(maxChampionChanceMultiplier, 1 + (factor − 1) × championChanceScaling × tier)`
@@ -32,7 +32,7 @@ The game difficulty (Easy, Normal, Hard) changes both systems. Peaceful uses the
 | Champion chance (all tiers) | ×0.5 | ×1 | ×1.5 |
 | Extra per tier above 1 | ×0.8 each | ×1 | ×1.25 each |
 
-On Hard, mobs top out at 3.75× health and 2.5× damage (reached after about 19 hours of world time), and tier 5 champions are about 3.7× as common as on Normal at the start of a world (tier 1: 1.5×). On Easy, tier 5 champions are about 0.2× as common. All of these are in the *Game Difficulty* section of the difficulty config. Vanilla's own difficulty effects (like mobs hitting players 1.5× harder on Hard) still apply on top.
+On Hard, mobs top out at 3.75× health and 2.5× damage (both reached after 19 hours of world time; on Easy, 2.25× and 1.5× after 25 hours), and tier 5 champions are about 3.7× as common as on Normal at the start of a world (tier 1: 1.5×). On Easy, tier 5 champions are about 0.2× as common. All of these are in the *Game Difficulty* section of the difficulty config. Vanilla's own difficulty effects (like mobs hitting players 1.5× harder on Hard) still apply on top.
 
 **Damage limit:** however difficulty scaling, champion tier and affixes stack, no mob hits harder than `maxTotalDamageMultiplier` × its vanilla damage (default 5×, in the *Champions* section of the difficulty config). This covers melee and projectiles; Sniper's +50% arrow damage and creeper explosions (capped by `maxCreeperExplosionPower`) are separate.
 
