@@ -13,12 +13,6 @@ public final class DifficultyModes {
     private DifficultyModes() {
     }
 
-    /** How fast mobs get stronger over time/distance. */
-    public static double growth(Level level) {
-        RpgDifficultyConfig c = RpgDifficultyMain.CONFIG;
-        return pick(level, c.easyGrowthMultiplier, c.normalGrowthMultiplier, c.hardGrowthMultiplier);
-    }
-
     /** Multiplier for the maximum strength (the max factor caps). */
     public static double cap(Level level) {
         RpgDifficultyConfig c = RpgDifficultyMain.CONFIG;
