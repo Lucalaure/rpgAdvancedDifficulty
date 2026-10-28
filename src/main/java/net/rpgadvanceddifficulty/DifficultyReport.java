@@ -50,6 +50,7 @@ public final class DifficultyReport {
             factor = zone.getFactor();
         } else {
             double startingFactor = map != null ? (double) map.get("startingFactor") : config.startingFactor;
+            double timeProgress = 0.0;
             double gained = 0.0;
 
             // Distance
@@ -70,13 +71,13 @@ public final class DifficultyReport {
                 long stepTicks = increasingTime * 1200L;
                 long elapsed = Math.max(0L, world.getGameTime() - startingTicks);
                 long steps = elapsed / stepTicks;
-                gained += steps * (map != null ? (double) map.get("timeFactor") : config.timeFactor);
+                timeProgress = MobStrengthener.timeProgress(steps, increasingTime, map != null ? (double) map.get("timeSpeed") : config.timeSpeed);
                 long nextStepAt = startingTicks + (steps + 1) * stepTicks;
                 minutesToNext = (int) Math.ceil((nextStepAt - world.getGameTime()) / 1200.0);
             }
 
             // Same shared progress as MobStrengthener; the readout shows the health factor
-            double progress = MobStrengthener.progress(gained, startingFactor, baseMaxHealth, baseMaxDamage, baseMaxProtection);
+            double progress = MobStrengthener.progress(timeProgress, gained, startingFactor, baseMaxHealth, baseMaxDamage, baseMaxProtection);
             factor = MobStrengthener.scale(startingFactor, progress, maxFactor);
             if (progress >= 1.0 || factor >= maxFactor) minutesToNext = -1;
         }
