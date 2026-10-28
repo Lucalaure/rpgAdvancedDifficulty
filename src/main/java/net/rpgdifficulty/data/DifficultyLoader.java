@@ -6,6 +6,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.rpgdifficulty.RpgDifficultyMain;
+import net.rpgdifficulty.api.MobStrengthener;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -52,11 +53,6 @@ public class DifficultyLoader implements ResourceManagerReloadListener {
                 } else {
                     map.put("increasingTime", RpgDifficultyMain.CONFIG.increasingTime);
                 }
-                if (data.has("timeFactor")) {
-                    map.put("timeFactor", data.get("timeFactor").getAsDouble());
-                } else {
-                    map.put("timeFactor", RpgDifficultyMain.CONFIG.timeFactor);
-                }
                 // max
                 if (data.has("maxFactorHealth")) {
                     map.put("maxFactorHealth", data.get("maxFactorHealth").getAsDouble());
@@ -89,6 +85,14 @@ public class DifficultyLoader implements ResourceManagerReloadListener {
                 } else {
                     map.put("startingTime", RpgDifficultyMain.CONFIG.startingTime);
                 }
+                // time speed; timeFactor is the old setting (factor gained per increasingTime), converted to the same pace
+                if (data.has("timeSpeed")) {
+                    map.put("timeSpeed", data.get("timeSpeed").getAsDouble());
+                } else if (data.has("timeFactor")) {
+                    map.put("timeSpeed", legacyTimeSpeed(data.get("timeFactor").getAsDouble(), map));
+                } else {
+                    map.put("timeSpeed", RpgDifficultyMain.CONFIG.timeSpeed);
+                }
 
                 dimensionDifficulty.put(data.get("dimension").getAsString(), map);
 
@@ -96,6 +100,17 @@ public class DifficultyLoader implements ResourceManagerReloadListener {
                 RpgDifficultyMain.LOGGER.error("Error occurred while loading resource {}. {}", id.toString(), e.toString());
             }
         });
+    }
+
+    /** timeSpeed that reaches the max after the same time an old timeFactor did with the file's other settings. */
+    private static double legacyTimeSpeed(double timeFactor, HashMap<String, Object> map) {
+        int increasingTime = (int) map.get("increasingTime");
+        double room = Math.max((double) map.get("maxFactorHealth"), Math.max((double) map.get("maxFactorDamage"), (double) map.get("maxFactorProtection")))
+                - (double) map.get("startingFactor");
+        if (increasingTime <= 0 || room <= 0.0D) {
+            return RpgDifficultyMain.CONFIG.timeSpeed;
+        }
+        return timeFactor * MobStrengthener.HOURS_TO_MAX * 60.0D / (increasingTime * room);
     }
 
 }

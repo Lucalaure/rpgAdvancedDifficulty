@@ -11,7 +11,7 @@ A Fabric mod for Minecraft 26.3 that combines two mods. (The 1.21.1 version is a
 
 Every mob spawn goes through a single pipeline:
 
-1. **Difficulty scaling.** Mobs get stronger with world time, plus distance from spawn if `enableDistanceScaling` is on. Health, damage and armor all grow at the same pace towards their own max, so they reach it together: by default on Normal, health goes up 10% for every hour the world has been running, damage 5% and armor 2.5%, reaching 3×, 2× and 1.5× after 20 hours. Every game difficulty takes the same 20 hours and only changes the max (see Game difficulty). The stat with the most room to grow (health by default) moves by `timeFactor` per `increasingTime` and the others follow proportionally. A difficulty zone or dimension datapack can override it.
+1. **Difficulty scaling.** Mobs get stronger with world time, plus distance from spawn if `enableDistanceScaling` is on. Health, damage and armor all grow at the same pace towards their own max, so they reach it together: by default on Normal, health goes up 10% for every hour the world has been running, damage 5% and armor 2.5%, reaching 3×, 2× and 1.5× after 20 hours. Every game difficulty takes the same 20 hours and only changes the max (see Game difficulty). `timeSpeed` sets how fast: 1.0 = the max after 20 hours, 2.0 = after 10 hours, 0.5 = after 40 hours. A difficulty zone or dimension datapack can override it.
 2. **Champion roll.** The mob then rolls for a champion tier. With `championsScaleWithDifficulty` on, the difficulty factor also raises champion odds, and higher tiers gain the most:
 
    `tier weight × min(maxChampionChanceMultiplier, 1 + (factor − 1) × championChanceScaling × tier)`
@@ -254,7 +254,7 @@ With Mod Menu installed, the config button opens a hub that links to both config
 
 ### Per-dimension difficulty (datapacks)
 
-To give a dimension its own scaling settings, add a JSON file at `data/<namespace>/difficulty/<name>.json` in a datapack. Any of these settings can be overridden: `distanceCoordinatesX`, `distanceCoordinatesZ`, `increasingDistance`, `distanceFactor`, `increasingTime`, `timeFactor`, `maxFactorHealth`, `maxFactorDamage`, `maxFactorProtection`, `startingFactor`, `startingDistance`, `startingTime`. Distance settings only apply when `enableDistanceScaling` is on.
+To give a dimension its own scaling settings, add a JSON file at `data/<namespace>/difficulty/<name>.json` in a datapack. Any of these settings can be overridden: `distanceCoordinatesX`, `distanceCoordinatesZ`, `increasingDistance`, `distanceFactor`, `increasingTime`, `timeSpeed`, `maxFactorHealth`, `maxFactorDamage`, `maxFactorProtection`, `startingFactor`, `startingDistance`, `startingTime`. Distance settings only apply when `enableDistanceScaling` is on.
 
 ```json
 {
@@ -262,7 +262,7 @@ To give a dimension its own scaling settings, add a JSON file at `data/<namespac
     "increasingDistance": 300,
     "distanceFactor": 0.1,
     "increasingTime": 60,
-    "timeFactor": 0.05,
+    "timeSpeed": 0.5,
     "maxFactorHealth": 3.0,
     "maxFactorDamage": 3.0,
     "maxFactorProtection": 1.5,
@@ -272,7 +272,7 @@ To give a dimension its own scaling settings, add a JSON file at `data/<namespac
 }
 ```
 
-Mobs in the `c:bosses` entity tag use the boss settings from `rpgdifficulty.json`. World time keeps counting while the server runs with nobody online, so on multiplayer servers consider a lower `timeFactor`, or enable distance scaling instead.
+Mobs in the `c:bosses` entity tag use the boss settings from `rpgdifficulty.json`. World time keeps counting while the server runs with nobody online, so on multiplayer servers consider a lower `timeSpeed`, or enable distance scaling instead.
 
 ### Difficulty zones (commands)
 

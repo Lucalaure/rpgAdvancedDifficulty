@@ -12,16 +12,16 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 @Config.Gui.Background("minecraft:textures/block/stone.png")
 public class RpgDifficultyConfig implements ConfigData {
 
-    @Comment("Minutes of world time (ticks the world has been running) per increase")
+    @Comment("How fast mobs reach their max over world time. 1.0 = after 20 hours, 2.0 = 10 hours, 0.5 = 40 hours. Health, damage and protection reach their max together, on every game difficulty")
+    public double timeSpeed = 1.0D;
+    @Comment("Minutes of world time (ticks the world has been running) per increase. Smaller = smaller, more frequent steps; it doesn't change when the max is reached")
     public int increasingTime = 60;
-    @Comment("0.1 = 10% stronger per increasingTime. This is the pace of the stat with the most room to grow (health by default); damage and protection grow proportionally so all three reach their max at the same time")
-    public double timeFactor = 0.1D;
 
     @Comment("Also make mobs stronger the further they spawn from world spawn")
     public boolean enableDistanceScaling = false;
     @Comment("in Blocks")
     public int increasingDistance = 300;
-    @Comment("0.1 = 10% stronger per increasingDistance, shared the same way as timeFactor")
+    @Comment("0.1 = 10% stronger per increasingDistance. This is the pace of the stat with the most room to grow (health by default); damage and protection grow proportionally")
     public double distanceFactor = 0.1D;
 
     @Comment("2.0 = double. All three are reached at the same time")
@@ -77,7 +77,8 @@ public class RpgDifficultyConfig implements ConfigData {
     @ConfigEntry.Category("monster_setting")
     public double bossDistanceFactor = 0.0D;
     @ConfigEntry.Category("monster_setting")
-    public double bossTimeFactor = 0.1D;
+    @Comment("Like timeSpeed, for bosses. 1.0 = max after 20 hours")
+    public double bossTimeSpeed = 1.0D;
     @ConfigEntry.Category("monster_setting")
     @Comment("Get all players in this radius")
     public double bossDistance = 256.0D;

@@ -37,18 +37,27 @@ public class MobStrengthener {
 
     private static final RandomSource random = RandomSource.create();
 
+    /** World time it takes to reach the max at timeSpeed 1.0. */
+    public static final double HOURS_TO_MAX = 20.0D;
+
+    /** Share (0 to 1+) of the way to the max after the given number of time steps: 1.0 after HOURS_TO_MAX / timeSpeed hours. */
+    public static double timeProgress(long steps, int increasingTime, double timeSpeed) {
+        return steps * increasingTime * timeSpeed / (HOURS_TO_MAX * 60.0D);
+    }
+
     /**
-     * How far (0 to 1) a mob is on its way to the max, from the factor gained through time and distance.
-     * The stat with the most room to grow (health by default) gains timeFactor/distanceFactor per step and the
-     * others follow proportionally, so health, damage and protection all reach their max at the same time.
+     * How far (0 to 1) a mob is on its way to the max, from world time (timeProgress) plus the factor gained
+     * through distance. Health, damage and protection all move the same share of the way, so they reach their max
+     * at the same time; distanceFactor is the pace of the stat with the most room to grow (health by default).
      * Measured against the max factors before the game difficulty cap, so every difficulty takes equally long.
      */
-    public static double progress(double gained, double startingFactor, double... baseMaxFactors) {
+    public static double progress(double timeProgress, double distanceGained, double startingFactor, double... baseMaxFactors) {
         double reference = 0.0D;
         for (double maxFactor : baseMaxFactors) {
             reference = Math.max(reference, maxFactor - startingFactor);
         }
-        return reference > 0.0D ? Mth.clamp(gained / reference, 0.0D, 1.0D) : 0.0D;
+        double distanceProgress = reference > 0.0D ? distanceGained / reference : 0.0D;
+        return Mth.clamp(timeProgress + distanceProgress, 0.0D, 1.0D);
     }
 
     /** The factor for one stat at the given progress, between startingFactor and its max. */
@@ -91,7 +100,8 @@ public class MobStrengthener {
             double mobDamageFactor = startingFactor;
             double mobProtectionFactor = startingFactor;
             double dynamicFactor = startingFactor;
-            // Factor gained from distance and time, shared by all stats (see progress)
+            // Progress from world time and factor gained from distance, shared by all stats (see progress)
+            double timeProgress = 0.0D;
             double gained = 0.0D;
 
             // Entity Values
@@ -151,11 +161,9 @@ public class MobStrengthener {
                     if (!isBossMob && RpgDifficultyMain.CONFIG.excludeTimeInOtherDimension && mobEntity.level().dimension() != Level.OVERWORLD) {
                         timeDivided = 0;
                     }
-                    if (isBossMob) {
-                        gained += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
-                    } else {
-                        gained += timeDivided * (map != null ? (double) map.get("timeFactor") : RpgDifficultyMain.CONFIG.timeFactor);
-                    }
+                    double timeSpeed = isBossMob ? RpgDifficultyMain.CONFIG.bossTimeSpeed
+                            : (map != null ? (double) map.get("timeSpeed") : RpgDifficultyMain.CONFIG.timeSpeed);
+                    timeProgress = timeProgress(timeDivided, map != null ? (int) map.get("increasingTime") : RpgDifficultyMain.CONFIG.increasingTime, timeSpeed);
                 }
 
                 double baseMaxHealth = isBossMob ? RpgDifficultyMain.CONFIG.bossMaxFactor
@@ -167,7 +175,7 @@ public class MobStrengthener {
                 double maxFactorProtection = cap * baseMaxProtection;
 
                 // Every stat moves the same share of the way to its own max
-                double progress = progress(gained, startingFactor, baseMaxHealth, baseMaxDamage, baseMaxProtection);
+                double progress = progress(timeProgress, gained, startingFactor, baseMaxHealth, baseMaxDamage, baseMaxProtection);
                 mobHealthFactor = scale(startingFactor, progress, maxFactorHealth);
                 mobDamageFactor = scale(startingFactor, progress, maxFactorDamage);
                 mobProtectionFactor = scale(startingFactor, progress, maxFactorProtection);
@@ -277,6 +285,7 @@ public class MobStrengthener {
             }
 
             double startingFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
+            double timeProgress = 0.0D;
             double gained = 0.0D;
             int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : ((ServerLevel) entity.level()).getRespawnData().pos().getX();
             int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : ((ServerLevel) entity.level()).getRespawnData().pos().getZ();
@@ -303,13 +312,14 @@ public class MobStrengthener {
                     worldTime -= (map != null ? (int) map.get("startingTime") : RpgDifficultyMain.CONFIG.startingTime) * 1200;
                 }
                 int timeDivided = worldTime / ((map != null ? (int) map.get("increasingTime") : RpgDifficultyMain.CONFIG.increasingTime) * 1200);
-                gained += timeDivided * (map != null ? (double) map.get("timeFactor") : RpgDifficultyMain.CONFIG.timeFactor);
+                timeProgress = timeProgress(timeDivided, map != null ? (int) map.get("increasingTime") : RpgDifficultyMain.CONFIG.increasingTime,
+                        map != null ? (double) map.get("timeSpeed") : RpgDifficultyMain.CONFIG.timeSpeed);
             }
 
             double baseMaxHealth = map != null ? (double) map.get("maxFactorHealth") : RpgDifficultyMain.CONFIG.maxFactorHealth;
             double baseMaxDamage = map != null ? (double) map.get("maxFactorDamage") : RpgDifficultyMain.CONFIG.maxFactorDamage;
             double baseMaxProtection = map != null ? (double) map.get("maxFactorProtection") : RpgDifficultyMain.CONFIG.maxFactorProtection;
-            double progress = progress(gained, startingFactor, baseMaxHealth, baseMaxDamage, baseMaxProtection);
+            double progress = progress(timeProgress, gained, startingFactor, baseMaxHealth, baseMaxDamage, baseMaxProtection);
             double mobDamageFactor = scale(startingFactor, progress, DifficultyModes.cap(entity.level()) * baseMaxDamage);
             mobDamageFactor *= RpgDifficultyMain.CONFIG.creeperExplosionFactor;
             if (mobDamageFactor < 1.0F) {

@@ -6,7 +6,7 @@
     "text.autoconfig.rpgdifficulty.option.increasingDistance": "Distância crescente",
     "text.autoconfig.rpgdifficulty.option.distanceFactor": "Fator de distância",
     "text.autoconfig.rpgdifficulty.option.increasingTime": "Aumentando o Tempo",
-    "text.autoconfig.rpgdifficulty.option.timeFactor": "Fator de tempo",
+    "text.autoconfig.rpgdifficulty.option.timeSpeed": "Velocidade do tempo",
     "text.autoconfig.rpgdifficulty.option.maxFactorHealth": "Fator Máximo de Saúde",
     "text.autoconfig.rpgdifficulty.option.maxFactorDamage": "Fator de dano máximo",
     "text.autoconfig.rpgdifficulty.option.maxFactorProtection": "Fator de proteção máximo",
@@ -34,7 +34,7 @@
     "text.autoconfig.rpgdifficulty.option.dynamicBossModificator": "Modificador de Chefe Dinâmico",
     "text.autoconfig.rpgdifficulty.option.bossMaxFactor": "Modificador Boss Max",
     "text.autoconfig.rpgdifficulty.option.bossDistanceFactor": "Fator de distância do chefe",
-    "text.autoconfig.rpgdifficulty.option.bossTimeFactor": "Fator de tempo do chefe",
+    "text.autoconfig.rpgdifficulty.option.bossTimeSpeed": "Velocidade do tempo do chefe",
     "text.autoconfig.rpgdifficulty.option.creeperExplosionFactor": "Fator de explosão da trepadeira",
 
     "text.autoconfig.rpgdifficulty.clock": "Tempo em minutos: %d"
