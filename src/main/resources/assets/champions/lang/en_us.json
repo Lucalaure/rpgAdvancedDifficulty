@@ -184,7 +184,6 @@
   "champions.bestiary.odds_difficulty": "On %s:",
   "champions.bestiary.odds_note": "Chance per hostile mob when a world starts. Odds rise as mobs get stronger over time.",
   "champions.bestiary.difficulty": "Game difficulty",
-  "champions.bestiary.difficulty_growth": "Growth speed: ×%s",
   "champions.bestiary.difficulty_cap": "Max strength: ×%s",
   "champions.bestiary.difficulty_champions": "Champions: ×%s",
   "champions.bestiary.difficulty_tiers": "Higher tiers: ×%s each",

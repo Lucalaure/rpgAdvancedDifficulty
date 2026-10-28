@@ -91,13 +91,6 @@ public class RpgDifficultyConfig implements ConfigData {
     public float maxCreeperExplosionPower = 12.0F;
 
     @ConfigEntry.Category("game_difficulty")
-    @Comment("How fast mobs get stronger on Easy (and Peaceful). 0.5 = half as fast")
-    public double easyGrowthMultiplier = 0.5D;
-    @ConfigEntry.Category("game_difficulty")
-    public double normalGrowthMultiplier = 1.0D;
-    @ConfigEntry.Category("game_difficulty")
-    public double hardGrowthMultiplier = 1.5D;
-    @ConfigEntry.Category("game_difficulty")
     @Comment("Multiplies the max health/damage/protection factors. 1.25 on Hard = 3.75x max health and 2.5x max damage")
     public double easyCapMultiplier = 0.75D;
     @ConfigEntry.Category("game_difficulty")

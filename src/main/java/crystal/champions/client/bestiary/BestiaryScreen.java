@@ -91,8 +91,6 @@ public class BestiaryScreen extends BookViewScreen {
                 .append("\n")
                 .append(Component.translatable("champions.bestiary.odds_difficulty", difficulty).withStyle(ChatFormatting.DARK_GRAY))
                 .append("\n\n")
-                .append(Component.translatable("champions.bestiary.difficulty_growth", format(DifficultyModes.growth(level))))
-                .append("\n")
                 .append(Component.translatable("champions.bestiary.difficulty_cap", format(DifficultyModes.cap(level))))
                 .append("\n")
                 .append(Component.translatable("champions.bestiary.difficulty_champions", format(DifficultyModes.championChance(level))))

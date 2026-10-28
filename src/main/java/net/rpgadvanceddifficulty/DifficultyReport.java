@@ -38,11 +38,10 @@ public final class DifficultyReport {
         HashMap<String, Object> map = DifficultyLoader.dimensionDifficulty.get(dimension);
         boolean overworld = world.dimension() == Level.OVERWORLD;
 
-        double growth = DifficultyModes.growth(world);
-        double cap = DifficultyModes.cap(world);
-        double maxFactor = cap * (map != null ? (double) map.get("maxFactorHealth") : config.maxFactorHealth);
-        double maxFactorDamage = cap * (map != null ? (double) map.get("maxFactorDamage") : config.maxFactorDamage);
-        double maxFactorProtection = cap * (map != null ? (double) map.get("maxFactorProtection") : config.maxFactorProtection);
+        double baseMaxHealth = map != null ? (double) map.get("maxFactorHealth") : config.maxFactorHealth;
+        double baseMaxDamage = map != null ? (double) map.get("maxFactorDamage") : config.maxFactorDamage;
+        double baseMaxProtection = map != null ? (double) map.get("maxFactorProtection") : config.maxFactorProtection;
+        double maxFactor = DifficultyModes.cap(world) * baseMaxHealth;
         double factor;
         int minutesToNext = -1;
 
@@ -61,7 +60,7 @@ public final class DifficultyReport {
                 int startingDistance = map != null ? (int) map.get("startingDistance") : config.startingDistance;
                 float distance = Mth.sqrt((float) pos.distanceToSqr(spawnX, pos.y, spawnZ));
                 distance = (int) distance <= startingDistance ? 0 : distance - startingDistance;
-                gained += ((int) distance / increasingDistance) * growth * (map != null ? (double) map.get("distanceFactor") : config.distanceFactor);
+                gained += ((int) distance / increasingDistance) * (map != null ? (double) map.get("distanceFactor") : config.distanceFactor);
             }
 
             // Time
@@ -71,13 +70,13 @@ public final class DifficultyReport {
                 long stepTicks = increasingTime * 1200L;
                 long elapsed = Math.max(0L, world.getGameTime() - startingTicks);
                 long steps = elapsed / stepTicks;
-                gained += steps * growth * (map != null ? (double) map.get("timeFactor") : config.timeFactor);
+                gained += steps * (map != null ? (double) map.get("timeFactor") : config.timeFactor);
                 long nextStepAt = startingTicks + (steps + 1) * stepTicks;
                 minutesToNext = (int) Math.ceil((nextStepAt - world.getGameTime()) / 1200.0);
             }
 
             // Same shared progress as MobStrengthener; the readout shows the health factor
-            double progress = MobStrengthener.progress(gained, startingFactor, maxFactor, maxFactorDamage, maxFactorProtection);
+            double progress = MobStrengthener.progress(gained, startingFactor, baseMaxHealth, baseMaxDamage, baseMaxProtection);
             factor = MobStrengthener.scale(startingFactor, progress, maxFactor);
             if (progress >= 1.0 || factor >= maxFactor) minutesToNext = -1;
         }
