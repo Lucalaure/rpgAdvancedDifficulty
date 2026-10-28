@@ -4,10 +4,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.illager.AbstractIllager;
+import net.minecraft.world.entity.monster.AbstractIllager;
 
 import java.util.List;
 
@@ -19,11 +19,11 @@ public class WarlordAffix extends MobSpecificAffix {
     private static final double RADIUS = 16.0;
 
     public WarlordAffix() {
-        super("warlord", "illagers", EntityTypes.PILLAGER, mob -> mob instanceof AbstractIllager);
+        super("warlord", "illagers", EntityType.PILLAGER, mob -> mob instanceof AbstractIllager);
     }
 
     private static final String SUMMONED_TAG = "champions.warlord_summoned";
-    private static final List<EntityType<? extends Mob>> FOLLOWERS = List.of(EntityTypes.PILLAGER, EntityTypes.VINDICATOR);
+    private static final List<EntityType<? extends Mob>> FOLLOWERS = List.of(EntityType.PILLAGER, EntityType.VINDICATOR);
 
     @Override
     public void onTick(LivingEntity entity) {
@@ -34,7 +34,7 @@ public class WarlordAffix extends MobSpecificAffix {
         if (entity.tickCount % 20 != 0 || !(entity.level() instanceof ServerLevel level)) return;
         for (AbstractIllager ally : level.getEntitiesOfClass(AbstractIllager.class, entity.getBoundingBox().inflate(RADIUS),
                 illager -> illager != entity && illager.isAlive())) {
-            ally.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 40, 0, true, true));
+            ally.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 0, true, true));
         }
     }
 }

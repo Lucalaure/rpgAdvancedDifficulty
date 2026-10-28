@@ -15,8 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ShulkerBullet;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.EntityHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -59,15 +58,15 @@ public abstract class ShulkerBulletMixin extends Entity implements IBullet {
 
     // NBT оставляем только для сохранения в файл (чтобы после перезахода в мир пули не теряли тип)
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void writeChampionData(ValueOutput nbt, CallbackInfo ci) {
+    private void writeChampionData(CompoundTag nbt, CallbackInfo ci) {
         nbt.putBoolean("arctic", champions$isArctic());
         nbt.putBoolean("molten", champions$isMolten());
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void readChampionData(ValueInput nbt, CallbackInfo ci) {
-        champions$setArctic(nbt.getBooleanOr("arctic", false));
-        champions$setMolten(nbt.getBooleanOr("molten", false));
+    private void readChampionData(CompoundTag nbt, CallbackInfo ci) {
+        champions$setArctic(nbt.getBoolean("arctic"));
+        champions$setMolten(nbt.getBoolean("molten"));
     }
 
     @Inject(method = "onHitEntity", at = @At("HEAD"), cancellable = true)
@@ -76,7 +75,7 @@ public abstract class ShulkerBulletMixin extends Entity implements IBullet {
         if (!(targetEntity instanceof LivingEntity target)) return;
 
         if (champions$isArctic()) {
-            target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 5));
+            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 5));
             ci.cancel();
         }
         if (champions$isMolten()) {

@@ -28,11 +28,11 @@ public final class BestiaryCommand {
         dispatcher.register(literal("bestiary")
                 .executes(c -> give(c.getSource(), java.util.List.of(c.getSource().getPlayerOrException())))
                 .then(literal("give")
-                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .requires(source -> source.hasPermission(2))
                         .then(argument("players", EntityArgument.players())
                                 .executes(c -> give(c.getSource(), EntityArgument.getPlayers(c, "players")))))
                 .then(literal("reset")
-                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .requires(source -> source.hasPermission(2))
                         .executes(c -> reset(c.getSource(), java.util.List.of(c.getSource().getPlayerOrException())))
                         .then(argument("players", EntityArgument.players())
                                 .executes(c -> reset(c.getSource(), EntityArgument.getPlayers(c, "players"))))));

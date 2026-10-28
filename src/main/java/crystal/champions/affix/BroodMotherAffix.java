@@ -4,11 +4,11 @@ import crystal.champions.IChampions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.spider.CaveSpider;
-import net.minecraft.world.entity.monster.spider.Spider;
+import net.minecraft.world.entity.monster.CaveSpider;
+import net.minecraft.world.entity.monster.Spider;
 
 /**
  * BroodMotherAffix (spiders, not cave spiders)
@@ -19,7 +19,7 @@ public class BroodMotherAffix extends MobSpecificAffix {
     private static final int MAX_NEARBY = 6;
 
     public BroodMotherAffix() {
-        super("brood_mother", "spiders", EntityTypes.SPIDER, mob -> mob instanceof Spider && !(mob instanceof CaveSpider));
+        super("brood_mother", "spiders", EntityType.SPIDER, mob -> mob instanceof Spider && !(mob instanceof CaveSpider));
     }
 
     @Override
@@ -28,10 +28,10 @@ public class BroodMotherAffix extends MobSpecificAffix {
         int nearby = level.getEntitiesOfClass(CaveSpider.class, champion.getBoundingBox().inflate(16)).size();
 
         for (int i = 0; i < Math.min(PER_HIT, MAX_NEARBY - nearby); i++) {
-            CaveSpider spider = EntityTypes.CAVE_SPIDER.create(level, EntitySpawnReason.MOB_SUMMONED);
+            CaveSpider spider = EntityType.CAVE_SPIDER.create(level);
             if (spider == null) continue;
-            spider.snapTo(champion.getX(), champion.getY(), champion.getZ(), champion.getRandom().nextFloat() * 360.0F, 0.0F);
-            spider.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(champion.position())), EntitySpawnReason.MOB_SUMMONED, null);
+            spider.moveTo(champion.getX(), champion.getY(), champion.getZ(), champion.getRandom().nextFloat() * 360.0F, 0.0F);
+            spider.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(champion.position())), MobSpawnType.MOB_SUMMONED, null);
             ((IChampions) spider).champions$setChampionTier(IChampions.NEVER_CHAMPION);
             if (source.getEntity() instanceof LivingEntity attacker && attacker != champion) {
                 spider.setTarget(attacker);

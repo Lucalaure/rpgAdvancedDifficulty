@@ -2,13 +2,13 @@ package crystal.champions.affix;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.monster.Ghast;
-import net.minecraft.world.entity.projectile.hurtingprojectile.LargeFireball;
-import net.minecraft.world.entity.projectile.hurtingprojectile.SmallFireball;
+import net.minecraft.world.entity.projectile.LargeFireball;
+import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -19,7 +19,7 @@ public class BarrageAffix extends MobSpecificAffix {
     private static final int COOLDOWN = 80;
 
     public BarrageAffix() {
-        super("barrage", "blazes_ghasts", EntityTypes.BLAZE, mob -> mob instanceof Blaze || mob instanceof Ghast);
+        super("barrage", "blazes_ghasts", EntityType.BLAZE, mob -> mob instanceof Blaze || mob instanceof Ghast);
     }
 
     @Override

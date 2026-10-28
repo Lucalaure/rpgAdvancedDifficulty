@@ -1,10 +1,10 @@
 package crystal.champions.affix;
 
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.rpgdifficulty.mixin.access.AbstractArrowAccess;
 
 /**
@@ -18,7 +18,7 @@ public class SniperAffix extends MobSpecificAffix {
     public static final float DAMAGE_MULTIPLIER = 1.5F;
 
     public SniperAffix() {
-        super("sniper", "skeletons", EntityTypes.SKELETON, mob -> mob instanceof AbstractSkeleton);
+        super("sniper", "skeletons", EntityType.SKELETON, mob -> mob instanceof AbstractSkeleton);
     }
 
     @Override

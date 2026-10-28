@@ -33,7 +33,7 @@ public final class DifficultyReport {
 
     public static Snapshot compute(ServerLevel world, Vec3 pos) {
         RpgDifficultyConfig config = RpgDifficultyMain.CONFIG;
-        String dimension = world.dimension().identifier().toString();
+        String dimension = world.dimension().location().toString();
         HashMap<String, Object> map = DifficultyLoader.dimensionDifficulty.get(dimension);
         boolean overworld = world.dimension() == Level.OVERWORLD;
 
@@ -51,8 +51,8 @@ public final class DifficultyReport {
             // Distance
             int increasingDistance = map != null ? (int) map.get("increasingDistance") : config.increasingDistance;
             if (config.enableDistanceScaling && increasingDistance != 0 && !(config.excludeDistanceInOtherDimension && !overworld)) {
-                int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : world.getRespawnData().pos().getX();
-                int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : world.getRespawnData().pos().getZ();
+                int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : world.getSharedSpawnPos().getX();
+                int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : world.getSharedSpawnPos().getZ();
                 int startingDistance = map != null ? (int) map.get("startingDistance") : config.startingDistance;
                 float distance = Mth.sqrt((float) pos.distanceToSqr(spawnX, pos.y, spawnZ));
                 distance = (int) distance <= startingDistance ? 0 : distance - startingDistance;

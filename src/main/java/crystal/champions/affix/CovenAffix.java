@@ -3,7 +3,7 @@ package crystal.champions.affix;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
@@ -21,11 +21,11 @@ public class CovenAffix extends MobSpecificAffix {
     private static final double RADIUS = 8.0;
 
     public CovenAffix() {
-        super("coven", "witches", EntityTypes.WITCH, mob -> mob instanceof Witch);
+        super("coven", "witches", EntityType.WITCH, mob -> mob instanceof Witch);
     }
 
     private static final String SUMMONED_TAG = "champions.coven_summoned";
-    private static final List<EntityType<? extends Mob>> FOLLOWERS = List.of(EntityTypes.ZOMBIE, EntityTypes.SKELETON, EntityTypes.SPIDER);
+    private static final List<EntityType<? extends Mob>> FOLLOWERS = List.of(EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER);
 
     @Override
     public void onTick(LivingEntity entity) {

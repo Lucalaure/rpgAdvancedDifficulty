@@ -2,8 +2,8 @@ package crystal.champions.affix;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -38,9 +38,9 @@ public class StormcallerAffix extends Affix {
             Vec3 strike = Vec3.atBottomCenterOf(ground);
             if (strike.distanceTo(mob.position()) < MIN_DISTANCE_FROM_CHAMPION) continue;
 
-            LightningBolt bolt = EntityTypes.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED);
+            LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(level);
             if (bolt == null) continue;
-            bolt.snapTo(strike);
+            bolt.moveTo(strike);
             level.addFreshEntity(bolt);
             i++;
         }

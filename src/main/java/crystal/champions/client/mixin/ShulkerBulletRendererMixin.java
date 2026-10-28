@@ -1,85 +1,69 @@
 package crystal.champions.client.mixin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import crystal.champions.IBullet;
-import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.model.ShulkerBulletModel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ShulkerBulletRenderer;
-import net.minecraft.client.renderer.entity.state.ShulkerBulletRenderState;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.projectile.ShulkerBullet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ShulkerBulletRenderer.class)
 public class ShulkerBulletRendererMixin {
 
-    @Unique private static final Identifier ARCTIC_TEXTURE = Identifier.fromNamespaceAndPath("champions", "textures/entity/arctic.png");
-    @Unique private static final Identifier MOLTEN_TEXTURE = Identifier.fromNamespaceAndPath("champions", "textures/entity/molten.png");
-    @Unique private static final Identifier DEFAULT_TEXTURE = Identifier.withDefaultNamespace("textures/entity/shulker/spark.png");
+    @Unique private static final ResourceLocation ARCTIC_TEXTURE = ResourceLocation.fromNamespaceAndPath("champions", "textures/entity/arctic.png");
+    @Unique private static final ResourceLocation MOLTEN_TEXTURE = ResourceLocation.fromNamespaceAndPath("champions", "textures/entity/molten.png");
+    @Unique private static final ResourceLocation DEFAULT_TEXTURE = ResourceLocation.withDefaultNamespace("textures/entity/shulker/spark.png");
+
+    @Unique private static final String RENDER =
+            "render(Lnet/minecraft/world/entity/projectile/ShulkerBullet;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V";
 
     /**
-     * Texture override, extracted from IBullet into the render state (null = vanilla)
+     * Texture override from IBullet (null = vanilla)
      */
-    @Unique private static final RenderStateDataKey<Identifier> CHAMPIONS_TEXTURE = RenderStateDataKey.create(() -> "champions:bullet_texture");
-
-    @Unique private static final String SUBMIT =
-            "submit(Lnet/minecraft/client/renderer/entity/state/ShulkerBulletRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V";
-
-    /**
-     * Check IBullet while we still have the entity
-     */
-    @Inject(
-            method = "extractRenderState(Lnet/minecraft/world/entity/projectile/ShulkerBullet;Lnet/minecraft/client/renderer/entity/state/ShulkerBulletRenderState;F)V",
-            at = @At("TAIL")
-    )
-    private void champions$extractTexture(ShulkerBullet entity, ShulkerBulletRenderState state, float partialTicks, CallbackInfo ci) {
+    @Unique
+    private static ResourceLocation champions$texture(ShulkerBullet entity) {
         IBullet bullet = (IBullet) entity;
-
-        Identifier texture = null;
         if (bullet.champions$isArctic()) {
-            texture = ARCTIC_TEXTURE;
+            return ARCTIC_TEXTURE;
         } else if (bullet.champions$isMolten()) {
-            texture = MOLTEN_TEXTURE;
+            return MOLTEN_TEXTURE;
         }
-        state.setData(CHAMPIONS_TEXTURE, texture);
+        return null;
     }
 
     /**
      * Change bullet color
-     * @param state render state with texture from IBullet
-     * @return texture
+     * @param model which model
+     * @param texture vanilla texture
+     * @param entity for check IBullet
+     * @return render type
      */
     @Redirect(
-            method = SUBMIT,
+            method = RENDER,
             at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/client/renderer/entity/ShulkerBulletRenderer;TEXTURE_LOCATION:Lnet/minecraft/resources/Identifier;",
-                    opcode = org.objectweb.asm.Opcodes.GETSTATIC
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/model/ShulkerBulletModel;renderType(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"
             )
     )
-    private Identifier redirectGetLayer(ShulkerBulletRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
-        Identifier texture = state.getData(CHAMPIONS_TEXTURE);
-        return texture != null ? texture : DEFAULT_TEXTURE;
+    private RenderType redirectGetLayer(ShulkerBulletModel<ShulkerBullet> model, ResourceLocation texture, ShulkerBullet entity) {
+        ResourceLocation override = champions$texture(entity);
+        return model.renderType(override != null ? override : texture);
     }
 
     @Redirect(
-            method = SUBMIT,
+            method = RENDER,
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/renderer/entity/ShulkerBulletRenderer;RENDER_TYPE:Lnet/minecraft/client/renderer/rendertype/RenderType;",
+                    target = "Lnet/minecraft/client/renderer/entity/ShulkerBulletRenderer;RENDER_TYPE:Lnet/minecraft/client/renderer/RenderType;",
                     opcode = org.objectweb.asm.Opcodes.GETSTATIC
             )
     )
-    private RenderType redirectLayerField(ShulkerBulletRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
-        Identifier texture = state.getData(CHAMPIONS_TEXTURE);
-        return RenderTypes.entityTranslucent(texture != null ? texture : DEFAULT_TEXTURE);
+    private RenderType redirectLayerField(ShulkerBullet entity) {
+        ResourceLocation override = champions$texture(entity);
+        return RenderType.entityTranslucent(override != null ? override : DEFAULT_TEXTURE);
     }
 }

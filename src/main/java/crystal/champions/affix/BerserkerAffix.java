@@ -1,7 +1,7 @@
 package crystal.champions.affix;
 
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.monster.illager.Vindicator;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Vindicator;
 
 /**
  * BerserkerAffix (vindicators)
@@ -10,7 +10,7 @@ import net.minecraft.world.entity.monster.illager.Vindicator;
  */
 public class BerserkerAffix extends MobSpecificAffix {
     public BerserkerAffix() {
-        super("berserker", "vindicators", EntityTypes.VINDICATOR, mob -> mob instanceof Vindicator);
+        super("berserker", "vindicators", EntityType.VINDICATOR, mob -> mob instanceof Vindicator);
     }
 
     /** Attack cooldown multiplier: 1.0 at full health down to 0.3 near death. */

@@ -23,13 +23,13 @@ public final class ChampionTags {
 
     /** Weight multiplier for a champion tier from the mob's tags: chance * tierBonus^(tier - 1). */
     public static double tierMultiplier(Mob mob, int tier) {
-        if (tier <= 0 || mob.entityTags().isEmpty()) return 1.0;
+        if (tier <= 0 || mob.getTags().isEmpty()) return 1.0;
         return read(mob, CHANCE_PREFIX) * Math.pow(read(mob, TIER_BONUS_PREFIX), tier - 1);
     }
 
     private static double read(Mob mob, String prefix) {
         double value = 1.0;
-        for (String tag : mob.entityTags()) {
+        for (String tag : mob.getTags()) {
             if (tag.startsWith(prefix)) {
                 try {
                     value *= Math.max(0.0, Double.parseDouble(tag.substring(prefix.length())));

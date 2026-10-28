@@ -28,8 +28,8 @@ public class AffixLifecycleMixin {
     @Shadow protected boolean dead;
     @Unique private float champions$healthBeforeHit;
 
-    @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
-    private void champions$beforeHurt(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
+    private void champions$beforeHurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
         if (source.is(DamageTypes.LIGHTNING_BOLT) && self instanceof IChampions champion && champion.champions$hasAffix("stormcaller")) {
             cir.setReturnValue(false);
@@ -39,8 +39,8 @@ public class AffixLifecycleMixin {
     }
 
     // Vampiric: the attacker heals for part of the damage this entity actually took
-    @Inject(method = "hurtServer", at = @At("RETURN"))
-    private void champions$afterHurt(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurt", at = @At("RETURN"))
+    private void champions$afterHurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
         if (!cir.getReturnValueZ() || !(source.getEntity() instanceof LivingEntity attacker) || attacker == self) return;
         if (!(attacker instanceof IChampions champion) || !champion.champions$hasAffix("vampiric") || !attacker.isAlive()) return;
@@ -48,7 +48,7 @@ public class AffixLifecycleMixin {
         float dealt = this.champions$healthBeforeHit - self.getHealth();
         if (dealt > 0) {
             attacker.heal(dealt * VampiricAffix.LIFESTEAL);
-            level.sendParticles(ParticleTypes.HEART, attacker.getX(), attacker.getY(1.0) + 0.3, attacker.getZ(), 1, 0.2, 0.1, 0.2, 0.0);
+            if (self.level() instanceof ServerLevel level) level.sendParticles(ParticleTypes.HEART, attacker.getX(), attacker.getY(1.0) + 0.3, attacker.getZ(), 1, 0.2, 0.1, 0.2, 0.0);
         }
     }
 

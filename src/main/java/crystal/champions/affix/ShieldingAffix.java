@@ -3,7 +3,6 @@ package crystal.champions.affix;
 import crystal.champions.IChampions;
 import crystal.champions.config.ChampionsConfigAffixes;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SpellParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -33,7 +32,7 @@ public class ShieldingAffix extends Affix {
         }
         if (shieldWork) {
             ((ServerLevel) entity.level()).sendParticles(
-                    SpellParticleOption.create(ParticleTypes.EFFECT, -1, 1.0F),
+                    ParticleTypes.EFFECT,
                     entity.getX(), entity.getRandomY(), entity.getZ(),
                     0, 1.0, 1.0, 1.0, 0.8
             );

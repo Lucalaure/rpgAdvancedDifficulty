@@ -24,7 +24,7 @@
   ],
   "client": [
     "client.ScreenMixin",
-    "client.DebugScreenEntryListMixin"
+    "client.DebugScreenOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1

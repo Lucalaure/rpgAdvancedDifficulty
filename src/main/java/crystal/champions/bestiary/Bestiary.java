@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +32,7 @@ public final class Bestiary {
     }
 
     public static final AttachmentType<List<String>> DISCOVERED_AFFIXES = AttachmentRegistry.create(
-            Identifier.fromNamespaceAndPath(Champions.MOD_ID, "discovered_affixes"),
+            ResourceLocation.fromNamespaceAndPath(Champions.MOD_ID, "discovered_affixes"),
             builder -> builder
                     .initializer(List::of)
                     .persistent(Codec.STRING.listOf())
@@ -41,7 +41,7 @@ public final class Bestiary {
 
     /** Whether the player has already been given their first bestiary book (only happens once). */
     public static final AttachmentType<Boolean> RECEIVED_BOOK = AttachmentRegistry.create(
-            Identifier.fromNamespaceAndPath(Champions.MOD_ID, "received_bestiary"),
+            ResourceLocation.fromNamespaceAndPath(Champions.MOD_ID, "received_bestiary"),
             builder -> builder.persistent(Codec.BOOL).copyOnDeath());
 
     /** Loads the attachment types during mod init. */

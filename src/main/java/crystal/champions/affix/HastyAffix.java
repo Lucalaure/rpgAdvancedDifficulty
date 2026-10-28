@@ -21,7 +21,7 @@ public class HastyAffix extends Affix {
     public void onTick(LivingEntity entity) {
         if (entity.tickCount % 20 == 0) {
             entity.addEffect(new MobEffectInstance(
-                    MobEffects.SPEED, 20, config.hastyAmplifier, true, false, false
+                    MobEffects.MOVEMENT_SPEED, 20, config.hastyAmplifier, true, false, false
             ));
         }
     }

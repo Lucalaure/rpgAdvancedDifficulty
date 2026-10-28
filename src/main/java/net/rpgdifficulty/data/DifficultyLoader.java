@@ -2,21 +2,25 @@ package net.rpgdifficulty.data;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.rpgdifficulty.RpgDifficultyMain;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-public class DifficultyLoader implements ResourceManagerReloadListener {
+public class DifficultyLoader implements SimpleSynchronousResourceReloadListener {
 
     public static HashMap<String, HashMap<String, Object>> dimensionDifficulty = new HashMap<>();
 
-    // Registered with Fabric's ResourceLoader under this id
-    public static final Identifier ID = Identifier.fromNamespaceAndPath("rpgdifficulty", "difficulty_loader");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("rpgdifficulty", "difficulty_loader");
+
+    @Override
+    public ResourceLocation getFabricId() {
+        return ID;
+    }
 
     @Override
     public void onResourceManagerReload(ResourceManager manager) {

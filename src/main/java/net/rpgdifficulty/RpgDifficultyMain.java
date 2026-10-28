@@ -6,9 +6,9 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -27,18 +27,18 @@ public class RpgDifficultyMain implements ModInitializer {
 
     public static RpgDifficultyConfig CONFIG = new RpgDifficultyConfig();
 
-    public static final TagKey<EntityType<?>> BOSS_ENTITY_TYPES = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("c", "bosses"));
+    public static final TagKey<EntityType<?>> BOSS_ENTITY_TYPES = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("c", "bosses"));
 
     @Override
     public void onInitialize() {
         AutoConfig.register(RpgDifficultyConfig.class, GsonConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(RpgDifficultyConfig.class).getConfig();
-        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(DifficultyLoader.ID, new DifficultyLoader());
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new DifficultyLoader());
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> DifficultyZoneCommand.register(dispatcher, registryAccess));
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> DifficultyTimeCommand.register(dispatcher));
         DifficultySync.register();
-        PayloadTypeRegistry.clientboundPlay().register(ZoneSyncManager.ZoneSyncPayload.TYPE, ZoneSyncManager.ZoneSyncPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(ZoneSyncManager.ZoneSyncPayload.TYPE, ZoneSyncManager.ZoneSyncPayload.CODEC);
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> ZoneSyncManager.syncToPlayer(handler.getPlayer()));
     }
 

@@ -2,7 +2,7 @@
 
 # RPG Advanced Difficulty
 
-A Fabric mod for Minecraft 26.3 that combines two mods. (The 1.21.1 version is available as release v1.0.0.)
+A Fabric mod for Minecraft 1.21.1 that combines two mods. This is the 1.21.1 branch; the main branch targets 26.3.
 
 - **RpgDifficulty** (Globox_Z, MIT): mobs get stronger as the world ages, and optionally with distance from spawn.
 - **Champions** (Crystal, GPLv3): any hostile mob can spawn as a *champion*, an elite with a tier (1–5), boosted stats, random affixes (Molten, Shielding, Sniper, …), a boss bar and extra loot.
@@ -166,7 +166,7 @@ They're in `data/champions/advancement` and awarded by `ChampionAdvancements`. K
 
 ## F3 readout
 
-The F3 screen shows two extra lines (on by default, can be switched off in the F3 debug options, F3 + F6):
+The F3 screen shows two extra lines at the bottom of the left column:
 
 ```
 RPG Difficulty: 1.50x / 3.00x max (next increase in 1h 0m)

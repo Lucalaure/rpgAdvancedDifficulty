@@ -2,69 +2,85 @@
   "type": "minecraft:entity",
   "pools": [
     {
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 8,
-              "min": 4
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 8.0,
+                "min": 4.0
+              },
+              "function": "minecraft:set_count"
             }
-          },
+          ],
           "name": "minecraft:experience_bottle",
           "weight": 15
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 6,
-              "min": 3
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 6.0,
+                "min": 3.0
+              },
+              "function": "minecraft:set_count"
             }
-          },
+          ],
           "name": "minecraft:emerald",
           "weight": 12
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 2,
-              "min": 1
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
             }
-          },
+          ],
           "name": "minecraft:diamond",
           "weight": 10
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 2,
-              "min": 1
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
             }
-          },
+          ],
           "name": "minecraft:golden_apple",
           "weight": 8
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 3,
-              "min": 1
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
             }
-          },
+          ],
           "name": "minecraft:ender_pearl",
           "weight": 8
         },
@@ -73,139 +89,160 @@
           "value": {
             "pools": [
               {
+                "bonus_rolls": 0.0,
                 "entries": [
                   {
                     "type": "minecraft:item",
-                    "modifier": {
-                      "type": "minecraft:enchant_with_levels",
-                      "levels": {
-                        "type": "minecraft:uniform",
-                        "max": 25,
-                        "min": 15
-                      },
-                      "options": "#minecraft:in_enchanting_table"
-                    },
+                    "functions": [
+                      {
+                        "function": "minecraft:enchant_with_levels",
+                        "levels": {
+                          "type": "minecraft:uniform",
+                          "max": 25.0,
+                          "min": 15.0
+                        },
+                        "options": "#minecraft:in_enchanting_table"
+                      }
+                    ],
                     "name": "minecraft:iron_sword"
                   },
                   {
                     "type": "minecraft:item",
-                    "modifier": {
-                      "type": "minecraft:enchant_with_levels",
-                      "levels": {
-                        "type": "minecraft:uniform",
-                        "max": 25,
-                        "min": 15
-                      },
-                      "options": "#minecraft:in_enchanting_table"
-                    },
+                    "functions": [
+                      {
+                        "function": "minecraft:enchant_with_levels",
+                        "levels": {
+                          "type": "minecraft:uniform",
+                          "max": 25.0,
+                          "min": 15.0
+                        },
+                        "options": "#minecraft:in_enchanting_table"
+                      }
+                    ],
                     "name": "minecraft:iron_axe"
                   },
                   {
                     "type": "minecraft:item",
-                    "modifier": {
-                      "type": "minecraft:enchant_with_levels",
-                      "levels": {
-                        "type": "minecraft:uniform",
-                        "max": 25,
-                        "min": 15
-                      },
-                      "options": "#minecraft:in_enchanting_table"
-                    },
+                    "functions": [
+                      {
+                        "function": "minecraft:enchant_with_levels",
+                        "levels": {
+                          "type": "minecraft:uniform",
+                          "max": 25.0,
+                          "min": 15.0
+                        },
+                        "options": "#minecraft:in_enchanting_table"
+                      }
+                    ],
                     "name": "minecraft:iron_pickaxe"
                   },
                   {
                     "type": "minecraft:item",
-                    "modifier": {
-                      "type": "minecraft:enchant_with_levels",
-                      "levels": {
-                        "type": "minecraft:uniform",
-                        "max": 25,
-                        "min": 15
-                      },
-                      "options": "#minecraft:in_enchanting_table"
-                    },
+                    "functions": [
+                      {
+                        "function": "minecraft:enchant_with_levels",
+                        "levels": {
+                          "type": "minecraft:uniform",
+                          "max": 25.0,
+                          "min": 15.0
+                        },
+                        "options": "#minecraft:in_enchanting_table"
+                      }
+                    ],
                     "name": "minecraft:iron_shovel"
                   },
                   {
                     "type": "minecraft:item",
-                    "modifier": {
-                      "type": "minecraft:enchant_with_levels",
-                      "levels": {
-                        "type": "minecraft:uniform",
-                        "max": 25,
-                        "min": 15
-                      },
-                      "options": "#minecraft:in_enchanting_table"
-                    },
+                    "functions": [
+                      {
+                        "function": "minecraft:enchant_with_levels",
+                        "levels": {
+                          "type": "minecraft:uniform",
+                          "max": 25.0,
+                          "min": 15.0
+                        },
+                        "options": "#minecraft:in_enchanting_table"
+                      }
+                    ],
                     "name": "minecraft:iron_helmet"
                   },
                   {
                     "type": "minecraft:item",
-                    "modifier": {
-                      "type": "minecraft:enchant_with_levels",
-                      "levels": {
-                        "type": "minecraft:uniform",
-                        "max": 25,
-                        "min": 15
-                      },
-                      "options": "#minecraft:in_enchanting_table"
-                    },
+                    "functions": [
+                      {
+                        "function": "minecraft:enchant_with_levels",
+                        "levels": {
+                          "type": "minecraft:uniform",
+                          "max": 25.0,
+                          "min": 15.0
+                        },
+                        "options": "#minecraft:in_enchanting_table"
+                      }
+                    ],
                     "name": "minecraft:iron_chestplate"
                   },
                   {
                     "type": "minecraft:item",
-                    "modifier": {
-                      "type": "minecraft:enchant_with_levels",
-                      "levels": {
-                        "type": "minecraft:uniform",
-                        "max": 25,
-                        "min": 15
-                      },
-                      "options": "#minecraft:in_enchanting_table"
-                    },
+                    "functions": [
+                      {
+                        "function": "minecraft:enchant_with_levels",
+                        "levels": {
+                          "type": "minecraft:uniform",
+                          "max": 25.0,
+                          "min": 15.0
+                        },
+                        "options": "#minecraft:in_enchanting_table"
+                      }
+                    ],
                     "name": "minecraft:iron_leggings"
                   },
                   {
                     "type": "minecraft:item",
-                    "modifier": {
-                      "type": "minecraft:enchant_with_levels",
-                      "levels": {
-                        "type": "minecraft:uniform",
-                        "max": 25,
-                        "min": 15
-                      },
-                      "options": "#minecraft:in_enchanting_table"
-                    },
+                    "functions": [
+                      {
+                        "function": "minecraft:enchant_with_levels",
+                        "levels": {
+                          "type": "minecraft:uniform",
+                          "max": 25.0,
+                          "min": 15.0
+                        },
+                        "options": "#minecraft:in_enchanting_table"
+                      }
+                    ],
                     "name": "minecraft:iron_boots"
                   },
                   {
                     "type": "minecraft:item",
-                    "modifier": {
-                      "type": "minecraft:enchant_with_levels",
-                      "levels": {
-                        "type": "minecraft:uniform",
-                        "max": 25,
-                        "min": 15
-                      },
-                      "options": "#minecraft:in_enchanting_table"
-                    },
+                    "functions": [
+                      {
+                        "function": "minecraft:enchant_with_levels",
+                        "levels": {
+                          "type": "minecraft:uniform",
+                          "max": 25.0,
+                          "min": 15.0
+                        },
+                        "options": "#minecraft:in_enchanting_table"
+                      }
+                    ],
                     "name": "minecraft:bow"
                   },
                   {
                     "type": "minecraft:item",
-                    "modifier": {
-                      "type": "minecraft:enchant_with_levels",
-                      "levels": {
-                        "type": "minecraft:uniform",
-                        "max": 25,
-                        "min": 15
-                      },
-                      "options": "#minecraft:in_enchanting_table"
-                    },
+                    "functions": [
+                      {
+                        "function": "minecraft:enchant_with_levels",
+                        "levels": {
+                          "type": "minecraft:uniform",
+                          "max": 25.0,
+                          "min": 15.0
+                        },
+                        "options": "#minecraft:in_enchanting_table"
+                      }
+                    ],
                     "name": "minecraft:crossbow"
                   }
                 ],
-                "rolls": 1
+                "rolls": 1.0
               }
             ]
           },
@@ -213,20 +250,22 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:enchant_with_levels",
-            "levels": {
-              "type": "minecraft:uniform",
-              "max": 25,
-              "min": 18
-            },
-            "options": "#minecraft:in_enchanting_table"
-          },
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "max": 25.0,
+                "min": 18.0
+              },
+              "options": "#minecraft:in_enchanting_table"
+            }
+          ],
           "name": "minecraft:book",
           "weight": 20
         }
       ],
-      "rolls": 2
+      "rolls": 2.0
     }
   ]
 }

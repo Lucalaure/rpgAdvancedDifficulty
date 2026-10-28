@@ -24,7 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
@@ -56,7 +56,7 @@ public final class ChampionCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         dispatcher.register(literal("champion")
-                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .requires(source -> source.hasPermission(2))
                 .then(literal("list").executes(c -> list(c.getSource())))
                 .then(literal("demo")
                         .then(argument("affix", StringArgumentType.word())
@@ -64,7 +64,7 @@ public final class ChampionCommand {
                                 .executes(c -> demo(c.getSource(), StringArgumentType.getString(c, "affix")))))
                 .then(literal("spawn")
                         .then(argument("mob", ResourceArgument.resource(context, Registries.ENTITY_TYPE))
-                                .suggests(SuggestionProviders.cast(SuggestionProviders.SUMMONABLE_ENTITIES))
+                                .suggests(SuggestionProviders.SUMMONABLE_ENTITIES)
                                 .then(argument("affixes", StringArgumentType.greedyString())
                                         .suggests((c, builder) -> suggestAffixes(builder))
                                         .executes(c -> spawn(c.getSource(),
@@ -92,7 +92,7 @@ public final class ChampionCommand {
 
     private static int spawn(CommandSourceStack source, EntityType<?> type, List<String> affixNames) throws CommandSyntaxException {
         ServerLevel level = source.getLevel();
-        if (!(type.create(level, EntitySpawnReason.COMMAND) instanceof Mob mob)) throw NOT_A_MOB.create(type.getDescription().getString());
+        if (!(type.create(level) instanceof Mob mob)) throw NOT_A_MOB.create(type.getDescription().getString());
 
         for (String name : affixNames) {
             Affix affix = AffixRegistry.ALL_AFFIXES.get(name);
@@ -101,8 +101,8 @@ public final class ChampionCommand {
         }
 
         Vec3 pos = spawnPosition(source);
-        mob.snapTo(pos.x, pos.y, pos.z, source.getRotation().y + 180.0F, 0.0F);
-        mob.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(pos)), EntitySpawnReason.COMMAND, null);
+        mob.moveTo(pos.x, pos.y, pos.z, source.getRotation().y + 180.0F, 0.0F);
+        mob.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(pos)), MobSpawnType.COMMAND, null);
 
         // Lowest tier with enough slots for all the affixes (tier 5 if they need more than any tier has)
         int slotsNeeded = affixNames.stream().mapToInt(name -> AffixRegistry.ALL_AFFIXES.get(name).getSlots()).sum();

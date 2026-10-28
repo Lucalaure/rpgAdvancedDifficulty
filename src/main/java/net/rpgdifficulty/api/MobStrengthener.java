@@ -14,7 +14,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -54,13 +54,13 @@ public class MobStrengthener {
             }
 
             DifficultyZone difficultyZone = DifficultyZonePersistentState.get(world.getServer())
-                    .findZone(world.dimension().identifier().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ())
+                    .findZone(world.dimension().location().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ())
                     .orElse(null);
 
             HashMap<String, Object> map = null;
 
-            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.dimension().identifier().toString())) {
-                map = DifficultyLoader.dimensionDifficulty.get(world.dimension().identifier().toString());
+            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.dimension().location().toString())) {
+                map = DifficultyLoader.dimensionDifficulty.get(world.dimension().location().toString());
             }
 
             // Game difficulty (Easy/Normal/Hard) changes how fast mobs grow and how strong they can get
@@ -94,8 +94,8 @@ public class MobStrengthener {
             } else {
 
                 // Distance, Time
-                int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : world.getRespawnData().pos().getX();
-                int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : world.getRespawnData().pos().getZ();
+                int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : world.getSharedSpawnPos().getX();
+                int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : world.getSharedSpawnPos().getZ();
 
                 float worldSpawnDistance = Mth.sqrt((float) mobEntity.distanceToSqr(spawnX, mobEntity.getY(), spawnZ));
                 int worldTime = (int) world.getGameTime();
@@ -248,7 +248,7 @@ public class MobStrengthener {
 
             if (entity.level().getServer() != null) {
                 DifficultyZone difficultyZone = DifficultyZonePersistentState.get(entity.level().getServer())
-                        .findZone(entity.level().dimension().identifier().toString(), entity.getX(), entity.getY(), entity.getZ())
+                        .findZone(entity.level().dimension().location().toString(), entity.getX(), entity.getY(), entity.getZ())
                         .orElse(null);
 
                 if (difficultyZone != null) {
@@ -258,14 +258,14 @@ public class MobStrengthener {
 
             HashMap<String, Object> map = null;
 
-            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(entity.level().dimension().identifier().toString())) {
-                map = DifficultyLoader.dimensionDifficulty.get(entity.level().dimension().identifier().toString());
+            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(entity.level().dimension().location().toString())) {
+                map = DifficultyLoader.dimensionDifficulty.get(entity.level().dimension().location().toString());
             }
 
             double growth = DifficultyModes.growth(entity.level());
             double mobDamageFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
-            int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : ((ServerLevel) entity.level()).getRespawnData().pos().getX();
-            int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : ((ServerLevel) entity.level()).getRespawnData().pos().getZ();
+            int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : ((ServerLevel) entity.level()).getSharedSpawnPos().getX();
+            int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : ((ServerLevel) entity.level()).getSharedSpawnPos().getZ();
 
             float worldSpawnDistance = Mth.sqrt((float) entity.distanceToSqr(spawnX, entity.getY(), spawnZ));
             int worldTime = (int) entity.level().getGameTime();
@@ -337,7 +337,7 @@ public class MobStrengthener {
                             continue;
                         }
                         itemStack.grow((int) (itemStack.getCount() * dropChance));
-                        mobEntity.spawnAtLocation(world, itemStack);
+                        mobEntity.spawnAtLocation(itemStack);
                     }
                 }
             }

@@ -3,10 +3,10 @@ package crystal.champions.client.render;
 import crystal.champions.client.mixin.ClientWorldAccessor;
 import crystal.champions.client.net.ChampionDisplayInfo;
 import crystal.champions.config.ChampionsConfigClient;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -25,7 +25,7 @@ import static crystal.champions.client.net.ClientPacket.activeChampionsCl;
 import static crystal.champions.client.render.ChampionsColor.getColor;
 import static crystal.champions.client.render.ChampionsRender.renderChampion;
 
-public abstract class ChampionHudRender implements HudElement {
+public abstract class ChampionHudRender implements HudRenderCallback {
 
     private UUID targetUuid = null;
     private long lastUpdateAt = 0;
@@ -36,12 +36,12 @@ public abstract class ChampionHudRender implements HudElement {
      * @param context Здесь мы рисуем все что до этого сделали
      */
     @Override
-    public void extractRenderState(GuiGraphicsExtractor context, DeltaTracker tickCounter) {
+    public void onHudRender(GuiGraphics context, DeltaTracker tickCounter) {
         Minecraft client = Minecraft.getInstance();
 
         final float delta = tickCounter.getGameTimeDeltaPartialTick(true);
 
-        if (client.player == null || client.gui.hud.isHidden()) return;
+        if (client.player == null || client.options.hideGui) return;
         ChampionData bestChampion = findBestChampion(client, delta);
         ChampionData bestChampionCl = findBestChampionCl(client, delta);
 

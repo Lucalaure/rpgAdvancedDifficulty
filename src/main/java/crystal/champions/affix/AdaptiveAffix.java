@@ -50,6 +50,6 @@ public class AdaptiveAffix extends Affix {
         if (!(source.getEntity() instanceof LivingEntity)) return null;
         if (source.getDirectEntity() == entity && source.getEntity() == entity) return null;
         Optional<ResourceKey<DamageType>> key = source.typeHolder().unwrapKey();
-        return key.map(k -> k.identifier().toString()).orElse(null);
+        return key.map(k -> k.location().toString()).orElse(null);
     }
 }

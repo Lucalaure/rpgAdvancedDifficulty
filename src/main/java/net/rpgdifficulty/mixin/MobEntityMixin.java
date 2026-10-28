@@ -13,8 +13,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.nbt.CompoundTag;
 import net.rpgdifficulty.access.EntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
 
@@ -36,13 +35,13 @@ public abstract class MobEntityMixin extends LivingEntity implements EntityAcces
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void readCustomDataFromNbtMixin(ValueInput input, CallbackInfo info) {
-        this.mobHealthMultiplier = input.getFloatOr("MobHealthMultiplier", 0.0f);
-        this.strengthened = input.getBooleanOr("RpgDifficultyApplied", false);
+    private void readCustomDataFromNbtMixin(CompoundTag input, CallbackInfo info) {
+        this.mobHealthMultiplier = input.getFloat("MobHealthMultiplier");
+        this.strengthened = input.getBoolean("RpgDifficultyApplied");
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void writeCustomDataToNbtMixin(ValueOutput output, CallbackInfo info) {
+    private void writeCustomDataToNbtMixin(CompoundTag output, CallbackInfo info) {
         output.putFloat("MobHealthMultiplier", this.mobHealthMultiplier);
         output.putBoolean("RpgDifficultyApplied", this.strengthened);
     }

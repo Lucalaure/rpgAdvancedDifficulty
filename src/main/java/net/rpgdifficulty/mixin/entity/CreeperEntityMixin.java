@@ -20,7 +20,7 @@ public abstract class CreeperEntityMixin extends Monster {
     }
 
     // Power already includes the champion tier radius boost, so the cap covers both mods combined
-    @ModifyArg(method = "explodeCreeper", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;explode(Lnet/minecraft/world/entity/Entity;DDDFLnet/minecraft/world/level/Level$ExplosionInteraction;)V"), index = 4)
+    @ModifyArg(method = "explodeCreeper", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;explode(Lnet/minecraft/world/entity/Entity;DDDFLnet/minecraft/world/level/Level$ExplosionInteraction;)Lnet/minecraft/world/level/Explosion;"), index = 4)
     private float explodeMixin(float power) {
         if (this.level() instanceof ServerLevel) {
             return Math.min(power * (float) MobStrengthener.getDamageFactor(this), RpgDifficultyMain.CONFIG.maxCreeperExplosionPower);

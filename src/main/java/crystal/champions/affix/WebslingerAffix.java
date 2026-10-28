@@ -4,12 +4,12 @@ import crystal.champions.util.TemporaryBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.spider.Spider;
+import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball;
+import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -27,7 +27,7 @@ public class WebslingerAffix extends MobSpecificAffix {
     public static final int WEB_TICKS = 100;
 
     public WebslingerAffix() {
-        super("webslinger", "spiders", EntityTypes.SPIDER, mob -> mob instanceof Spider);
+        super("webslinger", "spiders", EntityType.SPIDER, mob -> mob instanceof Spider);
     }
 
     @Override
@@ -39,18 +39,20 @@ public class WebslingerAffix extends MobSpecificAffix {
         if (distance < 3 || distance > 16 || !mob.hasLineOfSight(target)) return;
 
         ItemStack web = new ItemStack(Items.COBWEB);
-        Snowball projectile = new Snowball(level, mob, web);
+        Snowball projectile = new Snowball(level, mob);
+        projectile.setItem(web);
         projectile.addTag(WEB_TAG);
         double xd = target.getX() - mob.getX();
         double zd = target.getZ() - mob.getZ();
         double yd = target.getY(0.33) - projectile.getY();
-        Projectile.spawnProjectileUsingShoot(projectile, level, web, xd, yd + Math.sqrt(xd * xd + zd * zd) * 0.2, zd, 1.2F, 2.0F);
+        projectile.shoot(xd, yd + Math.sqrt(xd * xd + zd * zd) * 0.2, zd, 1.2F, 2.0F);
+        level.addFreshEntity(projectile);
         mob.playSound(SoundEvents.SPIDER_AMBIENT, 1.0F, 1.5F);
     }
 
     @Override
     public void onProjectileHit(Mob owner, Projectile projectile, HitResult hit) {
-        if (!projectile.entityTags().contains(WEB_TAG) || !(projectile.level() instanceof ServerLevel level)) return;
+        if (!projectile.getTags().contains(WEB_TAG) || !(projectile.level() instanceof ServerLevel level)) return;
 
         BlockPos pos = null;
         if (hit instanceof EntityHitResult entityHit) {

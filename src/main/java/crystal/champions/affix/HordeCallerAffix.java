@@ -4,10 +4,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class HordeCallerAffix extends MobSpecificAffix {
     private static final String CALLED_TAG = "champions.horde_called";
 
     public HordeCallerAffix() {
-        super("horde_caller", "zombies", EntityTypes.ZOMBIE, mob -> mob instanceof Zombie);
+        super("horde_caller", "zombies", EntityType.ZOMBIE, mob -> mob instanceof Zombie);
     }
 
     @Override

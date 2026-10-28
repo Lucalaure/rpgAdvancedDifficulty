@@ -3,7 +3,7 @@ package net.rpgdifficulty.zone;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -17,7 +17,7 @@ public class ZoneSyncManager {
     public record ZoneSyncPayload(List<ZoneEntry> zones) implements CustomPacketPayload {
 
         public static final CustomPacketPayload.Type<ZoneSyncPayload> TYPE =
-                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath("rpgdifficulty", "zone_sync"));
+                new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath("rpgdifficulty", "zone_sync"));
 
         // Alias of TYPE (1.21.1 name)
         public static final CustomPacketPayload.Type<ZoneSyncPayload> ID = TYPE;

@@ -1,8 +1,8 @@
 package crystal.champions.affix;
 
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.monster.cubemob.MagmaCube;
-import net.minecraft.world.entity.monster.cubemob.Slime;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.MagmaCube;
+import net.minecraft.world.entity.monster.Slime;
 
 /**
  * SplitterAffix (slimes and magma cubes)
@@ -15,6 +15,6 @@ public class SplitterAffix extends MobSpecificAffix {
     public static final float INHERIT_CHANCE = 0.5F;
 
     public SplitterAffix() {
-        super("splitter", "slimes", EntityTypes.SLIME, mob -> mob instanceof Slime || mob instanceof MagmaCube);
+        super("splitter", "slimes", EntityType.SLIME, mob -> mob instanceof Slime || mob instanceof MagmaCube);
     }
 }

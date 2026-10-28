@@ -3,7 +3,6 @@ package crystal.champions.mixin.affixes;
 import crystal.champions.IChampions;
 import crystal.champions.affix.AdaptiveAffix;
 import crystal.champions.affix.AffixRegistry;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,8 +17,8 @@ public class AdaptiveMixin {
      * При ударе считаем урон для чемпиона
      *                 return affix.calculateDamage((LivingEntity)(Object)this, source, amount);
      */
-    @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true)
-    private float applyAdaptive(float amount, ServerLevel level, DamageSource source) {
+    @ModifyVariable(method = "hurt", at = @At("HEAD"), argsOnly = true)
+    private float applyAdaptive(float amount, DamageSource source) {
         if (this instanceof IChampions champion && champion.champions$getAffixesString().contains("adaptive")) {
             AdaptiveAffix affix = (AdaptiveAffix) AffixRegistry.ALL_AFFIXES.get("adaptive");
             if (affix != null) {
@@ -29,8 +28,8 @@ public class AdaptiveMixin {
         return amount;
     }
 
-    @Inject(method = "hurtServer", at = @At("RETURN"))
-    private void recordAdaptive(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurt", at = @At("RETURN"))
+    private void recordAdaptive(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValueZ() && this instanceof IChampions champion && champion.champions$getAffixesString().contains("adaptive")) {
             AdaptiveAffix affix = (AdaptiveAffix) AffixRegistry.ALL_AFFIXES.get("adaptive");
             if (affix != null) {

@@ -1,7 +1,6 @@
 package net.rpgdifficulty.zone;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.UUID;
@@ -63,8 +62,7 @@ public class DifficultyZone {
 
     public CompoundTag toNbt() {
         CompoundTag nbt = new CompoundTag();
-        // Same int-array layout as the old NbtCompound#putUuid
-        nbt.store("Id", UUIDUtil.CODEC, id);
+        nbt.putUUID("Id", id);
         nbt.putString("Dimension", dimension);
         nbt.putString("Shape", shape.name());
         nbt.putDouble("Factor", factor);
@@ -82,21 +80,26 @@ public class DifficultyZone {
     }
 
     public static DifficultyZone fromNbt(CompoundTag nbt) {
-        UUID id = nbt.read("Id", UUIDUtil.CODEC).orElseGet(UUID::randomUUID);
-        String dimension = nbt.getStringOr("Dimension", "");
-        Shape shape = Shape.valueOf(nbt.getStringOr("Shape", Shape.BOX.name()));
-        double factor = nbt.getDoubleOr("Factor", 0.0D);
-        String name = nbt.contains("Name") ? nbt.getStringOr("Name", null) : null;
+        UUID id = nbt.hasUUID("Id") ? nbt.getUUID("Id") : UUID.randomUUID();
+        String dimension = nbt.getString("Dimension");
+        Shape shape = Shape.valueOf(nbt.contains("Shape") ? nbt.getString("Shape") : Shape.BOX.name());
+        double factor = nbt.getDouble("Factor");
+        String name = nbt.contains("Name") ? nbt.getString("Name") : null;
 
         if (shape == Shape.BOX) {
-            int[] min = nbt.getIntArray("BoxMin").orElse(new int[3]);
-            int[] max = nbt.getIntArray("BoxMax").orElse(new int[3]);
+            int[] min = intArray(nbt, "BoxMin");
+            int[] max = intArray(nbt, "BoxMax");
             return new DifficultyZone(id, dimension, shape, factor, name, new BlockPos(min[0], min[1], min[2]), new BlockPos(max[0], max[1], max[2]), null, 0);
         } else {
-            int[] c = nbt.getIntArray("Center").orElse(new int[3]);
-            double radius = nbt.getDoubleOr("Radius", 0.0D);
+            int[] c = intArray(nbt, "Center");
+            double radius = nbt.getDouble("Radius");
             return new DifficultyZone(id, dimension, shape, factor, name, null, null, new BlockPos(c[0], c[1], c[2]), radius);
         }
+    }
+
+    private static int[] intArray(CompoundTag nbt, String key) {
+        int[] array = nbt.getIntArray(key);
+        return array.length >= 3 ? array : new int[3];
     }
 
     public UUID getId() {

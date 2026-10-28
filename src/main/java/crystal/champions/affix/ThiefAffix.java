@@ -4,10 +4,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Enderman;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -20,7 +20,7 @@ public class ThiefAffix extends MobSpecificAffix {
     public static final float CHANCE = 0.25F;
 
     public ThiefAffix() {
-        super("thief", "endermen", EntityTypes.ENDERMAN, mob -> mob instanceof Enderman);
+        super("thief", "endermen", EntityType.ENDERMAN, mob -> mob instanceof EnderMan);
     }
 
     @Override
@@ -35,6 +35,6 @@ public class ThiefAffix extends MobSpecificAffix {
         Vec3 away = player.position().subtract(champion.position()).multiply(1, 0, 1).normalize().scale(0.3);
         item.setDeltaMovement(away.x, 0.3, away.z);
         level.addFreshEntity(item);
-        level.playSound(null, player.blockPosition(), SoundEvents.ITEM_BREAK.value(), SoundSource.PLAYERS, 0.8F, 1.4F);
+        level.playSound(null, player.blockPosition(), SoundEvents.ITEM_BREAK, SoundSource.PLAYERS, 0.8F, 1.4F);
     }
 }

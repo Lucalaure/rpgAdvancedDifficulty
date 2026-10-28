@@ -8,7 +8,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ public abstract class Payload implements CustomPacketPayload {
     private static final String CHAMPIONS = "champions";
 
     public record ChampionUpdate(UUID uuid, Component name, int tier, String affixes, float health, float maxHealth) implements CustomPacketPayload {
-        public static final Type<ChampionUpdate> SERVER_UPDATE_ID = new Type<>(Identifier.fromNamespaceAndPath(CHAMPIONS, "update_hud"));
+        public static final Type<ChampionUpdate> SERVER_UPDATE_ID = new Type<>(ResourceLocation.fromNamespaceAndPath(CHAMPIONS, "update_hud"));
         public static final StreamCodec<RegistryFriendlyByteBuf, ChampionUpdate> CODEC = StreamCodec.composite(
                 UUIDUtil.STREAM_CODEC, ChampionUpdate::uuid,
                 ComponentSerialization.STREAM_CODEC, ChampionUpdate::name,
@@ -31,7 +31,7 @@ public abstract class Payload implements CustomPacketPayload {
 
 
     public record ChampionUpdateCl(UUID uuid, Component name, int tier, String affixes, float health, float maxHealth) implements CustomPacketPayload {
-        public static final Type<ChampionUpdateCl> CLIENT_UPDATE_ID = new Type<>(Identifier.fromNamespaceAndPath(CHAMPIONS, "update_client_hud"));
+        public static final Type<ChampionUpdateCl> CLIENT_UPDATE_ID = new Type<>(ResourceLocation.fromNamespaceAndPath(CHAMPIONS, "update_client_hud"));
         public static final StreamCodec<RegistryFriendlyByteBuf, ChampionUpdateCl> CODEC = StreamCodec.composite(
                 UUIDUtil.STREAM_CODEC, ChampionUpdateCl::uuid,
                 ComponentSerialization.STREAM_CODEC, ChampionUpdateCl::name,
@@ -46,7 +46,7 @@ public abstract class Payload implements CustomPacketPayload {
 
 
     public record ChampionRemove(UUID uuid) implements CustomPacketPayload {
-        public static final Type<ChampionRemove> REMOVE_ID = new Type<>(Identifier.fromNamespaceAndPath(CHAMPIONS, "remove_hud"));
+        public static final Type<ChampionRemove> REMOVE_ID = new Type<>(ResourceLocation.fromNamespaceAndPath(CHAMPIONS, "remove_hud"));
         public static final StreamCodec<RegistryFriendlyByteBuf, ChampionRemove> CODEC = StreamCodec.composite(
                 UUIDUtil.STREAM_CODEC, ChampionRemove::uuid,
                 ChampionRemove::new
@@ -55,8 +55,8 @@ public abstract class Payload implements CustomPacketPayload {
     }
 
     public static void register() {
-        PayloadTypeRegistry.clientboundPlay().register(Payload.ChampionUpdate.SERVER_UPDATE_ID, Payload.ChampionUpdate.CODEC);
-        PayloadTypeRegistry.clientboundPlay().register(Payload.ChampionUpdateCl.CLIENT_UPDATE_ID, Payload.ChampionUpdateCl.CODEC);
-        PayloadTypeRegistry.clientboundPlay().register(Payload.ChampionRemove.REMOVE_ID, Payload.ChampionRemove.CODEC);
+        PayloadTypeRegistry.playS2C().register(Payload.ChampionUpdate.SERVER_UPDATE_ID, Payload.ChampionUpdate.CODEC);
+        PayloadTypeRegistry.playS2C().register(Payload.ChampionUpdateCl.CLIENT_UPDATE_ID, Payload.ChampionUpdateCl.CODEC);
+        PayloadTypeRegistry.playS2C().register(Payload.ChampionRemove.REMOVE_ID, Payload.ChampionRemove.CODEC);
     }
 }

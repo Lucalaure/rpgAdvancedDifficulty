@@ -10,8 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.nbt.CompoundTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -107,7 +106,7 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
                 if (entity instanceof Mob mob) affix.onAttack(entity, mob);
                 if (entity.tickCount % 40 == 0) {
                     entity.addEffect(new MobEffectInstance(
-                            MobEffects.SPEED, 40, tier / 3, false, false, false));
+                            MobEffects.MOVEMENT_SPEED, 40, tier / 3, false, false, false));
                 }
             });
         }
@@ -132,7 +131,7 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
 
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void writeChampionData(ValueOutput nbt, CallbackInfo ci) {
+    private void writeChampionData(CompoundTag nbt, CallbackInfo ci) {
         nbt.putInt(KEY_TIER, this.champions$getChampionTier());
         nbt.putString(KEY_AFFIXES, this.champions$getAffixesString());
 
@@ -143,11 +142,11 @@ public abstract class EntityDataMixin extends Entity implements IChampions {
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void readChampionData(ValueInput nbt, CallbackInfo ci) {
-        nbt.getInt(KEY_TIER).ifPresent(this::champions$setChampionTier);
-        nbt.getString(KEY_AFFIXES).ifPresent(this::champions$setAffixesString);
-        nbt.getString(KEY_ADAPTATION_TYPE).ifPresent(this::champions$setAdaptationType);
-        nbt.getInt(KEY_ADAPTATION_COUNT).ifPresent(this::champions$setAdaptation);
-        this.dropsChampionLoot = nbt.getBooleanOr(KEY_LOOT, true);
+    private void readChampionData(CompoundTag nbt, CallbackInfo ci) {
+        if (nbt.contains(KEY_TIER)) this.champions$setChampionTier(nbt.getInt(KEY_TIER));
+        if (nbt.contains(KEY_AFFIXES)) this.champions$setAffixesString(nbt.getString(KEY_AFFIXES));
+        if (nbt.contains(KEY_ADAPTATION_TYPE)) this.champions$setAdaptationType(nbt.getString(KEY_ADAPTATION_TYPE));
+        if (nbt.contains(KEY_ADAPTATION_COUNT)) this.champions$setAdaptation(nbt.getInt(KEY_ADAPTATION_COUNT));
+        this.dropsChampionLoot = !nbt.contains(KEY_LOOT) || nbt.getBoolean(KEY_LOOT);
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Mob;
 
 /**
- * Даем Identifier пакетам и отправляем их
+ * Даем ResourceLocation пакетам и отправляем их
  * Разделено на разные секции
  * sendUpdateS (server)
  * sendUpdateC (client)

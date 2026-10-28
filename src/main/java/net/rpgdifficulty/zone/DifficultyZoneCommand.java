@@ -31,7 +31,7 @@ public class DifficultyZoneCommand {
                                         .then(argument("pos1", BlockPosArgument.blockPos())
                                                 .then(argument("pos2", BlockPosArgument.blockPos())
                                                         .then(argument("factor", DoubleArgumentType.doubleArg(0.0))
-                                                                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                                                                .requires(source -> source.hasPermission(2))
                                                                 .executes(ctx -> createBox(ctx, null))
                                                                 .then(argument("name", StringArgumentType.string())
                                                                         .executes(ctx -> createBox(ctx,
@@ -40,19 +40,19 @@ public class DifficultyZoneCommand {
                                         .then(argument("center", BlockPosArgument.blockPos())
                                                 .then(argument("radius", DoubleArgumentType.doubleArg(0.0))
                                                         .then(argument("factor", DoubleArgumentType.doubleArg(0.0))
-                                                                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                                                                .requires(source -> source.hasPermission(2))
                                                                 .executes(ctx -> createSphere(ctx, null))
                                                                 .then(argument("name", StringArgumentType.string())
                                                                         .executes(ctx -> createSphere(ctx,
                                                                                 StringArgumentType.getString(ctx, "name")))))))))
                         .then(literal("remove")
-                                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                                .requires(source -> source.hasPermission(2))
                                 .then(argument("id", UuidArgument.uuid())
                                         .executes(DifficultyZoneCommand::remove))
                                 .then(literal("here")
                                         .executes(DifficultyZoneCommand::removeHere)))
                         .then(literal("list")
-                                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                                .requires(source -> source.hasPermission(2))
                                 .executes(DifficultyZoneCommand::list))));
     }
 
@@ -62,7 +62,7 @@ public class DifficultyZoneCommand {
         BlockPos pos2 = BlockPosArgument.getBlockPos(context, "pos2");
         double factor = DoubleArgumentType.getDouble(context, "factor");
 
-        String dimension = source.getLevel().dimension().identifier().toString();
+        String dimension = source.getLevel().dimension().location().toString();
         DifficultyZone zone = DifficultyZone.createBox(dimension, pos1, pos2, factor, name);
 
         DifficultyZonePersistentState.get(source.getServer()).addZone(zone);
@@ -78,7 +78,7 @@ public class DifficultyZoneCommand {
         double radius = DoubleArgumentType.getDouble(context, "radius");
         double factor = DoubleArgumentType.getDouble(context, "factor");
 
-        String dimension = source.getLevel().dimension().identifier().toString();
+        String dimension = source.getLevel().dimension().location().toString();
         DifficultyZone zone = DifficultyZone.createSphere(dimension, center, radius, factor, name);
 
         DifficultyZonePersistentState.get(source.getServer()).addZone(zone);
@@ -108,7 +108,7 @@ public class DifficultyZoneCommand {
         CommandSourceStack source = context.getSource();
 
         BlockPos pos = BlockPos.containing(source.getPosition());
-        String dimension = source.getLevel().dimension().identifier().toString();
+        String dimension = source.getLevel().dimension().location().toString();
 
         DifficultyZonePersistentState state = DifficultyZonePersistentState.get(source.getServer());
         Optional<DifficultyZone> found = state.findZone(dimension, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);

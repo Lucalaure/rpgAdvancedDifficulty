@@ -1,19 +1,20 @@
 package crystal.champions.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.particle.SpriteSet;
 
 /**
  * Custom particles for champions
  */
-public class ChampionsParticle extends SingleQuadParticle {
+public class ChampionsParticle extends TextureSheetParticle {
     private final SpriteSet spriteProvider;
 
     public ChampionsParticle(ClientLevel world, double x, double y, double z,
                              double velocityX, double velocityY, double velocityZ,
                              SpriteSet spriteProvider, int hexColor) {
-        super(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider.first());
+        super(world, x, y, z, velocityX, velocityY, velocityZ);
 
         this.spriteProvider = spriteProvider;
         this.lifetime = 40 + this.random.nextInt(10);
@@ -39,7 +40,7 @@ public class ChampionsParticle extends SingleQuadParticle {
     }
 
     @Override
-    public SingleQuadParticle.Layer getLayer() {
-        return SingleQuadParticle.Layer.TRANSLUCENT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 }

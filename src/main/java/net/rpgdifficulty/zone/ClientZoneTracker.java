@@ -36,7 +36,7 @@ public class ClientZoneTracker {
         }
         lastCheckedPos = pos;
 
-        String dimension = client.player.level().dimension().identifier().toString();
+        String dimension = client.player.level().dimension().location().toString();
         double x = client.player.getX();
         double y = client.player.getY();
         double z = client.player.getZ();

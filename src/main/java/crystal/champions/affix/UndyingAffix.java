@@ -21,7 +21,7 @@ public class UndyingAffix extends Affix {
         if (!champion.addTag(USED_TAG)) return false; // already used its second life
         champion.setHealth(champion.getMaxHealth() * 0.5F);
         champion.removeAllEffects();
-        champion.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 40, 4));
+        champion.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 40, 4));
         champion.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 1));
         // Totem of undying particles and sound
         champion.level().broadcastEntityEvent(champion, (byte) 35);

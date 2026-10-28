@@ -4,7 +4,7 @@ import crystal.champions.affix.AffixRegistry;
 import crystal.champions.bestiary.Bestiary;
 import crystal.champions.util.ChampionRank;
 import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,9 +20,9 @@ public final class ChampionAdvancements {
     private ChampionAdvancements() {
     }
 
-    public static final Identifier CHAMPION_SLAYER = Identifier.fromNamespaceAndPath(Champions.MOD_ID, "champion_slayer");
-    public static final Identifier APEX_HUNTER = Identifier.fromNamespaceAndPath(Champions.MOD_ID, "apex_hunter");
-    public static final Identifier KNOW_THY_ENEMY = Identifier.fromNamespaceAndPath(Champions.MOD_ID, "know_thy_enemy");
+    public static final ResourceLocation CHAMPION_SLAYER = ResourceLocation.fromNamespaceAndPath(Champions.MOD_ID, "champion_slayer");
+    public static final ResourceLocation APEX_HUNTER = ResourceLocation.fromNamespaceAndPath(Champions.MOD_ID, "apex_hunter");
+    public static final ResourceLocation KNOW_THY_ENEMY = ResourceLocation.fromNamespaceAndPath(Champions.MOD_ID, "know_thy_enemy");
 
     /** A champion died: whoever killed it (directly or with a projectile) gets the kill advancements. */
     public static void onChampionKilled(LivingEntity champion, DamageSource source) {
@@ -44,7 +44,7 @@ public final class ChampionAdvancements {
         }
     }
 
-    private static void award(ServerPlayer player, Identifier id) {
+    private static void award(ServerPlayer player, ResourceLocation id) {
         AdvancementHolder advancement = player.level().getServer().getAdvancements().get(id);
         if (advancement != null) {
             player.getAdvancements().award(advancement, "requirement");

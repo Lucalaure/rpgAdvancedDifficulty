@@ -2,12 +2,12 @@ package crystal.champions.affix;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.HitResult;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class Affix {
     private final String name;
@@ -27,7 +27,7 @@ public class Affix {
     public String getMobsKey() { return "champions.bestiary.mobs.any"; }
 
     /** Mob spawned by "/champion demo <affix>". */
-    public EntityType<? extends Mob> getExampleMob() { return EntityTypes.ZOMBIE; }
+    public EntityType<? extends Mob> getExampleMob() { return EntityType.ZOMBIE; }
 
     /** Affixes sharing a group can't roll together on one champion. */
     public @Nullable String getExclusiveGroup() { return null; }

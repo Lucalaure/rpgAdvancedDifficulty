@@ -46,7 +46,7 @@ It starts gentle, so early game stays familiar, and everything can be tuned in t
 - **Extras:** advancements, an F3 difficulty readout, testing commands, and full Mod Menu config.
 
 ## Requirements
-Fabric API, Cloth Config and Java 25. Mod Menu is optional. Install on both client and server.
+Fabric API, Cloth Config and Java 21. Mod Menu is optional. Install on both client and server.
 
 Don't use it with RpgDifficulty or Champions; it already includes both.
 
@@ -58,14 +58,14 @@ Based on [RpgDifficulty](https://github.com/Globox1997/RpgDifficulty) by Globox_
 
 | Field | Value |
 | --- | --- |
-| File | `rpgadvanceddifficulty-2.2.1+26.3.jar` (from the GitHub v2.2.1 release, or `build/libs/` after `./gradlew build`). Not the `-sources` jar. |
+| File | `rpgadvanceddifficulty-2.2.1+1.21.1.jar` (from the GitHub v2.2.1+1.21.1 release, or `build/libs/` after `./gradlew build`). Not the `-sources` jar. |
 | Display name | RPG Advanced Difficulty 2.2.1 |
 | Release type | Release (or Beta if you'd like feedback first) |
-| Game version | 26.3 |
+| Game version | 1.21.1 |
 | Mod loader | Fabric |
-| Java version | Java 25 |
+| Java version | Java 21 |
 | Environment | Client and Server |
-| Changelog | The v2.2.1 release notes from GitHub |
+| Changelog | The v2.2.1+1.21.1 release notes from GitHub |
 
 ### Relations
 

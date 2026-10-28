@@ -4,9 +4,9 @@ import crystal.champions.IChampions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.LivingEntity;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -54,15 +54,15 @@ public abstract class MobSpecificAffix extends Affix {
         if (!(leader.level() instanceof ServerLevel level)) return;
         for (int i = 0; i < count; i++) {
             EntityType<? extends Mob> type = types.get(leader.getRandom().nextInt(types.size()));
-            Mob minion = type.create(level, EntitySpawnReason.REINFORCEMENT);
+            Mob minion = type.create(level);
             if (minion == null) continue;
 
             double angle = leader.getRandom().nextDouble() * Math.PI * 2;
-            minion.snapTo(leader.getX() + Math.cos(angle) * 2, leader.getY(), leader.getZ() + Math.sin(angle) * 2, leader.getRandom().nextFloat() * 360.0F, 0.0F);
+            minion.moveTo(leader.getX() + Math.cos(angle) * 2, leader.getY(), leader.getZ() + Math.sin(angle) * 2, leader.getRandom().nextFloat() * 360.0F, 0.0F);
             if (!level.noCollision(minion)) {
-                minion.snapTo(leader.getX(), leader.getY(), leader.getZ(), leader.getYRot(), 0.0F);
+                minion.moveTo(leader.getX(), leader.getY(), leader.getZ(), leader.getYRot(), 0.0F);
             }
-            minion.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(minion.position())), EntitySpawnReason.REINFORCEMENT, null);
+            minion.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(minion.position())), MobSpawnType.REINFORCEMENT, null);
             ((IChampions) minion).champions$setChampionTier(IChampions.NEVER_CHAMPION);
             if (target != null) {
                 minion.setTarget(target);

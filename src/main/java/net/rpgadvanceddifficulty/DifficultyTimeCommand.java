@@ -26,7 +26,7 @@ public final class DifficultyTimeCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal("rpgdifficulty")
                 .then(literal("time")
-                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .requires(source -> source.hasPermission(2))
                         .then(literal("query").executes(c -> query(c.getSource())))
                         .then(literal("add").then(argument("hours", DoubleArgumentType.doubleArg())
                                 .executes(c -> setAge(c.getSource(), worldAge(c.getSource().getServer()) + hours(c.getSource(), DoubleArgumentType.getDouble(c, "hours"))))))

@@ -5,8 +5,8 @@ import crystal.champions.config.ChampionsConfigAffixes;
 import crystal.champions.IChampions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Silverfish;
 
@@ -39,12 +39,12 @@ public class InfectedAffix extends Affix {
         final int maxCount = Math.min(count, config.maxSilverFishCount);
 
         for (int i = 0; i < maxCount; i++) {
-            Silverfish silverfish = EntityTypes.SILVERFISH.create(world, EntitySpawnReason.EVENT);
+            Silverfish silverfish = EntityType.SILVERFISH.create(world);
             if (silverfish != null) {
                 BlockPos pos = entity.blockPosition();
 
-                silverfish.snapTo(entity.getX(), entity.getY(), entity.getZ(), entity.getRandom().nextFloat() * 360.0F, 0.0F);
-                silverfish.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), EntitySpawnReason.EVENT, null);
+                silverfish.moveTo(entity.getX(), entity.getY(), entity.getZ(), entity.getRandom().nextFloat() * 360.0F, 0.0F);
+                silverfish.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.EVENT, null);
                 // Minions can't roll as champions themselves (otherwise infested silverfish would snowball)
                 ((IChampions) silverfish).champions$setChampionTier(IChampions.NEVER_CHAMPION);
 

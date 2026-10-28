@@ -7,7 +7,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
@@ -19,7 +19,7 @@ public final class DifficultySync {
     }
 
     public record DifficultyInfo(float factor, float maxFactor, float championChance, int minutesToNext, boolean inZone) implements CustomPacketPayload {
-        public static final Type<DifficultyInfo> TYPE = new Type<>(Identifier.fromNamespaceAndPath("rpgadvanceddifficulty", "difficulty_info"));
+        public static final Type<DifficultyInfo> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath("rpgadvanceddifficulty", "difficulty_info"));
         public static final StreamCodec<RegistryFriendlyByteBuf, DifficultyInfo> CODEC = StreamCodec.composite(
                 ByteBufCodecs.FLOAT, DifficultyInfo::factor,
                 ByteBufCodecs.FLOAT, DifficultyInfo::maxFactor,
@@ -35,12 +35,12 @@ public final class DifficultySync {
     }
 
     public static void register() {
-        PayloadTypeRegistry.clientboundPlay().register(DifficultyInfo.TYPE, DifficultyInfo.CODEC);
+        PayloadTypeRegistry.playS2C().register(DifficultyInfo.TYPE, DifficultyInfo.CODEC);
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (server.getTickCount() % 20 != 0) return;
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 if (!ServerPlayNetworking.canSend(player, DifficultyInfo.TYPE)) continue;
-                DifficultyReport.Snapshot snapshot = DifficultyReport.compute(player.level(), player.position());
+                DifficultyReport.Snapshot snapshot = DifficultyReport.compute(player.serverLevel(), player.position());
                 ServerPlayNetworking.send(player, new DifficultyInfo(snapshot.factor(), snapshot.maxFactor(),
                         snapshot.championChance(), snapshot.minutesToNext(), snapshot.inZone()));
             }

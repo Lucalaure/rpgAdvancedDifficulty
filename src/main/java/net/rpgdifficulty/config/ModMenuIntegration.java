@@ -2,7 +2,7 @@ package net.rpgdifficulty.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import me.shedaniel.autoconfig.AutoConfigClient;
+import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.gui.ConfigScreenProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,7 +16,7 @@ public class ModMenuIntegration implements ModMenuApi {
     @SuppressWarnings({"deprecation", "unchecked"})
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> {
-            ConfigScreenProvider<RpgDifficultyConfig> supplier = (ConfigScreenProvider<RpgDifficultyConfig>) AutoConfigClient.getConfigScreen(RpgDifficultyConfig.class, parent);
+            ConfigScreenProvider<RpgDifficultyConfig> supplier = (ConfigScreenProvider<RpgDifficultyConfig>) AutoConfig.getConfigScreen(RpgDifficultyConfig.class, parent);
             supplier.setBuildFunction(builder -> {
                 builder.setAfterInitConsumer(screen -> {
                     Minecraft minecraftClient = Minecraft.getInstance();

@@ -30,7 +30,7 @@ public class DesecratingAffix extends Affix {
         cloud.setRadius(3.0f);
         cloud.setWaitTime(10);
         cloud.setDuration(config.cloudDuration);
-        MobEffectInstance desecrating = new MobEffectInstance(MobEffects.INSTANT_DAMAGE, 10, 1);
+        MobEffectInstance desecrating = new MobEffectInstance(MobEffects.HARM, 10, 1);
         cloud.addEffect(desecrating);
 
         world.addFreshEntity(cloud);
