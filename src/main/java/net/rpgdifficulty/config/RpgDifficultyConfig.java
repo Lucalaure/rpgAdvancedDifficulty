@@ -14,17 +14,17 @@ public class RpgDifficultyConfig implements ConfigData {
 
     @Comment("Minutes of world time (ticks the world has been running) per increase")
     public int increasingTime = 60;
-    @Comment("0.1 = 10% stronger per increasingTime")
+    @Comment("0.1 = 10% stronger per increasingTime. This is the pace of the stat with the most room to grow (health by default); damage and protection grow proportionally so all three reach their max at the same time")
     public double timeFactor = 0.1D;
 
     @Comment("Also make mobs stronger the further they spawn from world spawn")
     public boolean enableDistanceScaling = false;
     @Comment("in Blocks")
     public int increasingDistance = 300;
-    @Comment("0.1 = 10%")
+    @Comment("0.1 = 10% stronger per increasingDistance, shared the same way as timeFactor")
     public double distanceFactor = 0.1D;
 
-    @Comment("2.0 = double")
+    @Comment("2.0 = double. All three are reached at the same time")
     public double maxFactorHealth = 3.0D;
     public double maxFactorDamage = 2.0D;
     public double maxFactorProtection = 1.5D;
