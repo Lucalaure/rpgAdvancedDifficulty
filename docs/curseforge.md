@@ -15,6 +15,7 @@ It starts gentle, so early game stays familiar, and everything can be tuned in t
 - **Scaling mobs:** health, damage and armor grow with world time and all reach their max together after 20 hours on every difficulty. Hard raises the max and Easy lowers it.
 - **Champions (tiers 1 to 5):** boosted stats, a health bar, and up to 8 affix slots.
 - **40 affixes:** like Shielding, Vampiric, Undying, Stormcaller, invisible Stalker creepers, Sniper skeletons and Webslinger spiders.
+- **No cheesing:** a champion heals back to full once everyone who fought it has died.
 - **Tiered loot:** higher tiers drop better rewards, up to nether stars and Mending books.
 - **Bestiary:** a book you start with that records each affix you encounter and explains it.
 - **Extras:** advancements, an F3 difficulty readout, testing commands, and full Mod Menu config.
