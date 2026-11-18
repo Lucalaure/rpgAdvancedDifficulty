@@ -63,5 +63,6 @@
     "text.autoconfig.rpgdifficulty.option.easyChampionTierBonus": "Easy: Higher Tier Bonus",
     "text.autoconfig.rpgdifficulty.option.normalChampionTierBonus": "Normal: Higher Tier Bonus",
     "text.autoconfig.rpgdifficulty.option.hardChampionTierBonus": "Hard: Higher Tier Bonus",
-    "text.autoconfig.rpgdifficulty.option.bestiaryDiscoveryRange": "Bestiary Discovery Range"
+    "text.autoconfig.rpgdifficulty.option.bestiaryDiscoveryRange": "Bestiary Discovery Range",
+    "text.autoconfig.rpgdifficulty.option.resetChampionsOnPlayerDeath": "Champions Heal When Their Attackers Die"
 }

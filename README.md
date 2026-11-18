@@ -35,6 +35,8 @@ Every difficulty reaches its max after the same 20 hours of world time; only the
 
 **Damage limit:** however difficulty scaling, champion tier and affixes stack, no mob hits harder than `maxTotalDamageMultiplier` × its vanilla damage (default 5×, in the *Champions* section of the difficulty config). This covers melee and projectiles; Sniper's +50% arrow damage and creeper explosions (capped by `maxCreeperExplosionPower`) are separate.
 
+**Champions heal when you die:** a champion remembers every player who damaged it. Once all of them have died (each at some point after their last hit), it heals back to full and gets Undying's second life back, so you can't wear a champion down by dying and running back. Players who never hit it don't count. Turn it off with `resetChampionsOnPlayerDeath` in the *Champions* section of the difficulty config.
+
 ## Champion tiers
 
 | Tier | Base chance (Normal) | Health | Damage | Affix slots |

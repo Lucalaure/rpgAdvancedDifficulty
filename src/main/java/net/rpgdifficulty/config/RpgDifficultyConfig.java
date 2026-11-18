@@ -122,6 +122,10 @@ public class RpgDifficultyConfig implements ConfigData {
     public double bestiaryDiscoveryRange = 24.0D;
 
     @ConfigEntry.Category("champions")
+    @Comment("A champion heals back to full once every player who damaged it has died (in multiplayer, all of them)")
+    public boolean resetChampionsOnPlayerDeath = true;
+
+    @ConfigEntry.Category("champions")
     @Comment("Allow mobs to spawn as Champions (tiers, affixes and loot are set in config/Champions)")
     public boolean enableChampions = true;
     @ConfigEntry.Category("champions")

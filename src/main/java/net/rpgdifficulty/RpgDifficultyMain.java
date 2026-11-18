@@ -38,6 +38,7 @@ public class RpgDifficultyMain implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> DifficultyZoneCommand.register(dispatcher, registryAccess));
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> DifficultyTimeCommand.register(dispatcher));
         DifficultySync.register();
+        net.rpgadvanceddifficulty.ChampionReset.register();
         PayloadTypeRegistry.playS2C().register(ZoneSyncManager.ZoneSyncPayload.TYPE, ZoneSyncManager.ZoneSyncPayload.CODEC);
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> ZoneSyncManager.syncToPlayer(handler.getPlayer()));
     }
