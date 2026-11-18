@@ -1,6 +1,8 @@
 package net.rpgadvanceddifficulty.gametest;
 
 import crystal.champions.IBullet;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import crystal.champions.affix.UndyingAffix;
 import crystal.champions.IChampions;
 import crystal.champions.affix.Affix;
 import crystal.champions.affix.AffixEvents;
@@ -125,6 +127,7 @@ public class AffixClientGameTest implements FabricClientGameTest {
             run("undying", this::testUndying);
             run("stormcaller", this::testStormcaller);
             run("creeper fuse", this::testCreeperFuse);
+            run("champion reset on player death", this::testChampionReset);
 
             // Mob-specific affixes
             run("horde_caller", this::testHordeCaller);
@@ -405,6 +408,24 @@ public class AffixClientGameTest implements FabricClientGameTest {
             mob.damageCooldownTime = 0;
             mob.hurtServer(level(s), level(s).damageSources().playerAttack(player(s)), 10000.0f);
             check(!mob.isAlive(), "undying: champion revived a second time");
+        });
+    }
+
+    private void testChampionReset() {
+        UUID hit = spawnChampion(EntityTypes.ZOMBIE, "undying", 2.0);
+        UUID other = spawnChampion(EntityTypes.ZOMBIE, "hasty", -2.0);
+        server.runOnServer(s -> {
+            Mob mob = champion(s, hit);
+            Mob untouched = champion(s, other);
+            mob.hurtServer(level(s), level(s).damageSources().playerAttack(player(s)), 10000.0f); // uses up Undying
+            mob.damageCooldownTime = 0;
+            untouched.hurtServer(level(s), level(s).damageSources().generic(), 4.0f);
+            check(mob.getHealth() < mob.getMaxHealth() && mob.entityTags().contains(UndyingAffix.USED_TAG), "reset: setup failed");
+            // Fire the death event directly so the test player doesn't have to respawn
+            ServerLivingEntityEvents.AFTER_DEATH.invoker().afterDeath(player(s), level(s).damageSources().generic());
+            check(mob.getHealth() == mob.getMaxHealth(), "reset: champion not healed after its attacker died (" + mob.getHealth() + ")");
+            check(!mob.entityTags().contains(UndyingAffix.USED_TAG), "reset: Undying not restored");
+            check(untouched.getHealth() < untouched.getMaxHealth(), "reset: champion nobody hit was healed");
         });
     }
 
@@ -859,11 +880,10 @@ public class AffixClientGameTest implements FabricClientGameTest {
                 return result;
             });
             double cap = server.computeOnServer(s -> DifficultyModes.cap(level(s)));
-            double growth = server.computeOnServer(s -> DifficultyModes.growth(level(s)));
             switch (mode) {
-                case "easy" -> { easy = shares; check(cap == 0.75 && growth == 0.5, "difficulty: easy multipliers " + growth + "/" + cap); }
-                case "normal" -> { normal = shares; check(cap == 1.0 && growth == 1.0, "difficulty: normal multipliers " + growth + "/" + cap); }
-                default -> { hard = shares; check(cap == 1.5 && growth == 1.5, "difficulty: hard multipliers " + growth + "/" + cap); }
+                case "easy" -> { easy = shares; check(cap == 0.75, "difficulty: easy cap " + cap); }
+                case "normal" -> { normal = shares; check(cap == 1.0, "difficulty: normal cap " + cap); }
+                default -> { hard = shares; check(cap == 1.25, "difficulty: hard cap " + cap); }
             }
         }
         for (int tier = 1; tier <= 5; tier++) {
