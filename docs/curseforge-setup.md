@@ -23,14 +23,14 @@ The license has to be GPLv3 because the mod includes code from Champions (GPLv3)
 
 | Field | Value |
 | --- | --- |
-| File | `rpgadvanceddifficulty-2.4.0+1.21.1.jar` (from the GitHub v2.4.0+1.21.1 release, or `build/libs/` after `./gradlew build`). Not the `-sources` jar. |
-| Display name | RPG Advanced Difficulty 2.4.0 |
+| File | `rpgadvanceddifficulty-2.5.0+1.21.1.jar` (from the GitHub v2.5.0+1.21.1 release, or `build/libs/` after `./gradlew build`). Not the `-sources` jar. |
+| Display name | RPG Advanced Difficulty 2.5.0 |
 | Release type | Release (or Beta if you'd like feedback first) |
 | Game version | 1.21.1 |
 | Mod loader | Fabric |
 | Java version | Java 21 |
 | Environment | Client and Server |
-| Changelog | The v2.4.0+1.21.1 release notes from GitHub |
+| Changelog | The v2.5.0+1.21.1 release notes from GitHub |
 
 ### Relations
 
